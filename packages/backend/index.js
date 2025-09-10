@@ -12,8 +12,8 @@ app.use(
   }),
 );
 
-app.get("/hello", (req, res) => {
-  res.json({ message: "hello world" });
+app.get("/health", (req, res) => {
+    res.send("ok");
 });
 
 app.listen(process.env.SERVER_PORT, () => {
