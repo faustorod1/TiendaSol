@@ -5,7 +5,7 @@ class FactoryNotification {
     /**
      * @param {EstadoPedido} estado
      */
-    static crearSegunEstadoPedido(estado){
+    static crearMensajeSegunEstadoPedido(estado){
         let mensaje;
         switch(estado){
             case EstadoPedido.CANCELADO: 
@@ -38,13 +38,13 @@ class FactoryNotification {
      * @param {Pedido} pedido
      */
     static crearSegunPedido(pedido){
-        const productos = [];
-        pedido.items.forEach(item => productos.push(item.producto.nombre));
+        const productos = pedido.items.map(item => item.producto);
+        const nombresProductos = productos.map(prod => prod.nombre);
 
-        let mensaje = FactoryNotification.crearSegunEstadoPedido(pedido.estado);
+        let mensaje = FactoryNotification.crearMensajeSegunEstadoPedido(pedido.estado);
         mensaje = mensaje.replaceAll('{{ID_PEDIDO}}', pedido.id);
         mensaje = mensaje.replaceAll('{{COMPRADOR}}', pedido.comprador.nombre);
-        mensaje = mensaje.replaceAll('{{PRODUCTOS}}', productos.join('\n'));
+        mensaje = mensaje.replaceAll('{{PRODUCTOS}}', nombresProductos.join('\n'));
         mensaje = mensaje.replaceAll('{{TOTAL}}', pedido.calcularTotal());
         mensaje = mensaje.replaceAll('{{DIRECCION_ENTREGA}}', pedido.direccionEntrega.pasarAString());
         

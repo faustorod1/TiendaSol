@@ -7,8 +7,6 @@ class Pedido{
     vendedor;
     /** @type ItemPedido[] */
     items;
-    /** @type number */
-    total;
     /** @type Moneda */
     moneda;
     /** @type DireccionEntrega */
@@ -71,10 +69,10 @@ class Pedido{
         this.historialEstados.push(unCambioEstadoPedido);
     }
 
-    /**
-     * @returns boolean
-     */
     validarStock(){
-        return this.items.every(item => item.producto.estaDisponible(item.cantidad));
+        const productosFaltantes = this.items.filter(item => !item.producto.estaDisponible(item.cantidad)); 
+        if(productosFaltantes.length > 0) {
+            throw new StockInsuficienteError(productosFaltantes);
+        }
     }
 }

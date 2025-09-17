@@ -12,7 +12,7 @@ app.use(
   }),
 );
 
-app.get("/health", (req, res) => {
+app.get("/health", (res) => {
     res.send("ok");
 });
 
