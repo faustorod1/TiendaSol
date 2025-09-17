@@ -54,8 +54,7 @@ class Pedido{
      * @returns number
      */
     calcularTotal(){
-        this.total = this.items.reduce((acum, item) => acum + item.subtotal(), 0);
-        return this.total;
+        return this.items.reduce((acum, item) => acum + item.subtotal(), 0);
     }
 
     /**
