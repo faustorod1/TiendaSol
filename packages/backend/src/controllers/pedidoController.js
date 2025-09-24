@@ -1,36 +1,27 @@
 import { Pedido } from "../entities/pedido.js";
+import { EstadoPedido } from "../entities/estadoPedido.js"
+import { Moneda } from "../entities/moneda.js"
 import { StockInsuficienteError} from "../entities/errors/StockInsuficienteError.js"
 import { z } from "zod";
-
-// Creación de un pedido, validando el stock disponible de cada producto.
-// Cancelación de un pedido antes de que haya sido enviado.
-// Consulta del historial de pedidos de un usuario.
-// Marcado de un pedido como enviado por parte del vendedor.
 
 export class pedidoController {
     costructor (pedidoService){
         this.pedidoService = pedidoService;
     }
-    // {
-    //     comprador: 2,
-    //     vendedor: 4,
-    //     items: [
-    //         {
-                
-    //         },
-    //         {
-                
-    //         }
-    //     ]
-    // }
+    
 
     crearPedido(req, res){
-        const pedido = req.body.productos;
-        if (!pedido) {
-            return res.status(400).json({ error: "Error en los datos enviados" });
+        const pedidoSinValidar = {
+            ...req.body,
+            comprador: req.user.id
+        };
+        const pedidoResult = crearPedidoSchema.safeParse(pedidoSinValidar);
+        if (!pedidoResult.success) {
+            return res.status(400).json(pedidoResult.error.issues);
         }
+        const pedido = pedidoResult.data;
         
-        this.pedidoService.crearPedido(productos)
+        this.pedidoService.crearPedido(pedido)
         .then(() => res.status(201).json({ message: "Pedido creado con éxito" }))
         .catch(error => {
             if (error.constructor.name == StockInsuficienteError.name) {
@@ -43,16 +34,26 @@ export class pedidoController {
         })
     };
 
+
+
     cambiarEstado(req, res){
-        const pedidoId = req.params.id;
-        const estadoNuevo = req.body.estado;
-        const usuarioId = req.user.id;//TODO: validar este usuario id
-        if (pedidoId <= 0) {
-            return res.status(400).json({ error: "ID de pedido no válido" });
+        const params = {
+            pedidoId: req.params.id,
+            estadoNuevo: req.body.estado
+        };
+
+        const paramResult = cambiarEstadoSchema.safeParse(params);
+        if (!paramResult.success) {
+            return res.status(400).json(paramResult.error.issues);
         }
-        else if (!estadoNuevo) {
-            return res.status(400).json({ error: "Error en el estado enviado" });
+        const {pedidoId, estadoNuevo} = paramResult.data;
+        
+        const userIdResult = userIdSchema.safeParse(req.user.id);
+        if (!userIdResult.success) {
+            return res.status(400).json(userIdResult.error.issues);
         }
+        const usuarioId = userIdResult.data;
+
         this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId)
         .then(() => {
             res.status(200).json({ message: "Estado del pedido actualizado con éxito" });
@@ -62,13 +63,53 @@ export class pedidoController {
         });
     };
 
+
+
     consultarHistorialPedidos(req, res){
-        const idUsuario = req.user.id;
+        const userIdResult = userIdSchema.safeParse(req.user.id);
+        if (!userIdResult.success) {
+            return res.status(400).json(userIdResult.error.issues);
+        }
+        const usuarioId = userIdResult.data;
 
-        // todo: validar idUsuario, deberia ser un token stateful y deberia pasar por un middleware de autenticacion
+        // todo: validar usuarioId, deberia ser un token stateful y deberia pasar por un middleware de autenticacion
 
-        this.pedidoService.consultarHistorialPedidos(idUsuario)
+        this.pedidoService.consultarHistorialPedidos(usuarioId)
             .then(historial => res.status(200).json(historial))
             .catch(error => res.status(400).json({ error: error.message }));
     };
 }
+
+
+
+// Schemas zod
+
+const cambiarEstadoSchema = z.object({
+    pedidoId: z
+        .string()
+        .transform(v => Number(v))
+        .pipe(z.number().int().positive()),
+    estadoNuevo: z.enum(Object.values(EstadoPedido))
+});
+
+// Si llega a tener formato cambia acá
+const userIdSchema = z.string();
+
+const crearPedidoSchema = z.object({
+    comprador: userIdSchema,
+    vendedor: userIdSchema,
+    items: z.array(itemPedidoSchema).nonempty(),
+    moneda: z.enum(Object.values(Moneda)),
+    direccionEntrega: z.string()
+});
+
+const itemPedidoSchema = z.object({
+    productoId: z
+        .string()
+        .transform(v => Number(v))
+        .pipe(z.number().int().positive()),
+    cantidad: z
+        .string()
+        .transform(v => Number(v))
+        .pipe(z.number().int().positive())
+});

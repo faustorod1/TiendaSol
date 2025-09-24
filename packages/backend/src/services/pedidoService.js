@@ -7,6 +7,8 @@ class pedidoService {
     }
 
     async crearPedido(pedidoJSON){
+        // TODO: El id no llega por la query. Ver de dónde sale y quién instancia cada cosa.
+        // TODO: Los items vienen con menos info (ej: precio en el momento). Tal vez cuando esté el repo se puede arreglar
         const nuevoPedido = new Pedido(
             pedidoJSON.id,
             pedidoJSON.comprador,

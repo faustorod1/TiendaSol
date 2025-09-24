@@ -17,8 +17,6 @@ class Pedido{
     fechaCreacion;
     /** @type CambioEstadoPedido[] */
     historialEstados;
-    /** @type Usuario */
-    vendedor;
 
     /**
      * @param {string} id
