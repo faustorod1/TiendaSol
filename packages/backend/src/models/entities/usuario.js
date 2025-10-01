@@ -1,6 +1,6 @@
 class Usuario{
-    /** @type string */
-    id;
+    /** @type mongoose.Types.ObjectId */
+    _id;
     /** @type string */
     nombre;
     /** @type string */
@@ -22,7 +22,7 @@ class Usuario{
      * @param {Notificacion[]} notificaciones
      */
     constructor(id, nombre, email, telefono, tipo, fechaAlta) {
-        this.id = id;
+        this._id = id;
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;

@@ -21,24 +21,26 @@ class pedidoService {
         await this.pedidoRepository.crearPedido(nuevoPedido)
     }
 
-    async cambiarEstado(pedidoId, nuevoEstado, usuarioId){
+    async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){
         const pedido = await this.pedidoRepository.findById(pedidoId)
         switch (nuevoEstado) {
             case EstadoPedido.CANCELADO:
                 if (pedido.comprador.id !== usuarioId) {
                     throw new Error("Solo el comprador puede marcar el pedido como cancelado");
                 }
+                await this.pedidoRepository.cambiarEstado(pedidoId,nuevoEstado,motivoNuevo);
+
                 break;
             case EstadoPedido.ENVIADO:
                 if (pedido.vendedor.id !== usuarioId) {
                     throw new Error("Solo el vendedor puede marcar el pedido como enviado");
                 }
+                await this.pedidoRepository.cambiarEstado(pedidoId,nuevoEstado,null);
+
                 break;
             default:
                 break;
         }
-        
-        await this.pedidoRepository.cambiarEstado(pedidoId, nuevoEstado)
     }
 
     async consultarHistorialPedidos(idUsuario){

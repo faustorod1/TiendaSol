@@ -11,7 +11,7 @@ export class usuarioService {
 
         const offset = (page - 1) * limit;
 
-        const { rows, count } = await this.notificacionRepository.findAndPaginate(filtro, limit, offset);
+        const { rows, count } = await this.usuarioRepository.findNotificationsByPage(filtro, limit, offset);
 
         return {
             total: count,

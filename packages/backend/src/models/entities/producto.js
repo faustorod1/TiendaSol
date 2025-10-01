@@ -1,6 +1,6 @@
 class Producto {
-    /** @type string */
-    id;
+    /** @type mongoose.Types.ObjectId */
+    _id;
     /** @type Usuario */
     vendedor;
     /** @type string */
@@ -33,7 +33,7 @@ class Producto {
      * @param {boolean} activo
      */
     constructor(id, vendedor, titulo, descripcion, categorias, precio, moneda, stock, fotos, activo) {
-        this.id = id;
+        this._id = id;
         this.vendedor = vendedor;
         this.titulo = titulo;
         this.descripcion = descripcion;

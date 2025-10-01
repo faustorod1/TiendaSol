@@ -1,6 +1,6 @@
 class Pedido{
-    /** @type string */
-    id;
+    /** @type mongoose.Types.ObjectId */
+    _id;
     /** @type Usuario */
     comprador;
     /** @type Usuario */
@@ -13,7 +13,7 @@ class Pedido{
     direccionEntrega;
     /** @type EstadoPedido */
     estado;
-    /** @type CambioEstadoPedido[] */
+    /** @type Date */
     fechaCreacion;
     /** @type CambioEstadoPedido[] */
     historialEstados;
@@ -30,7 +30,7 @@ class Pedido{
      * @param {CambioEstadoPedido[]} historialEstados
      */
     constructor(id,comprador, vendedor, items, moneda, direccionEntrega){
-        this.id = id;
+        this._id = id;
         this.comprador = comprador;
         this.vendedor = vendedor;
         this.items = items;

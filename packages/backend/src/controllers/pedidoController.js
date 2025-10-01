@@ -1,5 +1,5 @@
 import { Pedido } from "../entities/pedido.js";
-import { EstadoPedido } from "../entities/estadoPedido.js"
+import { estadoPedido } from "../entities/estadoPedido.js"
 import { Moneda } from "../entities/moneda.js"
 import { StockInsuficienteError} from "../entities/errors/StockInsuficienteError.js"
 import { z } from "zod";
@@ -54,7 +54,7 @@ export class pedidoController {
         }
         const usuarioId = userIdResult.data;
 
-        this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId)
+        this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId, req.body.motivo)
         .then(() => {
             res.status(200).json({ message: "Estado del pedido actualizado con éxito" });
         })
@@ -89,11 +89,13 @@ const cambiarEstadoSchema = z.object({
         .string()
         .transform(v => Number(v))
         .pipe(z.number().int().positive()),
-    estadoNuevo: z.enum(Object.values(EstadoPedido))
+    estadoNuevo: z.enum(Object.values(estadoPedido))
 });
 
+const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
+
 // Si llega a tener formato cambia acá
-const userIdSchema = z.string();
+const userIdSchema = objectIdSchema;
 
 const crearPedidoSchema = z.object({
     comprador: userIdSchema,

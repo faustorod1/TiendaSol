@@ -1,6 +1,6 @@
 class Notificacion {
-    /** @type string */
-    id;
+    /** @type mongoose.Types.ObjectId */
+    _id;
     /** @type Usuario */
     usuarioDestino;
     /** @type string */
