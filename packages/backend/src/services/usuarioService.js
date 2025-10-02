@@ -1,6 +1,8 @@
+import { Usuario } from '../models/usuario.js';
+import { Notificacion } from '../models/notificacion.js';
 export class usuarioService {
-  constructor(notificacionModel) {
-    this.Notificacion = notificacionModel;
+  constructor(usuarioRepository) {
+    this.usuarioRepository = usuarioRepository;
   }
 
   async obtenerNotificaciones(usuarioId, leida, { page, limit }) {

@@ -19,7 +19,7 @@ export class usuarioController {
 
             res.status(200).json(paginated);
         } catch (error) {
-            res.status(500).json({ error: 'Error al obtener notificaciones' });
+            res.status(500).json({ error: error.message || 'Error al obtener notificaciones' });
         }
     }
 
