@@ -6,12 +6,23 @@ export class PedidoRepository {
         this.model = PedidoModel;
     }
 
-    // TODO
-    async crearPedido(nuevoPedido){}
-
     async save(pedido) {
-        const nuevoPedido = new this.model(pedido);
-        return await nuevoPedido.save();
+        const pedidoParaGuardar = {
+            comprador: pedido.comprador.id,
+            vendedor: pedido.vendedor.id,
+
+            items: pedido.items.map(item => ({
+                producto: item.producto.id,
+                cantidad: item.cantidad,
+                precioUnitario: item.precioUnitario 
+            })),
+            moneda: pedido.moneda,
+            direccionEntrega: pedido.direccionEntrega,
+            estado: pedido.estado 
+        };
+
+        const nuevoPedidoModel = new PedidoModel(pedidoParaGuardar);
+        return await nuevoPedidoModel.save();
     }
 
     async findByPage(nroPagina, elemsXPagina) {

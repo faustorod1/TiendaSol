@@ -5,9 +5,10 @@ import { PedidoRepository } from "../models/repositories/pedidoRepository.js";
 import { ProductoRepository } from "../models/repositories/productoRepository.js";
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
+import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
 
 class PedidoService {
-    constructor(pedidoRepository, productoRepository) {
+    constructor(pedidoRepository, productoRepository, usuarioRepository) {
         this.pedidoRepository = pedidoRepository
         this.productoRepository = productoRepository
         this.usuarioRepository = usuarioRepository
@@ -35,10 +36,10 @@ class PedidoService {
             items,
             pedidoJSON.moneda,
             pedidoJSON.direccionEntrega
-        )
+        );
 
         await this.usuarioRepository.update(vendedor);
-        await this.pedidoRepository.crearPedido(nuevoPedido);
+        await this.pedidoRepository.save(nuevoPedido);
     }
 
     async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){

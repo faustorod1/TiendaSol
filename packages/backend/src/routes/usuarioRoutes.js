@@ -1,4 +1,4 @@
-import {usuarioController} from '../controllers/usuarioController.js';
+import { usuarioController } from '../controllers/usuarioController.js';
 import { usuarioErrorHandler } from '../middlewares/usuarioErrorHandler.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
 import { authMockMiddleware } from '../middlewares/authMockMiddleware.js';
