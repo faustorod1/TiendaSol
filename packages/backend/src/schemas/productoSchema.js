@@ -42,7 +42,13 @@ const productoSchema = new mongoose.Schema({
         required: false,
     },
     activo:{
-        
+        type: Boolean,
+        required: true,
+    },
+    cantidadVendida: {
+        type: Number,
+        required: true,
+        default: 0,
     }
 },{
     timestamps: true,

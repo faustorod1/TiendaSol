@@ -21,11 +21,25 @@ export class ProductoRepository {
             if (filtros.precioMax) filtrosValidos.precio.$lte = filtros.precioMax;
         }
 
+        const sort = {};
+        switch (filtros.orderBy) {
+            case "precio_asc":
+                sort.precio = 1;
+                break;
+            case "precio_desc":
+                sort.precio = -1;
+                break;
+            case "mas_vendido":
+                sort.cantidadVendida = -1;
+                break;
+            default:
+                sort._id = -1;
+        }
 
-        // TODO Falta el sort by
         return this.model.find(filtrosValidos)
-            .skip((nroPagina - 1) * elemsXPagina)
-            .limit(elemsXPagina);
+        .sort(sort)
+        .skip((nroPagina - 1) * elemsXPagina)
+        .limit(elemsXPagina);
     }
 
     async findAll() {
@@ -34,6 +48,10 @@ export class ProductoRepository {
 
     async findById(id) {
         return await this.model.findById(id);
+    }
+
+    async findManyById(ids){
+        return await this.model.find({ _id: { $in : ids } });
     }
 
     async findByTitle(titulo) {
@@ -56,5 +74,16 @@ export class ProductoRepository {
 
     async delete(id) {
         return await this.model.findByIdAndDelete(id);
+    }
+
+    async incrementarVentasYReducirStock(items) {
+        const operaciones = items.map(item => ({
+            updateOne: {
+                filter: { _id: item.productoId },
+                update: { $inc: { cantidadVendida: item.cantidad }, $dec: { stock: item.cantidad } }
+            }
+        }));
+
+        return await this.model.bulkWrite(operaciones);
     }
 }

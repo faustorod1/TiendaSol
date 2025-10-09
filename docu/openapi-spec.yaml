@@ -1,251 +1,499 @@
 openapi: 3.0.2
 info:
-    title: Tienda Sol API
-    version: 1.0.0
-    description: >-
-        Una nueva API para la compra desde cualquier lugar, comparar productos, acceder a múltiples métodos de
-        pago y recibir los artículos en casa en pocos días
-paths:
-    /pedidos:
-        summary: Operaciones CURL de pedidos
-        get:
-            tags:
-                - Pedidos
-            responses:
-                '200':
-                    description: Retorno de historial exitoso
-                '400':
-                    description: El historial no esta disponible o ah ocurrido un error
-            summary: Lista de pedidos del usuario autenticado
-            description: Devuelve una lista de pedidos hechos por el usuario consultante
-        post:
-            requestBody:
-                description: Pedido
-                content:
-                    application/json:
-                        examples:
-                            pedido ejemplo:
-                                value:
-                                    id: 123
-                                    comprador:
-                                        compradorId: 456
-                                        nombre: Juan Perez
-                                        email: juan@example.com
-                                        telefono: '123456789'
-                                        tipo: COMPRADOR
-                                        fechaAlta: '2025-09-24T12:00:00Z'
-                                    vendedor:
-                                        vendedorId: 789
-                                        nombre: Tienda Sol
-                                        email: tienda@example.com
-                                        telefono: '987654321'
-                                        tipo: VENDEDOR
-                                        fechaAlta: '2024-01-15T09:30:00Z'
-                                    items:
-                                        -
-                                            producto:
-                                                productoId: 321
-                                                vendedor:
-                                                    vendedorId: 789
-                                                    nombre: Tienda Sol
-                                                    email: tienda@example.com
-                                                    telefono: '987654321'
-                                                    tipo: VENDEDOR
-                                                    fechaAlta: '2024-01-15T09:30:00Z'
-                                                titulo: Notebook Gamer
-                                                descripcion: Notebook con RTX 3050
-                                                categorias:
-                                                    -
-                                                        nombre: Electrónica
-                                                precio: 350000
-                                                moneda: PESO_ARG
-                                                stock: 10
-                                                fotos:
-                                                    - 'https://miservidor.com/fotos/notebook1.jpg'
-                                                    - 'https://miservidor.com/fotos/notebook2.jpg'
-                                                activo: true
-                                            cantidad: 2
-                                            precioUnitario: 350000
-                                    moneda: PESO_ARG
-                                    direccionEntrega:
-                                        calle: Av. Siempre Viva
-                                        altura: '742'
-                                        piso: '2'
-                                        departamento: B
-                                        codigoPostal: '1824'
-                                        ciudad: Lanús
-                                        provincia: Buenos Aires
-                                        pais: Argentina
-                                        lat: -34.702
-                                        lon: -58.396
-                required: true
-            tags:
-                - Pedidos
-            responses:
-                '201':
-                    description: Cuando el pedido ah sido creado exitosamente.
-                '400':
-                    description: Envia status 400 cuando no se envió bien el pedido.
-                '409':
-                    description: No hay suficiente stock del producto solicitado.
-            summary: Crea un pedido.
-            description: Crea un pedido a partir de la informacion dentro del json body.
-    '/pedidos/{id}':
-        summary: Path para cambiar el estado de un pedido
-        description: >-
-            Enviando el id de un pedido y el estado en su body se puede cambiar el estado  de ese pedido
-            mediante un PATCH
-        patch:
-            tags:
-                - Pedidos
-            responses:
-                '200':
-                    description: Accion realizada con exito
-                '400':
-                    description: Id desconocido o estado invalido
-                '401':
-                    description: Usuario no autorizado
-            summary: Lista de pedidos del usuario autenticado
-            description: >-
-                Llega el id de un pedido por path param y dentro de la request se debe enviar el estado
-                deseado, luego dentro del sistema se valida si este tiene permiso de hacer el cambio.
-        parameters:
-            -
-                examples:
-                    Id:
-                        value: '452'
-                name: id
-                description: Identificador del pedido
-                schema:
-                    type: number
-                in: path
-                required: true
-    /productos:
-        summary: Productos de la aplicacion web
-        description: Path predeterminado para obtener por paginas los productos.
-        get:
-            tags:
-                - Productos
-            parameters:
-                -
-                    name: Categoria
-                    description: Categoria del producto
-                    schema:
-                        type: string
-                    in: query
-                    required: false
-                -
-                    name: Nombre
-                    description: Nombre del producto
-                    schema:
-                        type: string
-                    in: query
-                -
-                    name: Descripcion
-                    description: Descripcion del producto
-                    schema:
-                        type: string
-                    in: query
-                -
-                    name: Page
-                    description: Numero de pagina
-                    schema:
-                        type: number
-                    in: query
-                -
-                    name: Limit
-                    description: Cantidad de productos por pagina
-                    schema:
-                        type: number
-                    in: query
-            responses:
-                '200':
-                    description: Retorna lista de productos paginados
-                '204':
-                    description: Lista de productos vacia o objeto null
-                '400':
-                    description: 'Verificar query params, filtros enviados y productos por pagina con numero de pagina'
-            summary: Retorna todos los productos
-            description: >-
-                Retorna todos los productos en la base de datos ordenado por paginas y cantidad de productos
-                por pagina.
+  title: Tienda Sol API
+  version: 1.0.0
+  description: >-
+    Una nueva API para la compra desde cualquier lugar, comparar productos, 
+    acceder a múltiples métodos de pago y recibir los artículos en casa en pocos días.
 
-                Tambien acepta filtros como categoria, nombre, descripcion.
-    '/usuarios/{usuarioId}/notificaciones':
-        get:
-            tags:
-                - Notificaciones
-            parameters:
-                -
-                    name: Page
-                    description: Numero de pagina
-                    schema:
-                        type: number
-                    in: query
-                -
-                    name: Limit
-                    description: Cantidad de notificaciones por pagina
-                    schema:
-                        type: number
-                    in: query
-                -
-                    examples:
-                        UsuarioId:
-                            value: '351'
-                    name: usuarioId
-                    description: Identificador del usuario
-                    schema:
-                        type: number
-                    in: path
-                    required: true
-            responses:
-                '200':
-                    description: Envio de notificaciones con exito
-                '500':
-                    description: Error al obtener notificaciones
-            summary: Obtiene notificaciones del usuario
-            description: Se retornan las notificaciones del usuario que tenga el id enviado por parametro
-    '/usuarios/{usuarioId}/notificaciones/{id}':
-        patch:
-            tags:
-                - Notificaciones
-            parameters:
-                -
-                    examples:
-                        UsuarioId:
-                            value: '12'
-                    name: usuarioId
-                    description: Identificador del usuario
-                    schema:
-                        type: number
-                    in: path
-                    required: true
-                -
-                    examples:
-                        Id:
-                            value: '42'
-                    name: id
-                    description: Identificador de la notificacion
-                    schema:
-                        type: number
-                    in: path
-                    required: true
-            responses:
-                '200':
-                    description: Notificacion marcada como leida
-                '404':
-                    description: Notificacion no encontrada
-                '500':
-                    description: El servidor no puede marcar la notificacion como leida
-            summary: Marca una notificación como leida
-            description: Se marca la notificacion con respectivo id como leida para el usuario con el id por parametro
 tags:
-    -
-        name: Pedidos
-        description: ''
-    -
-        name: Notificaciones
-        description: ''
-    -
-        name: Productos
-        description: ''
+  - name: Pedidos
+    description: ''
+  - name: Productos
+    description: ''
+  - name: Notificaciones
+    description: ''
+
+paths:
+  /pedidos:
+    summary: Operaciones de pedidos.
+    get:
+      tags:
+        - Pedidos
+      summary: Lista de pedidos del usuario autenticado
+      description: Devuelve una lista de pedidos hechos por el usuario consultante.
+      responses:
+        '200':
+          description: Retorno de historial exitoso.
+        '400':
+          description: El historial no está disponible o ha ocurrido un error.
+    post:
+      tags:
+        - Pedidos
+      summary: Crea un pedido
+      description: Crea un pedido a partir de la información dentro del JSON body.
+      requestBody:
+        description: Datos del pedido a crear.
+        required: true
+        content:
+          application/json:
+            examples:
+              pedidoEjemplo:
+                value:
+                  id: 123
+                  comprador:
+                    compradorId: 456
+                    nombre: Brian Perez
+                    email: Perez@example.com
+                    telefono: '123456789'
+                    tipo: COMPRADOR
+                    fechaAlta: '2025-09-24T12:00:00Z'
+                  vendedor:
+                    vendedorId: 789
+                    nombre: Tienda Sol
+                    email: tienda@example.com
+                    telefono: '987654321'
+                    tipo: VENDEDOR
+                    fechaAlta: '2024-01-15T09:30:00Z'
+                  items:
+                    - producto:
+                        productoId: 321
+                        vendedor:
+                          vendedorId: 789
+                          nombre: Tienda Sol
+                          email: tienda@example.com
+                          telefono: '987654321'
+                          tipo: VENDEDOR
+                          fechaAlta: '2024-01-15T09:30:00Z'
+                        titulo: Notebook Gamer
+                        descripcion: Notebook con RTX 3050
+                        categorias:
+                          - nombre: Electrónica
+                        precio: 350000
+                        moneda: PESO_ARG
+                        stock: 10
+                        fotos:
+                          - 'https://miservidor.com/fotos/yo.jpg'
+                          - 'https://miservidor.com/holamundo.jpg'
+                        activo: true
+                      cantidad: 2
+                      precioUnitario: 350000
+                  moneda: PESO_ARG
+                  direccionEntrega:
+                    calle: Av. Siempre Viva
+                    altura: '742'
+                    piso: '2'
+                    departamento: B
+                    codigoPostal: '1824'
+                    ciudad: Lanús
+                    provincia: Buenos Aires
+                    pais: Argentina
+                    lat: -34.702
+                    lon: -58.396
+      responses:
+        '201':
+          description: El pedido ha sido creado exitosamente.
+        '400':
+          description: Envía status 400 cuando no se envió bien el pedido.
+        '409':
+          description: No hay suficiente stock del producto solicitado.
+
+  '/pedidos/{id}':
+    patch:
+      tags:
+        - Pedidos
+      summary: Cambiar el estado de un pedido
+      description: >-
+        Permite actualizar el estado de un pedido específico enviando su ID en la URL
+        y el nuevo estado en el cuerpo de la solicitud. El sistema valida si el 
+        usuario autenticado tiene permiso para realizar el cambio.
+      parameters:
+        - name: id
+          in: path
+          description: Identificador numérico del pedido que se desea modificar.
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 452
+      requestBody:
+        description: Es necesario enviar el nuevo estado para el pedido.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  description: El nuevo estado del pedido.
+                  enum: ["ENVIADO","CANCELADO"]
+              required:
+                - estado
+            example:
+              estado: "ENVIADO"
+      responses:
+        '200':
+          description: Acción realizada con éxito. El estado del pedido fue actualizado.
+        '400':
+          description: Solicitud inválida. El ID del pedido no existe o el estado proporcionado no es válido.
+        '401':
+          description: Usuario no autorizado para realizar esta acción.
+
+  /productos:
+    summary: Productos de la aplicación web.
+    description: Path predeterminado para obtener los productos por páginas.
+    get:
+      tags:
+        - Productos
+      summary: Retorna todos los productos
+      description: >-
+        Retorna todos los productos en la base de datos ordenados por páginas y 
+        cantidad de productos por página. También acepta filtros como categoría, 
+        nombre y descripción.
+      parameters:
+        - name: Categoria
+          in: query
+          description: Categoria del producto.
+          required: false
+          schema:
+            type: string
+        - name: Nombre
+          in: query
+          description: Nombre del producto.
+          required: false
+          schema:
+            type: string
+        - name: Descripcion
+          in: query
+          description: Descripcion del producto.
+          required: false
+          schema:
+            type: string
+        - name: Page
+          in: query
+          description: Numero de pagina.
+          required: false
+          schema:
+            type: integer
+        - name: Limit
+          in: query
+          description: Cantidad de productos por pagina.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Retorna lista de productos paginados.
+        '204':
+          description: Lista de productos vacía o objeto null.
+        '400':
+          description: Verificar query params, filtros enviados y productos por pagina con numero de pagina.
+
+  '/usuarios/{usuarioId}/notificaciones':
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtiene notificaciones del usuario
+      description: Se retornan las notificaciones del usuario que tenga el id enviado por parámetro.
+      parameters:
+        - name: usuarioId
+          in: path
+          description: Identificador del usuario.
+          required: true
+          schema:
+            type: integer
+          example: 351
+        - name: Page
+          in: query
+          description: Número de página.
+          schema:
+            type: integer
+        - name: Limit
+          in: query
+          description: Cantidad de notificaciones por página.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Envío de notificaciones con éxito.
+        '500':
+          description: Error al obtener notificaciones.
+
+  '/usuarios/{usuarioId}/notificaciones/{id}':
+    patch:
+      tags:
+        - Notificaciones
+      summary: Marca una notificación como leída
+      description: Se marca la notificación con el ID respectivo como leída para el usuario con el ID enviado por parámetro.
+      parameters:
+        - name: usuarioId
+          in: path
+          description: Identificador del usuario.
+          required: true
+          schema:
+            type: integer
+          example: 12
+        - name: id
+          in: path
+          description: Identificador de la notificación.
+          required: true
+          schema:
+            type: integer
+          example: 42
+      responses:
+        '200':
+          description: Notificación marcada como leída.
+        '404':
+          description: Notificación no encontrada.
+        '500':
+          description: El servidor no puede marcar la notificación como leída.openapi: 3.0.2
+info:
+  title: Tienda Sol API
+  version: 1.0.0
+  description: >-
+    Una nueva API para la compra desde cualquier lugar, comparar productos, 
+    acceder a múltiples métodos de pago y recibir los artículos en casa en pocos días.
+
+tags:
+  - name: Pedidos
+    description: ''
+  - name: Productos
+    description: ''
+  - name: Notificaciones
+    description: ''
+
+paths:
+  /pedidos:
+    summary: Operaciones de pedidos.
+    get:
+      tags:
+        - Pedidos
+      summary: Lista de pedidos del usuario autenticado
+      description: Devuelve una lista de pedidos hechos por el usuario consultante.
+      responses:
+        '200':
+          description: Retorno de historial exitoso.
+        '400':
+          description: El historial no está disponible o ha ocurrido un error.
+    post:
+      tags:
+        - Pedidos
+      summary: Crea un pedido
+      description: Crea un pedido a partir de la información dentro del JSON body.
+      requestBody:
+        description: Datos del pedido a crear.
+        required: true
+        content:
+          application/json:
+            examples:
+              pedidoEjemplo:
+                value:
+                  id: 123
+                  comprador:
+                    compradorId: 456
+                    nombre: Brian Perez
+                    email: Perez@example.com
+                    telefono: '123456789'
+                    tipo: COMPRADOR
+                    fechaAlta: '2025-09-24T12:00:00Z'
+                  vendedor:
+                    vendedorId: 789
+                    nombre: Tienda Sol
+                    email: tienda@example.com
+                    telefono: '987654321'
+                    tipo: VENDEDOR
+                    fechaAlta: '2024-01-15T09:30:00Z'
+                  items:
+                    - producto:
+                        productoId: 321
+                        vendedor:
+                          vendedorId: 789
+                          nombre: Tienda Sol
+                          email: tienda@example.com
+                          telefono: '987654321'
+                          tipo: VENDEDOR
+                          fechaAlta: '2024-01-15T09:30:00Z'
+                        titulo: Notebook Gamer
+                        descripcion: Notebook con RTX 3050
+                        categorias:
+                          - nombre: Electrónica
+                        precio: 350000
+                        moneda: PESO_ARG
+                        stock: 10
+                        fotos:
+                          - 'https://miservidor.com/fotos/yo.jpg'
+                          - 'https://miservidor.com/holamundo.jpg'
+                        activo: true
+                      cantidad: 2
+                      precioUnitario: 350000
+                  moneda: PESO_ARG
+                  direccionEntrega:
+                    calle: Av. Siempre Viva
+                    altura: '742'
+                    piso: '2'
+                    departamento: B
+                    codigoPostal: '1824'
+                    ciudad: Lanús
+                    provincia: Buenos Aires
+                    pais: Argentina
+                    lat: -34.702
+                    lon: -58.396
+      responses:
+        '201':
+          description: El pedido ha sido creado exitosamente.
+        '400':
+          description: Envía status 400 cuando no se envió bien el pedido.
+        '409':
+          description: No hay suficiente stock del producto solicitado.
+
+  '/pedidos/{id}':
+    patch:
+      tags:
+        - Pedidos
+      summary: Cambiar el estado de un pedido
+      description: >-
+        Permite actualizar el estado de un pedido específico enviando su ID en la URL
+        y el nuevo estado en el cuerpo de la solicitud. El sistema valida si el 
+        usuario autenticado tiene permiso para realizar el cambio.
+      parameters:
+        - name: id
+          in: path
+          description: Identificador numérico del pedido que se desea modificar.
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 452
+      requestBody:
+        description: Es necesario enviar el nuevo estado para el pedido.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  description: El nuevo estado del pedido.
+                  enum: ["ENVIADO","CANCELADO"]
+              required:
+                - estado
+            example:
+              estado: "ENVIADO"
+      responses:
+        '200':
+          description: Acción realizada con éxito. El estado del pedido fue actualizado.
+        '400':
+          description: Solicitud inválida. El ID del pedido no existe o el estado proporcionado no es válido.
+        '401':
+          description: Usuario no autorizado para realizar esta acción.
+
+  /productos:
+    summary: Productos de la aplicación web.
+    description: Path predeterminado para obtener los productos por páginas.
+    get:
+      tags:
+        - Productos
+      summary: Retorna todos los productos
+      description: >-
+        Retorna todos los productos en la base de datos ordenados por páginas y 
+        cantidad de productos por página. También acepta filtros como categoría, 
+        nombre y descripción.
+      parameters:
+        - name: Categoria
+          in: query
+          description: Categoria del producto.
+          required: false
+          schema:
+            type: string
+        - name: Nombre
+          in: query
+          description: Nombre del producto.
+          required: false
+          schema:
+            type: string
+        - name: Descripcion
+          in: query
+          description: Descripcion del producto.
+          required: false
+          schema:
+            type: string
+        - name: Page
+          in: query
+          description: Numero de pagina.
+          required: false
+          schema:
+            type: integer
+        - name: Limit
+          in: query
+          description: Cantidad de productos por pagina.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Retorna lista de productos paginados.
+        '204':
+          description: Lista de productos vacía o objeto null.
+        '400':
+          description: Verificar query params, filtros enviados y productos por pagina con numero de pagina.
+
+  '/usuarios/{usuarioId}/notificaciones':
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtiene notificaciones del usuario
+      description: Se retornan las notificaciones del usuario que tenga el id enviado por parámetro.
+      parameters:
+        - name: usuarioId
+          in: path
+          description: Identificador del usuario.
+          required: true
+          schema:
+            type: integer
+          example: 351
+        - name: Page
+          in: query
+          description: Número de página.
+          schema:
+            type: integer
+        - name: Limit
+          in: query
+          description: Cantidad de notificaciones por página.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Envío de notificaciones con éxito.
+        '500':
+          description: Error al obtener notificaciones.
+
+  '/usuarios/{usuarioId}/notificaciones/{id}':
+    patch:
+      tags:
+        - Notificaciones
+      summary: Marca una notificación como leída
+      description: Se marca la notificación con el ID respectivo como leída para el usuario con el ID enviado por parámetro.
+      parameters:
+        - name: usuarioId
+          in: path
+          description: Identificador del usuario.
+          required: true
+          schema:
+            type: integer
+          example: 12
+        - name: id
+          in: path
+          description: Identificador de la notificación.
+          required: true
+          schema:
+            type: integer
+          example: 42
+      responses:
+        '200':
+          description: Notificación marcada como leída.
+        '404':
+          description: Notificación no encontrada.
+        '500':
+          description: El servidor no puede marcar la notificación como leída.

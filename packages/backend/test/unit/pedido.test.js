@@ -14,13 +14,11 @@ describe("factoryNotification.crearSegunPedido", () => {
     const comprador = new Usuario({ id: 20, nombre: "CompradorTest" });
     const direccionEntrega = { pasarAString: () => "Calle Falsa 123" };
     const producto = { nombre: "Producto Test" };
-    const itemPedido = { producto };
+    const itemPedido = { producto: producto };
     const pedido = new Pedido({
-        id: "PED-2",
-        vendedor,
-        comprador,
+        vendedor: vendedor,
+        comprador: comprador,
         items: [itemPedido],
-        direccionEntrega,
         moneda: Moneda.PESO_ARG
     });
 

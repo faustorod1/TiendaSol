@@ -1,4 +1,5 @@
-import {Producto} from "../entities/producto.js";
+import { Producto } from "../entities/producto.js";
+import { ProductoRepository } from "../models/repositories/productoRepository.js";
 
 class ProductoService {
     constructor(productoRepository) {

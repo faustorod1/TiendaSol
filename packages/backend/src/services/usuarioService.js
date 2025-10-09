@@ -1,6 +1,8 @@
 import { Usuario } from '../models/usuario.js';
 import { Notificacion } from '../models/notificacion.js';
-export class usuarioService {
+import { UsuarioRepository } from "../models/repositories/usuarioRepository.js"
+
+export class UsuarioService {
   constructor(usuarioRepository) {
     this.usuarioRepository = usuarioRepository;
   }
@@ -17,18 +19,18 @@ export class usuarioService {
 
         return {
             total: count,
-            page,
-            limit,
+            page: page,
+            limit: limit,
             notificaciones: rows
         };
     }
 
   async marcarNotificacionComoLeida(usuarioId, id) {
-    const notificacion = await this.Notificacion.findOne({ where: { id, usuarioId } });
-    if (!notificacion) return null;
+    const notificacionActualizada = await this.usuarioRepository.marcarNotificacionComoLeida(usuarioId, id);
+    if (notificacionActualizada === null) {
+      throw new Error("No se pudo encontrar la notificación para marcarla como leída.");
+    }
 
-    notificacion.leida = true;
-    await notificacion.save();
-    return notificacion;
+    return notificacionActualizada;
   }
 }

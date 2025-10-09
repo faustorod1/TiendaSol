@@ -1,13 +1,23 @@
 import { PedidoModel } from "../../schemas/pedidoSchema";
+import { CambioEstadoPedido } from "../../schemas/cambioEstadoPedido.js"
 
-export class PedidoRepository { //todo implementar la paginacion
+export class PedidoRepository {
     constructor() {
         this.model = PedidoModel;
     }
 
+    // TODO
+    async crearPedido(nuevoPedido){}
+
     async save(pedido) {
         const nuevoPedido = new this.model(pedido);
         return await nuevoPedido.save();
+    }
+
+    async findByPage(nroPagina, elemsXPagina) {
+        return await this.model.find()
+            .skip((nroPagina - 1) * elemsXPagina)
+            .limit(elemsXPagina);
     }
 
     async findAll(){
@@ -17,29 +27,8 @@ export class PedidoRepository { //todo implementar la paginacion
     async findById(id) {
         return await this.model.findById(id);
     }
-    
-    async cambiarEstado(pedidoId, nuevoEstado, motivoNuevo, usuario) {
-        try {
-            const pedido = await this.model.findById(pedidoId);
-            if (!pedido) throw new Error('Pedido no encontrado');
 
-            const cambioEstado = new CambioEstadoPedido(pedido, pedido.estado, pedido.motivo);
-            pedido.historialEstados.push(cambioEstado);
-
-            pedido.actualizarEstado(nuevoEstado, usuario, motivoNuevo);
-
-            await this.save(pedido);
-            return pedido;
-        } catch (error) {
-            console.error('Error al cambiar estado del pedido:', error);
-            throw error;
-        }
+    async consultarHistorialPedidos(id_usuario) {
+        return await this.model.find({ "comprador.id": id_usuario });
     }
-    async consultarHistorialPedidos(id_usuario) {//todo
-        return await this.model.array.findAll().filter(pedido => {
-             pedido.getComprador().getId().equals(id_usuario);
-        });
-    }
-
-    
 }

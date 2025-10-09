@@ -1,6 +1,7 @@
 import {usuarioController} from '../controllers/usuarioController.js';
 import { usuarioErrorHandler } from '../middlewares/usuarioErrorHandler.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
+import { authMockMiddleware } from '../middlewares/authMockMiddleware.js';
 import express from 'express';
 
 const pathUsuario = "/usuarios";
@@ -16,6 +17,9 @@ export default function usuarioRoutes(getController) {
     const controller = getController(usuarioController);
 
     router.use(loggerMiddleware);
+
+    // ? Para desarrollo
+    router.use(authMockMiddleware);
 
     router.get(pathNotificacion, async (req, res) => {
         try {

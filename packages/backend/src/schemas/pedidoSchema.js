@@ -6,11 +6,13 @@ import { estadoPedido } from '../models/entities/estadoPedido.js';
 
 const productoSchema = new mongoose.Schema({
     comprador:{
-        type: usuarioSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comprador_id",
         required: true,
     },
     vendedor:{
-        type: usuarioSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vendedor_id",
         required: true,
     },
 

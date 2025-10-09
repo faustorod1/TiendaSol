@@ -19,7 +19,6 @@ class Pedido{
     historialEstados;
 
     /**
-     * @param {string} id
      * @param {Usuario} comprador
      * @param {Usuario} vendedor
      * @param {ItemPedido[]} items 
@@ -29,8 +28,7 @@ class Pedido{
      * @param {Date} fechaCreacion
      * @param {CambioEstadoPedido[]} historialEstados
      */
-    constructor(id,comprador, vendedor, items, moneda, direccionEntrega){
-        this._id = id;
+    constructor(comprador, vendedor, items, moneda, direccionEntrega){
         this.comprador = comprador;
         this.vendedor = vendedor;
         this.items = items;

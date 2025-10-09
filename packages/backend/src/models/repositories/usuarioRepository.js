@@ -44,5 +44,33 @@ export class UsuarioRepository {
     async delete(id) {
         return await this.model.findByIdAndDelete(id);
     }
+ 
+    async marcarNotificacionComoLeida(usuarioId, notificacionId) {
+        const resultado = await UsuarioModel.updateOne(
+            { _id: usuarioId },
+            // 2. Operación de actualización: Modifica solo el campo 'leida' del elemento del array.
+            { $set: { "notificaciones.$[elem].leida": true } },
+            // 3. Opciones: Aquí le decimos a MongoDB cómo encontrar el elemento 'elem' correcto.
+            {
+                arrayFilters: [
+                    { "elem._id": notificacionId }
+                ]
+            }
+        );
+        return resultado.modifiedCount === 1;
+    }
 
+    async marcarNotificacionComoLeida(usuarioId, notificacionId) {
+        const usuarioActualizado = await UsuarioModel.findOneAndUpdate(
+            { _id: usuarioId,"notificaciones._id": notificacionId },
+            { $set: { "notificaciones.$.leida": true }},
+            { new: true, projection: { "notificaciones.$": 1 }}
+        );
+        // El resultado de la proyección es un documento de usuario que contiene
+        // únicamente el array 'notificaciones' con un solo elemento dentro.
+        if (usuarioActualizado && usuarioActualizado.notificaciones.length > 0) {
+            return usuarioActualizado.notificaciones[0]; // Devolvemos el objeto de la notificación
+        }
+        return null; 
+    }
 }

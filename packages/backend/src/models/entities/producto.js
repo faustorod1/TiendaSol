@@ -19,6 +19,8 @@ class Producto {
     fotos;
     /** @type boolean */
     activo;
+    /** @type number */
+    cantidadVendida;
 
     /**
      * @param {string} id

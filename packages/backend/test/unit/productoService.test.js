@@ -2,6 +2,7 @@ import { productoService } from "../../src/services/productoService.js";
 import { Producto } from "../../src/models/producto.js";
 import { Moneda } from "../../src/models/moneda.js";
 import { Usuario } from "../../src/models/usuario.js";
+import { TipoUsuario } from "../../src/models/tipoUsuario.js";
 import { Categoria } from "../../src/models/categoria.js";
 import { paginationSchema } from "../../src/schemas/paginationSchema.js";
 import { jest } from "@jest/globals"
@@ -16,9 +17,9 @@ describe("productoService.buscarTodos", () =>{
 
     test("Estructura de paginacion default", () => {
 
-        const vendedor1 = new Usuario("1");
-        const vendedor2 = new Usuario("2");
-        const vendedor3 = new Usuario("3");
+        const vendedor1 = new Usuario("1", "vendedor1", "email", 123, TipoUsuario.VENDEDOR, "12/02/2025");
+        const vendedor2 = new Usuario("2", "vendedor2", "email", 123, TipoUsuario.VENDEDOR, "12/02/2025");
+        const vendedor3 = new Usuario("3", "vendedor3", "email", 123, TipoUsuario.VENDEDOR, "12/02/2025");
 
         const sampleData = [
             new Producto(
