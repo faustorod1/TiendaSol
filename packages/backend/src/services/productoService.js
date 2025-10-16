@@ -10,9 +10,10 @@ export class ProductoService {
         const nroPagina = Math.max(Number(page), 1);
         const elemsXPagina = Math.min(Math.max(Number(limit), 1), 100);
 
-        const productos = this.productoRepository.findByPage(nroPagina, elemsXPagina, filtros);
+        const productos = await this.productoRepository.findByPage(nroPagina, elemsXPagina, filtros);
 
-        const total = this.productoRepository.count();
+        // ? es total de productos o total de este vendedor?
+        const total = await this.productoRepository.count();
         const totalPaginas = Math.ceil(total / elemsXPagina);
 
         return {

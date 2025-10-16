@@ -21,18 +21,30 @@ export class DireccionEntrega {
     lon;
 
     /**
-     * @param {string} calle
-     * @param {string} altura
-     * @param {string} piso
-     * @param {string} departamento
-     * @param {string} codigoPostal
-     * @param {string} ciudad
-     * @param {string} provincia
-     * @param {string} pais
-     * @param {string} lat
-     * @param {string} lon
+     * @param {Object} params
+     * @param {string} params.calle
+     * @param {string} params.altura
+     * @param {string} [params.piso]
+     * @param {string} [params.departamento]
+     * @param {string} params.codigoPostal
+     * @param {string} params.ciudad
+     * @param {string} params.provincia
+     * @param {string} params.pais
+     * @param {string} [params.lat]
+     * @param {string} [params.lon]
      */
-    constructor(calle, altura, piso, departamento, codigoPostal, ciudad, provincia, pais, lat, lon) {
+    constructor({
+        calle,
+        altura,
+        piso = "",
+        departamento = "",
+        codigoPostal,
+        ciudad,
+        provincia,
+        pais,
+        lat = "",
+        lon = ""
+    }) {
         this.calle = calle;
         this.altura = altura;
         this.piso = piso;

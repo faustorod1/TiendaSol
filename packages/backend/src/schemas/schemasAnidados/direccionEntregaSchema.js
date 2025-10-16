@@ -14,12 +14,10 @@ export const direccionEntregaSchema = new mongoose.Schema({
     },
     piso: {
         type: String,
-        required: true,
         trim: true,
     },
     departamento: {
         type: String,
-        required: true,
         trim: true, 
     },
     codigoPostal: {
@@ -44,12 +42,10 @@ export const direccionEntregaSchema = new mongoose.Schema({
     },
     lat: {
         type: String,
-        required: true,
         trim: true,
     },
     lon: {
         type: String,
-        required: true,
         trim: true,
     },
 });

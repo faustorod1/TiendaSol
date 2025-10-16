@@ -1,3 +1,6 @@
+import { EstadoPedido } from "./estadoPedido.js";
+import { Notificacion } from "./notificacion.js";
+
 export class FactoryNotification {
 
     //------- methods -------//
@@ -46,6 +49,8 @@ export class FactoryNotification {
         mensaje = mensaje.replaceAll('{{COMPRADOR}}', pedido.comprador.nombre);
         mensaje = mensaje.replaceAll('{{PRODUCTOS}}', nombresProductos.join('\n'));
         mensaje = mensaje.replaceAll('{{TOTAL}}', pedido.calcularTotal());
+        console.log(pedido.direccionEntrega);
+        
         mensaje = mensaje.replaceAll('{{DIRECCION_ENTREGA}}', pedido.direccionEntrega.pasarAString());
         
         let destinatario;

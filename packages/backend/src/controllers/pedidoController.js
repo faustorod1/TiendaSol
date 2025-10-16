@@ -5,7 +5,7 @@ import { StockInsuficienteError} from "../models/entities/errors/stockInsuficien
 import { z } from "zod";
 
 export class PedidoController {
-    costructor (pedidoService){
+    constructor (pedidoService){
         this.pedidoService = pedidoService;
     }
     
@@ -72,8 +72,6 @@ export class PedidoController {
         }
         const usuarioId = userIdResult.data;
 
-        // todo: validar usuarioId, deberia ser un token stateful y deberia pasar por un middleware de autenticacion
-
         this.pedidoService.consultarHistorialPedidos(usuarioId)
             .then(historial => res.status(200).json(historial))
             .catch(error => res.status(400).json({ error: error.message }));
@@ -98,14 +96,24 @@ const cambiarEstadoSchema = z.object({
 });
 
 const itemPedidoSchema = z.object({
-    productoId: z
-        .string()
-        .transform(v => Number(v))
-        .pipe(z.number().int().positive()),
+    productoId: objectIdSchema,
     cantidad: z
         .string()
         .transform(v => Number(v))
         .pipe(z.number().int().positive())
+});
+
+const direccionEntregaSchema = z.object({
+    calle: z.string().min(1, "Calle es obligatoria"),
+    altura: z.string().min(1, "Altura es obligatoria"),
+    piso: z.string().optional(),
+    departamento: z.string().optional(),
+    codigoPostal: z.string().min(1, "Código postal es obligatorio"),
+    ciudad: z.string().min(1, "Ciudad es obligatoria"),
+    provincia: z.string().min(1, "Provincia es obligatoria"),
+    pais: z.string().min(1, "País es obligatorio"),
+    lat: z.string().optional(),
+    lon: z.string().optional()
 });
 
 const crearPedidoSchema = z.object({
@@ -113,5 +121,5 @@ const crearPedidoSchema = z.object({
     vendedor: userIdSchema,
     items: z.array(itemPedidoSchema).nonempty(),
     moneda: z.enum(Object.values(Moneda)),
-    direccionEntrega: z.string()
+    direccionEntrega: direccionEntregaSchema
 });

@@ -3,7 +3,7 @@ import { Notificacion } from "../models/entities/notificacion.js";
 import { z } from "zod";
 
 export class UsuarioController {
-    costructor(usuarioService){
+    constructor(usuarioService){
         this.usuarioService = usuarioService;
     }
 

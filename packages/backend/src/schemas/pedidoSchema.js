@@ -41,6 +41,7 @@ const pedidoSchema = new mongoose.Schema({
     fechaCreacion: {
         type: Date,
         required: true,
+        default: Date.now,
     },
     historialEstados: {
         type: [cambioEstadoPedidoSchema],

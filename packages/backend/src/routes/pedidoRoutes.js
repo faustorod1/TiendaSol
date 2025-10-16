@@ -1,6 +1,7 @@
 import { PedidoController } from '../controllers/pedidoController.js';
 import { pedidoErrorHandler } from '../middlewares/pedidoMiddleware.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
+import { authMockMiddleware } from '../middlewares/authMockMiddleware.js';
 import express from 'express';
 
 const pathPedido = "/pedidos";
@@ -10,6 +11,9 @@ export default function pedidoRoutes(getController) {
     const controller = getController(PedidoController);
     
     router.use(loggerMiddleware);
+
+    // ? Para desarrollo
+    router.use(authMockMiddleware);
 
     router.post(pathPedido, async (req, res) => {
         try {
