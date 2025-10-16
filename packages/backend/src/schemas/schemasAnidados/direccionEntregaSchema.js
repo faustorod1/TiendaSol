@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { DireccionEntrega } from '../models/entities/direccionEntrega.js';
+import { DireccionEntrega } from '../../models/entities/direccionEntrega.js';
 
-const direccionEntregaSchema = new mongoose.Schema({
+export const direccionEntregaSchema = new mongoose.Schema({
     calle: {
         type: String,
         required: true,
@@ -14,12 +14,10 @@ const direccionEntregaSchema = new mongoose.Schema({
     },
     piso: {
         type: String,
-        required: true,
         trim: true,
     },
     departamento: {
         type: String,
-        required: true,
         trim: true, 
     },
     codigoPostal: {
@@ -44,17 +42,15 @@ const direccionEntregaSchema = new mongoose.Schema({
     },
     lat: {
         type: String,
-        required: true,
         trim: true,
     },
     lon: {
         type: String,
-        required: true,
         trim: true,
     },
 });
 
 direccionEntregaSchema.loadClass(DireccionEntrega);
 
-export const CDireccionEntregaModel = mongoose.model('DireccionEntrega', direccionEntregaSchema);
+export const DireccionEntregaModel = mongoose.model('DireccionEntrega', direccionEntregaSchema);
 

@@ -1,4 +1,4 @@
-class Producto {
+export class Producto {
     /** @type mongoose.Types.ObjectId */
     _id;
     /** @type Usuario */

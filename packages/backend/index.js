@@ -1,10 +1,13 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
 import cors from "cors";
 
+import routes from './src/routes/routes.js';
+
 import { Server } from "./server.js";
+import { MongoDBClient } from "./src/config/database.js";
 
 import { PedidoRepository } from './src/models/repositories/pedidoRepository.js';
 import { ProductoRepository } from './src/models/repositories/productoRepository.js';
@@ -18,7 +21,6 @@ import { PedidoController } from './src/controllers/pedidoController.js';
 import { ProductoController } from './src/controllers/productoController.js';
 import { UsuarioController } from './src/controllers/usuarioController.js';
 
-import { routes } from './src/routes/routes.js';
 
 const app = express();
 app.use(express.json());
@@ -49,7 +51,7 @@ const pedidoService = new PedidoService(pedidoRepository, productoRepository, us
 
 const usuarioController = new UsuarioController(usuarioService);
 const productoController = new ProductoController(productoService);
-const pedidoController = new PedidoControllerroller(pedidoService);
+const pedidoController = new PedidoController(pedidoService);
 
 server.setController(UsuarioController, usuarioController);
 server.setController(ProductoController, productoController);

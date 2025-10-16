@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import { ItemPedido } from '../models/entities/itemPedido.js';
-import { productoSchema } from '.productoSchema.js';
+import { ItemPedido } from '../../models/entities/itemPedido.js';
 
 export const itemPedidoSchema = new mongoose.Schema({
     producto:{

@@ -1,11 +1,11 @@
 import { z } from "zod"
 
-export class productoController {
+export class ProductoController {
     constructor(productoService) {
         this.productoService = productoService;
     }
 
-    buscarTodos(req, res) {
+    async buscarTodos(req, res) {
         const paginationResult = paginationSchema.safeParse(req.query);
         if (!paginationResult.success) {
             return res.status(400).json(paginationResult.error.issues);
@@ -18,7 +18,7 @@ export class productoController {
         }
         const filtros = filterResult.data;
 
-        const productosPaginados = this.productoService.buscarTodos(page, limit, filtros)
+        const productosPaginados = await this.productoService.buscarTodos(page, limit, filtros)
         if(!productosPaginados) {
             return res.status(204).send()
         }
@@ -67,6 +67,6 @@ const filterSchema = z.object({
     },
     {
         message: "precioMax debe ser mayor o igual que precioMin",
-        path: [precioMax]
+        path: ["precioMax"]
     }
 );

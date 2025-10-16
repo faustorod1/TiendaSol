@@ -1,4 +1,5 @@
-import { UsuarioModel } from "../../schemas/usuarioSchema";
+import { UsuarioModel } from "../../schemas/usuarioSchema.js";
+import mongoose from "mongoose";
 
 export class UsuarioRepository {
 
@@ -10,11 +11,17 @@ export class UsuarioRepository {
         return await this.model.find();
     }
 
+    async findById(usuarioId) {
+        const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
+        return await this.model.findById(objUsuario);
+    }
+
     async findNotificationsByPage(filtro, limit, offset) {
         const { usuarioId, leida } = filtro;
 
+        const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
         // Busca el usuario por ID
-        const usuario = await this.model.findById(usuarioId).lean();
+        const usuario = await this.model.findById(objUsuario).lean();
         if (!usuario) {
             throw new Error("Usuario no encontrado");
         }
@@ -61,8 +68,9 @@ export class UsuarioRepository {
     }
 
     async marcarNotificacionComoLeida(usuarioId, notificacionId) {
+        const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
         const usuarioActualizado = await UsuarioModel.findOneAndUpdate(
-            { _id: usuarioId,"notificaciones._id": notificacionId },
+            { _id: objUsuario,"notificaciones._id": notificacionId },
             { $set: { "notificaciones.$.leida": true }},
             { new: true, projection: { "notificaciones.$": 1 }}
         );

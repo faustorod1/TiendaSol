@@ -1,5 +1,6 @@
-import { PedidoModel } from "../../schemas/pedidoSchema";
-import { CambioEstadoPedido } from "../../schemas/cambioEstadoPedido.js"
+import { PedidoModel } from "../../schemas/pedidoSchema.js";
+import mongoose from "mongoose";
+//import { CambioEstadoPedido } from "../../schemas/CambioEstadoPedido.js"
 
 export class PedidoRepository {
     constructor() {
@@ -8,17 +9,17 @@ export class PedidoRepository {
 
     async save(pedido) {
         const pedidoParaGuardar = {
-            comprador: pedido.comprador.id,
-            vendedor: pedido.vendedor.id,
+            comprador: mongoose.Types.ObjectId.createFromHexString(pedido.comprador.id),
+            vendedor: mongoose.Types.ObjectId.createFromHexString(pedido.vendedor.id),
 
             items: pedido.items.map(item => ({
-                producto: item.producto.id,
+                producto: mongoose.Types.ObjectId.createFromHexString(item.producto.id),
                 cantidad: item.cantidad,
                 precioUnitario: item.precioUnitario 
             })),
             moneda: pedido.moneda,
             direccionEntrega: pedido.direccionEntrega,
-            estado: pedido.estado 
+            estado: pedido.estado,
         };
 
         const nuevoPedidoModel = new PedidoModel(pedidoParaGuardar);
@@ -40,6 +41,7 @@ export class PedidoRepository {
     }
 
     async consultarHistorialPedidos(id_usuario) {
-        return await this.model.find({ "comprador.id": id_usuario });
+        const objUsuario = mongoose.Types.ObjectId.createFromHexString(id_usuario);
+        return await this.model.find({ "comprador_id": objUsuario });
     }
 }

@@ -1,4 +1,4 @@
-const EstadoPedido = Object.freeze({ /*ENUM*/
+export const EstadoPedido = Object.freeze({ /*ENUM*/
     PENDIENTE:"PENDIENTE",
     CONFIRMADO:"CONFIRMADO",
     EN_PREPARACION:"EN_PREPARACION",

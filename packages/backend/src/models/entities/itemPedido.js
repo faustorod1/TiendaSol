@@ -1,4 +1,4 @@
-class itemPedido{
+export class ItemPedido{
     /** @type {Producto} */
     producto;
     /** @type {integer} */

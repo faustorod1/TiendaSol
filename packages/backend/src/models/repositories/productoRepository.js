@@ -1,4 +1,5 @@
-import { ProductoModel } from "../../schemas/productoSchema";
+import { ProductoModel } from "../../schemas/productoSchema.js";
+import mongoose from "mongoose";
 
 export class ProductoRepository {
     constructor() {
@@ -7,7 +8,7 @@ export class ProductoRepository {
     async findByPage(nroPagina, elemsXPagina, filtros) {
         const filtrosValidos = {};
         if (filtros.vendedor) {
-            filtrosValidos.vendedor = vendedor;
+            filtrosValidos.vendedor = mongoose.Types.ObjectId.createFromHexString(filtros.vendedor);
         }
         if (filtros.titulo) {
             filtrosValidos.titulo = RegExp(filtros.titulo, "i");
@@ -36,7 +37,7 @@ export class ProductoRepository {
                 sort._id = -1;
         }
 
-        return this.model.find(filtrosValidos)
+        return await this.model.find(filtrosValidos)
         .sort(sort)
         .skip((nroPagina - 1) * elemsXPagina)
         .limit(elemsXPagina);
@@ -52,6 +53,10 @@ export class ProductoRepository {
 
     async findManyById(ids){
         return await this.model.find({ _id: { $in : ids } });
+    }
+
+    async count() {
+        return await this.model.countDocuments();
     }
 
     async findByTitle(titulo) {

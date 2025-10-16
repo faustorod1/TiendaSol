@@ -1,13 +1,14 @@
-import { Pedido } from "../entities/pedido.js";
-import { ItemPedido } from "../entities/itemPedido.js";
-import { EstadoPedido } from "../entities/EstadoPedido.js"
+import { Pedido } from "../models/entities/pedido.js";
+import { ItemPedido } from "../models/entities/itemPedido.js";
+import { EstadoPedido } from "../models/entities/estadoPedido.js";
 import { PedidoRepository } from "../models/repositories/pedidoRepository.js";
 import { ProductoRepository } from "../models/repositories/productoRepository.js";
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
+import { DireccionEntrega } from "../models/entities/direccionEntrega.js";
 
-class PedidoService {
+export class PedidoService {
     constructor(pedidoRepository, productoRepository, usuarioRepository) {
         this.pedidoRepository = pedidoRepository
         this.productoRepository = productoRepository
@@ -15,11 +16,11 @@ class PedidoService {
     }
 
     async crearPedido(pedidoJSON){
-        const comprador = this.usuarioRepository.findById(pedidoJSON.comprador);
-        const vendedor = this.usuarioRepository.findById(pedidoJSON.vendedor);
+        const comprador = await this.usuarioRepository.findById(pedidoJSON.comprador);
+        const vendedor = await this.usuarioRepository.findById(pedidoJSON.vendedor);
 
         const idsProductos = pedidoJSON.items.map(item => item.productoId);
-        const productos = this.productoRepository.findManyById(idsProductos);
+        const productos = await this.productoRepository.findManyById(idsProductos);
         const productosMap = new Map(productos.map(p => [p.id.toString(), p]));
         
         const items = pedidoJSON.items.map(item => {
@@ -30,12 +31,14 @@ class PedidoService {
             return new ItemPedido(producto, item.cantidad, producto.precio);
         });
 
+        const direccionEntrega = new DireccionEntrega(pedidoJSON.direccionEntrega);
+
         const nuevoPedido = new Pedido(
             comprador,
             vendedor,
             items,
             pedidoJSON.moneda,
-            pedidoJSON.direccionEntrega
+            direccionEntrega
         );
 
         await this.usuarioRepository.update(vendedor);
@@ -66,12 +69,12 @@ class PedidoService {
     }
 
     async efectuarCambioEstado(pedidoId, nuevoEstado, motivoNuevo, usuario) {
-        const pedido = this.pedidoRepository.findById(pedidoId);
+        const pedido = await this.pedidoRepository.findById(pedidoId);
         pedido.actualizarEstado(nuevoEstado, nuevoEstado, usuario);
-        this.pedidoRepository.update(pedido);
+        await this.pedidoRepository.update(pedido);
         // Los guarda porque tienen nuevas notificaciones
-        this.usuarioRepository.update(pedido.comprador);
-        this.usuarioRepository.update(pedido.vendedor);
+        await this.usuarioRepository.update(pedido.comprador);
+        await this.usuarioRepository.update(pedido.vendedor);
     }
 
     async consultarHistorialPedidos(idUsuario){

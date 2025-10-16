@@ -1,4 +1,4 @@
-class Categoria{
+export class Categoria{
     /** @type {string} */
     nombre;
 

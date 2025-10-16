@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import { Producto } from '../models/entities/producto.js';
-import { usuarioSchema } from '../usuarioSchema.js';
-import { categoriaSchema } from '../schemasAnidados/categoriaSchema.js';
 import { Moneda } from '../models/entities/moneda.js'
+import { categoriaSchema } from './schemasAnidados/categoriaSchema.js';
 
 const productoSchema = new mongoose.Schema({
     vendedor:{
-        type: usuarioSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vendedor_id",
         required: true,
     },
     titulo:{

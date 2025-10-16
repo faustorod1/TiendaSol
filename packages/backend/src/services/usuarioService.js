@@ -1,5 +1,5 @@
-import { Usuario } from '../models/usuario.js';
-import { Notificacion } from '../models/notificacion.js';
+import { Usuario } from '../models/entities/usuario.js';
+import { Notificacion } from '../models/entities/notificacion.js';
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js"
 
 export class UsuarioService {
