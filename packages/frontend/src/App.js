@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import Header from "./components/mainPage/Header";
-import NavBar from "./components/mainPage/NavBar";
 import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
+
+import Footer from "./components/mainPage/Footer";
+import SiteHeader from "./components/mainPage/SiteHeader";
 
 import "./App.css";
 
+
 function App() {
+
+  let itemCount = 3; // Cantidad de artículos en el carrito
 
   /*
   const [message, setMessage] = useState("");
@@ -20,9 +24,13 @@ function App() {
  
   return (
     <div className="App">
-      <Header></Header>
-      <NavBar></NavBar>
-      <ProductSearchBar></ProductSearchBar>
+      <SiteHeader cartItemCount={itemCount} />
+      {/*<ProductSearchBar></ProductSearchBar>*/}
+      <main>
+        <p>Contenido principal de tu página...</p>
+        <div style={{ height: '200vh' }}></div>
+      </main>
+      <Footer />
     </div>
   );
 }
