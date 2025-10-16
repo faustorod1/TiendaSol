@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
+import { Pedido } from '../models/entities/pedido.js';
 import { Moneda } from '../models/entities/moneda.js'
-import { usuarioSchema } from '../usuarioSchema.js';
-import { direccionEntregaSchema } from '../schemasAnidados/direccionEntregaSchema.js'
-import { estadoPedido } from '../models/entities/estadoPedido.js';
+import { EstadoPedido } from '../models/entities/estadoPedido.js';
+import { direccionEntregaSchema } from './schemasAnidados/direccionEntregaSchema.js'
+import { itemPedidoSchema } from './schemasAnidados/itemPedidoSchema.js';
+import { cambioEstadoPedidoSchema } from './schemasAnidados/cambioEstadoPedidoSchema.js'
 
-const productoSchema = new mongoose.Schema({
+const pedidoSchema = new mongoose.Schema({
     comprador:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comprador_id",
@@ -46,7 +48,7 @@ const productoSchema = new mongoose.Schema({
     }
     },{
     timestamps: true,
-    collection: 'productos'
+    collection: 'pedidos'
 });
 
 pedidoSchema.loadClass(Pedido);

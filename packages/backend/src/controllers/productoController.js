@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export class productoController {
+export class ProductoController {
     constructor(productoService) {
         this.productoService = productoService;
     }
@@ -67,6 +67,6 @@ const filterSchema = z.object({
     },
     {
         message: "precioMax debe ser mayor o igual que precioMin",
-        path: [precioMax]
+        path: ["precioMax"]
     }
 );

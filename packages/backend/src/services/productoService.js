@@ -1,7 +1,7 @@
-import { Producto } from "../entities/producto.js";
+import { Producto } from "../models/entities/producto.js";
 import { ProductoRepository } from "../models/repositories/productoRepository.js";
 
-class ProductoService {
+export class ProductoService {
     constructor(productoRepository) {
         this.productoRepository = productoRepository;
     }

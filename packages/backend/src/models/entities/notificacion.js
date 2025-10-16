@@ -1,4 +1,4 @@
-class Notificacion {
+export class Notificacion {
     /** @type mongoose.Types.ObjectId */
     _id;
     /** @type Usuario */

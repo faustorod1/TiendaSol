@@ -1,5 +1,5 @@
-import { usuarioController } from '../controllers/usuarioController.js';
-import { usuarioErrorHandler } from '../middlewares/usuarioErrorHandler.js';
+import { UsuarioController } from '../controllers/usuarioController.js';
+import { usuarioErrorHandler } from '../middlewares/usuarioMiddleware.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
 import { authMockMiddleware } from '../middlewares/authMockMiddleware.js';
 import express from 'express';
@@ -14,7 +14,7 @@ patch usuarios/1/notificaciones/1
 
 export default function usuarioRoutes(getController) {
     const router = express.Router();
-    const controller = getController(usuarioController);
+    const controller = getController(UsuarioController);
 
     router.use(loggerMiddleware);
 

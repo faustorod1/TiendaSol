@@ -1,5 +1,5 @@
-import { PedidoModel } from "../../schemas/pedidoSchema";
-import { CambioEstadoPedido } from "../../schemas/cambioEstadoPedido.js"
+import { PedidoModel } from "../../schemas/pedidoSchema.js";
+//import { CambioEstadoPedido } from "../../schemas/CambioEstadoPedido.js"
 
 export class PedidoRepository {
     constructor() {

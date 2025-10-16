@@ -1,13 +1,13 @@
-import { Pedido } from "../entities/pedido.js";
-import { ItemPedido } from "../entities/itemPedido.js";
-import { EstadoPedido } from "../entities/EstadoPedido.js"
+import { Pedido } from "../models/entities/pedido.js";
+import { ItemPedido } from "../models/entities/itemPedido.js";
+import { EstadoPedido } from "../models/entities/estadoPedido.js"
 import { PedidoRepository } from "../models/repositories/pedidoRepository.js";
 import { ProductoRepository } from "../models/repositories/productoRepository.js";
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
 
-class PedidoService {
+export class PedidoService {
     constructor(pedidoRepository, productoRepository, usuarioRepository) {
         this.pedidoRepository = pedidoRepository
         this.productoRepository = productoRepository

@@ -1,4 +1,4 @@
-import { ProductoModel } from "../../schemas/productoSchema";
+import { ProductoModel } from "../../schemas/productoSchema.js";
 
 export class ProductoRepository {
     constructor() {
@@ -7,7 +7,7 @@ export class ProductoRepository {
     async findByPage(nroPagina, elemsXPagina, filtros) {
         const filtrosValidos = {};
         if (filtros.vendedor) {
-            filtrosValidos.vendedor = vendedor;
+            filtrosValidos.vendedor = filtros.vendedor;
         }
         if (filtros.titulo) {
             filtrosValidos.titulo = RegExp(filtros.titulo, "i");
@@ -52,6 +52,10 @@ export class ProductoRepository {
 
     async findManyById(ids){
         return await this.model.find({ _id: { $in : ids } });
+    }
+
+    async count() {
+        return await this.model.countDocuments();
     }
 
     async findByTitle(titulo) {

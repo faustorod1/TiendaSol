@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import { CambioEstadoPedido } from '../models/entities/CambioEstadoPedido.js';
-import { usuarioSchema } from '../usuarioSchema.js';
-import { EstadoPedido } from '../../types/estadoPedido.js';
+import { CambioEstadoPedido } from '../../models/entities/cambioEstadoPedido.js';
+import { EstadoPedido } from '../../models/entities/estadoPedido.js';
 
 export const cambioEstadoPedidoSchema = new mongoose.Schema({
     fecha: {

@@ -1,8 +1,8 @@
-import { Notificacion } from "../entities/notificacion.js";
+import { Notificacion } from "../models/entities/notificacion.js";
 
 import { z } from "zod";
 
-export class usuarioController {
+export class UsuarioController {
     costructor(usuarioService){
         this.usuarioService = usuarioService;
     }
@@ -61,6 +61,17 @@ export class usuarioController {
 
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
 
+const booleanSchema = z.string().transform((v, ctx) => {
+  if (v === "true") return true;
+  if (v === "false") return false;
+
+  ctx.addIssue({
+    code: z.ZodIssueCode.custom,
+    message: "Debe ser 'true' o 'false'"
+  });
+  return z.NEVER; // le dice a Zod que el parseo falló
+});
+
 const obtenerNotificacionesSchema = z.object({
     usuarioId: objectIdSchema,
     page: z
@@ -79,15 +90,4 @@ const obtenerNotificacionesSchema = z.object({
 const marcarNotificacionComoLeidaSchema = z.object({
     id: objectIdSchema,
     usuarioId: objectIdSchema
-});
-
-const booleanSchema = z.string().transform((v, ctx) => {
-  if (v === "true") return true;
-  if (v === "false") return false;
-
-  ctx.addIssue({
-    code: z.ZodIssueCode.custom,
-    message: "Debe ser 'true' o 'false'"
-  });
-  return z.NEVER; // le dice a Zod que el parseo falló
 });

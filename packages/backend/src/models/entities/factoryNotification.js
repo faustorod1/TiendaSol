@@ -1,4 +1,4 @@
-class FactoryNotification {
+export class FactoryNotification {
 
     //------- methods -------//
 

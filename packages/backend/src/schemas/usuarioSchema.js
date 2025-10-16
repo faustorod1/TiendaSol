@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Usuario } from '../models/entities/usuario.js';
-import { notificacionSchema } from '../schemasAnidados/notificacionSchema.js';
 import { TipoUsuario } from '../models/entities/tipoUsuario.js';
+import { notificacionSchema } from './schemasAnidados/notificacionSchema.js';
 
 const usuarioSchema = new mongoose.Schema({  
     nombre:{

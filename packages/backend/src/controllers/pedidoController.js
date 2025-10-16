@@ -1,10 +1,10 @@
-import { Pedido } from "../entities/pedido.js";
-import { estadoPedido } from "../entities/estadoPedido.js"
-import { Moneda } from "../entities/moneda.js"
-import { StockInsuficienteError} from "../entities/errors/StockInsuficienteError.js"
+import { Pedido } from "../models/entities/pedido.js";
+import { EstadoPedido } from "../models/entities/estadoPedido.js"
+import { Moneda } from "../models/entities/moneda.js"
+import { StockInsuficienteError} from "../models/entities/errors/stockInsuficienteError.js"
 import { z } from "zod";
 
-export class pedidoController {
+export class PedidoController {
     costructor (pedidoService){
         this.pedidoService = pedidoService;
     }
@@ -84,25 +84,17 @@ export class pedidoController {
 
 // Schemas zod
 
-const cambiarEstadoSchema = z.object({
-    pedidoId: z
-        .string()
-        .transform(v => Number(v))
-        .pipe(z.number().int().positive()),
-    estadoNuevo: z.enum(Object.values(estadoPedido))
-});
-
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
 
 // Si llega a tener formato cambia acá
 const userIdSchema = objectIdSchema;
 
-const crearPedidoSchema = z.object({
-    comprador: userIdSchema,
-    vendedor: userIdSchema,
-    items: z.array(itemPedidoSchema).nonempty(),
-    moneda: z.enum(Object.values(Moneda)),
-    direccionEntrega: z.string()
+const cambiarEstadoSchema = z.object({
+    pedidoId: z
+        .string()
+        .transform(v => Number(v))
+        .pipe(z.number().int().positive()),
+    estadoNuevo: z.enum(Object.values(EstadoPedido))
 });
 
 const itemPedidoSchema = z.object({
@@ -114,4 +106,12 @@ const itemPedidoSchema = z.object({
         .string()
         .transform(v => Number(v))
         .pipe(z.number().int().positive())
+});
+
+const crearPedidoSchema = z.object({
+    comprador: userIdSchema,
+    vendedor: userIdSchema,
+    items: z.array(itemPedidoSchema).nonempty(),
+    moneda: z.enum(Object.values(Moneda)),
+    direccionEntrega: z.string()
 });

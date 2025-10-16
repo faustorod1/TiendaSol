@@ -1,4 +1,4 @@
-class CambioEstadoPedido {
+export class CambioEstadoPedido {
     /** @type date */
     fecha;
     /** @type EstadoPedido */

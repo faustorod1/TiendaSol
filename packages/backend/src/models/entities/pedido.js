@@ -1,4 +1,4 @@
-class Pedido{
+export class Pedido{
     /** @type mongoose.Types.ObjectId */
     _id;
     /** @type Usuario */

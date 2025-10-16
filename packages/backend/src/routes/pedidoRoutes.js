@@ -1,5 +1,5 @@
-import {pedidoController} from '../controllers/pedidoController.js';
-import { PedidoErrorHandler } from '../middlewares/pedidoMiddleware.js';
+import { PedidoController } from '../controllers/pedidoController.js';
+import { pedidoErrorHandler } from '../middlewares/pedidoMiddleware.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
 import express from 'express';
 
@@ -7,7 +7,7 @@ const pathPedido = "/pedidos";
 
 export default function pedidoRoutes(getController) {
     const router = express.Router();
-    const controller = getController(pedidoController);
+    const controller = getController(PedidoController);
     
     router.use(loggerMiddleware);
 
@@ -37,6 +37,6 @@ export default function pedidoRoutes(getController) {
         }
     });
 
-    router.use(PedidoErrorHandler);
+    router.use(pedidoErrorHandler);
     return router;
 }

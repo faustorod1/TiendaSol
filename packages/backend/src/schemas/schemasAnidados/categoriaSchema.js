@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Categoria } from '../models/entities/categoria.js';
+import { Categoria } from '../../models/entities/categoria.js';
 
 export const categoriaSchema = new mongoose.Schema({
     nombre:{

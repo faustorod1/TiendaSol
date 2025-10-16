@@ -1,4 +1,4 @@
-class DireccionEntrega {
+export class DireccionEntrega {
     /** @type string */
     calle;
     /** @type string */

@@ -1,5 +1,5 @@
-import {productoController} from '../controllers/productoController.js';
-import { VendedorErrorHandler } from '../middlewares/vendedorMiddleware.js';
+import { ProductoController } from '../controllers/productoController.js';
+import { vendedorErrorHandler } from '../middlewares/vendedorMiddleware.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
 import express from 'express';
 
@@ -7,7 +7,7 @@ const pathProducto = "/productos";
 
 export default function productoRoutes(getController) {
     const router = express.Router();
-    const controller = getController(productoController);
+    const controller = getController(ProductoController);
     
     router.use(loggerMiddleware);
 
@@ -19,7 +19,7 @@ export default function productoRoutes(getController) {
         }
     });
 
-    router.use(VendedorErrorHandler);
+    router.use(vendedorErrorHandler);
 
     return router;
 }

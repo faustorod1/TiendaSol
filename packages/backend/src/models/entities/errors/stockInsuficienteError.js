@@ -1,4 +1,4 @@
-class StockInsuficienteError extends Error {
+export class StockInsuficienteError extends Error {
 
     /**
      * 
