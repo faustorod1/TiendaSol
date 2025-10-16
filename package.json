@@ -26,6 +26,9 @@
     "prettier": "3.6.2"
   },
   "dependencies": {
-    "mongoose": "^8.18.3"
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "mongoose": "^8.18.3",
+    "react-router-dom": "^7.9.4"
   }
 }

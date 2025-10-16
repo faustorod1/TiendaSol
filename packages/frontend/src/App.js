@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Header from "./components/mainPage/Header";
+import NavBar from "./components/mainPage/NavBar";
 import "./App.css";
 
 function App() {
+
+  /*
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -10,13 +14,12 @@ function App() {
       .then((data) => setMessage(data.message))
       .catch((error) => console.error("Error cargando mensaje.", error));
   }, []);
-
+  */
+ 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Monorepo Demo</h1>
-        <p>{message ? message : "Cargando mensaje del backend..."}</p>
-      </header>
+      <Header></Header>
+      <NavBar></NavBar>
     </div>
   );
 }
