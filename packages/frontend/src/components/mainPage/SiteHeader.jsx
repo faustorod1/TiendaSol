@@ -1,14 +1,34 @@
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import './SiteHeader.css';
+import MiniCart from './MiniCart.jsx';
 
-const SiteHeader = ({ cartItemCount }) => {
+const mockCartItems = [
+    { id: 1, name: 'Producto A', price: 29.99, quantity: 2, image: 'https://via.placeholder.com/60' },
+    { id: 2, name: 'Producto B', price: 49.99, quantity: 1, image: 'https://via.placeholder.com/60' },
+];
+
+const SiteHeader = ({ 
+    cartItems = [], 
+    handleIncrease, 
+    handleDecrease, 
+    handleRemove 
+}) => {
+
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const handleToggleCart = () => {
+        setIsCartOpen(!isCartOpen);
+    };
+
+    cartItems = mockCartItems; 
+    const cartItemCount = cartItems.length;
+
     return (
         <div className="header-wrapper">
             <header className="header-main">
-                {/* Agrupamos menú y marca para mantenerlos juntos */}
                 <div className="header-group left">
                     <button className="menu-button" aria-label="Abrir menú">
                         <FontAwesomeIcon icon={faBars} />
@@ -28,12 +48,12 @@ const SiteHeader = ({ cartItemCount }) => {
                 </form>
 
                 <div className="header-group right">
-                    <Link to="/cart" className="cart-link" aria-label={`Ver carrito con ${cartItemCount} artículos`}>
+                    <button onClick={handleToggleCart} className="cart-button" aria-label={`Ver carrito con ${cartItemCount} artículos`}>
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {cartItemCount > 0 && (
                             <span className="cart-count">{cartItemCount}</span>
                         )}
-                    </Link>
+                    </button>
                 </div>
             </header>
 
@@ -43,6 +63,15 @@ const SiteHeader = ({ cartItemCount }) => {
                 <a href="/categoria/electronica" className="category-link">Electrónica</a>
                 <a href="/categoria/ropa" className="category-link">Ropa</a>
             </nav>
+
+            <MiniCart 
+                isOpen={isCartOpen}
+                onClose={() => setIsCartOpen(false)}
+                items={cartItems}
+                onIncrease={handleIncrease}
+                onDecrease={handleDecrease}
+                onRemove={handleRemove}
+            />
         </div>
     );
 };
