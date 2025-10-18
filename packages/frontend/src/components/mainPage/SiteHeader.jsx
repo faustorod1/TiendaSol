@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import './SiteHeader.css';
 import MiniCart from './MiniCart.jsx';
+import SideMenu from './SideMenu.jsx';
 
 const mockCartItems = [
     { id: 1, name: 'Producto A', price: 29.99, quantity: 2, image: 'https://via.placeholder.com/60' },
@@ -18,6 +19,7 @@ const SiteHeader = ({
 }) => {
 
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleToggleCart = () => {
         setIsCartOpen(!isCartOpen);
@@ -30,7 +32,7 @@ const SiteHeader = ({
         <div className="header-wrapper">
             <header className="header-main">
                 <div className="header-group left">
-                    <button className="menu-button" aria-label="Abrir menú">
+                    <button onClick={() => setIsMenuOpen(true)} className="menu-button" aria-label="Abrir menú">
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                     <Link to="/" className="brand-link">
@@ -63,6 +65,11 @@ const SiteHeader = ({
                 <a href="/categoria/electronica" className="category-link">Electrónica</a>
                 <a href="/categoria/ropa" className="category-link">Ropa</a>
             </nav>
+
+            <SideMenu 
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+            />
 
             <MiniCart 
                 isOpen={isCartOpen}
