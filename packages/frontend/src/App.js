@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
-
+import { BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
+import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 
 import "./App.css";
 
@@ -27,9 +29,16 @@ function App() {
       <SiteHeader cartItemCount={itemCount} />
       {/*<ProductSearchBar></ProductSearchBar>*/}
       <main>
-        <p>Contenido principal de tu página...</p>
-        <div style={{ height: '200vh' }}></div>
+        <Routes>
+          <Route path="/" element={<p>Inicio - contenido principal de tu página</p>} />
+
+          {/* Ruta dinámica para productos */}
+          <Route path="/producto/:id" element={<ProductDetailPage />} />
+
+          {/* Podés agregar más rutas aquí */}
+        </Routes>
       </main>
+
       <Footer />
     </div>
   );

@@ -1,0 +1,166 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.4;
+}
+
+.product-detail-container {
+  max-width: 100rem;
+  margin: 20px auto;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.product-header {
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.product-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark-purple);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-categoria {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.product-categoria::before {
+  margin-right: 4px;
+}
+
+.product-content {
+  display: flex;
+  padding: 0;
+}
+
+.product-image-section {
+  flex: 0 0 300px;
+  position: relative;
+}
+
+.product-imagen {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.product-info-section {
+  flex: 1;
+  padding: 20px 24px;
+  position: relative;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 16px;
+  font-weight: 500;
+  width: 90%;
+}
+
+.product-price-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.product-precio {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.price-details {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.comprar{
+  background-color: var(--dark-purple);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  min-width: 50px;
+  margin-right: 1rem;
+}
+
+.comprar:hover {
+  background-color: --dark-purple-hover;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
+.comprar-container{
+  display: flex;
+  justify-content: right;
+}
+
+.product-vendedor-section {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #555;
+}
+
+.product-vendedor {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.product-email {
+  font-style: italic;
+  color: #777;
+}
+
+@media (max-width: 768px) {
+  .product-content {
+    flex-direction: column;
+  }
+  
+  .product-image-section {
+    flex: none;
+  }
+  
+  .product-imagen {
+    height: 180px;
+  }
+  
+  .product-rating-section {
+    position: static;
+    margin-top: 16px;
+    text-align: left;
+  }
+  
+  .product-detail-container {
+    margin: 10px;
+    border-radius: 8px;
+  }
+  
+  .product-header,
+  .product-info-section {
+    padding: 16px 20px;
+  }
+}
