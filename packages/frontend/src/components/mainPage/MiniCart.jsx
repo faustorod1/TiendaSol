@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './MiniCart.css';
+import Cart from './Cart';
 
 const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) => {
+    const [showCartPanel, setShowCartPanel] = useState(false);
     if (!isOpen) {
         return null;
     }
@@ -12,45 +14,56 @@ const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) 
 
     return (
         <div className="mini-cart-overlay" onClick={onClose}>
-            <div className="mini-cart-content" onClick={(e) => e.stopPropagation()}>
-                <div className="mini-cart-header">
-                    <h3>Tu Carrito</h3>
-                    <button onClick={onClose} className="close-button">&times;</button>
-                </div>
-
-                <div className="mini-cart-items">
-                    {items.length === 0 ? (
-                        <p className="empty-message">Tu carrito está vacío.</p>
-                    ) : (
-                        items.map(item => (
-                            <div key={item.id} className="cart-item">
-                                <img src={item.image} alt={item.name} className="item-image" />
-                                <div className="item-details">
-                                    <p className="item-name">{item.name}</p>
-                                    <p className="item-price">${item.price.toFixed(2)}</p>
-                                </div>
-                                <div className="item-quantity-controls">
-                                    <button onClick={() => onDecrease(item.id)}>-</button>
-                                    <span>{item.quantity}</span>
-                                    <button onClick={() => onIncrease(item.id)}>+</button>
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-
-                {items.length > 0 && (
-                    <div className="mini-cart-footer">
-                        <div className="subtotal">
-                            <span>Subtotal:</span>
-                            <span>${subtotal.toFixed(2)}</span>
-                        </div>
-                        <Link to="/cart" className="view-cart-button" onClick={onClose}>
-                            Ver Carrito Completo
-                        </Link>
-                        <button className="checkout-button">Comprar Ahora</button>
+            <div className="mini-cart-wrapper" onClick={(e) => e.stopPropagation()}>
+                {showCartPanel && (
+                    <div className="cart-panel">
+                        <Cart items={items} onClosePanel={() => setShowCartPanel(false)} />
                     </div>
                 )}
+
+                <div className="mini-cart-content">
+                    <div className="mini-cart-header">
+                        <h3>Tu Carrito</h3>
+                        <button onClick={onClose} className="close-button">&times;</button>
+                    </div>
+
+                    <div className="mini-cart-items">
+                        {items.length === 0 ? (
+                            <p className="empty-message">Tu carrito está vacío.</p>
+                        ) : (
+                            items.map(item => (
+                                <div key={item.id} className="cart-item">
+                                    <img src={item.image} alt={item.name} className="item-image" />
+                                    <div className="item-details">
+                                        <p className="item-name">{item.name}</p>
+                                        <p className="item-price">${item.price.toFixed(2)}</p>
+                                    </div>
+                                    <div className="item-quantity-controls">
+                                        <button onClick={() => onDecrease(item.id)}>-</button>
+                                        <span>{item.quantity}</span>
+                                        <button onClick={() => onIncrease(item.id)}>+</button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    {items.length > 0 && (
+                        <div className="mini-cart-footer">
+                            <div className="subtotal">
+                                <span>Subtotal:</span>
+                                <span>${subtotal.toFixed(2)}</span>
+                            </div>
+                            <button
+                                className="view-cart-button"
+                                onClick={() => setShowCartPanel(true)}
+                            >
+                                Ver Carrito Completo
+                            </button>
+                            <button className="checkout-button">Comprar Ahora</button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

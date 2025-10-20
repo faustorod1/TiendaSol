@@ -1,0 +1,117 @@
+/* Estilos pensados para parecerse al MiniCart: tarjetas por producto, imagen a la izquierda y detalles a la derecha */
+
+.cart-page {
+    max-width: 980px;
+    margin: 24px auto;
+    padding: 16px;
+    background: var(--pistacho, #b7e28b);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    color: #222;
+}
+
+.cart-page h1 {
+    margin: 0 0 16px 0;
+    font-size: 1.5rem;
+}
+
+.cart-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cart-list-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    background: var(--nyanza);
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+}
+
+.cart-item-image {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex: 0 0 72px;
+    background: #f2f2f2;
+}
+
+.cart-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 auto;
+}
+
+.cart-item-info strong,
+.cart-item-name {
+    font-size: 1rem;
+    color: #111;
+}
+
+.cart-item-meta {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Controles y cantidad (si los implementas) */
+.cart-item-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cart-item-quantity {
+    min-width: 28px;
+    text-align: center;
+}
+
+/* Resumen/acciones */
+.cart-summary {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--nyanza);
+}
+
+.checkout-button,
+.view-cart-button {
+    background: var(--dark-purple, #5b2b7a);
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.view-cart-button {
+    background: #fff;
+    color: var(--dark-purple, #5b2b7a);
+    border: 1px solid var(--dark-purple, #5b2b7a);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 520px) {
+    .cart-list-item {
+        gap: 10px;
+    }
+    .cart-item-image {
+        width: 56px;
+        height: 56px;
+        flex: 0 0 56px;
+    }
+}

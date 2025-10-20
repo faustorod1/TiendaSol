@@ -8,11 +8,32 @@
     z-index: 1000;
 }
 
+.mini-cart-wrapper {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 12px;
+}
+
+/* panel izquierdo (Cart) */
+.cart-panel {
+    width: 360px;
+    max-width: 40%;
+    background: var(--nyanza);
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    overflow: auto;
+}
+
+/* asegurar que el mini cart mantenga tamaño compacto a la derecha */
 .mini-cart-content {
+    width: 320px;
+    max-width: 50%;
     position: absolute;
-    top: 5rem; 
+    top: 5rem;
     right: 2rem;
-    width: 350px;
+    height: 100%;
     max-height: 500px;
     background-color: var(--nyanza);
     color: var(--dark-purple);
@@ -117,6 +138,7 @@
     margin-bottom: 1rem;
 }
 
+/* botones: estado por defecto (sin forzar) */
 .view-cart-button, .checkout-button {
     display: block;
     width: 100%;
@@ -131,8 +153,8 @@
 .view-cart-button {
     width: 91.5%;
     background-color: white;
-    border: 1px solid var(--dark-purple);
-    color: var(--dark-purple);
+    border: 1px solid var(--dark-purple, #5b2b7a);
+    color: var(--dark-purple, #5b2b7a);
     text-decoration: none;
 }
 
@@ -140,11 +162,41 @@
     background-color: lightgray;
 }
 
+/* mantener el botón de checkout con fondo oscuro y texto blanco */
 .checkout-button {
-    background-color: var(--pistacho);
-    color: var(--dark-purple);
+    background-color: var(--dark-purple, #5b2b7a);
+    color: #ffffff;
+    border: 1px solid var(--dark-purple, #5b2b7a);
 }
 
 .checkout-button:hover {
-    background-color: var(--pistacho-hover);
+    opacity: 0.92;
+}
+
+/* estilo del header del panel Cart (opcional, coincide con Cart.css) */
+.cart-panel-inner .cart-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-panel-inner .close-panel {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* Ajuste responsivo: en pantallas pequeñas apilar verticalmente */
+@media (max-width: 800px) {
+    .mini-cart-wrapper {
+        flex-direction: column;
+    }
+    .cart-panel,
+    .mini-cart-content {
+        width: 100%;
+        max-width: 100%;
+    }
 }
