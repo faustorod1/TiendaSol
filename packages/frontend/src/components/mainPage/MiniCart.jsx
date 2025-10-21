@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import './MiniCart.css';
 import Cart from './Cart';
+import './MiniCart.css';
 
 const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) => {
     const [showCartPanel, setShowCartPanel] = useState(false);
+
     if (!isOpen) {
         return null;
     }
@@ -60,7 +61,14 @@ const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) 
                             >
                                 Ver Carrito Completo
                             </button>
-                            <button className="checkout-button">Comprar Ahora</button>
+                            <Link
+                                to="/checkout"
+                                state={{ items }}
+                                className="checkout-button"
+                                onClick={onClose}
+                            >
+                                Comprar Ahora
+                            </Link>
                         </div>
                     )}
                 </div>

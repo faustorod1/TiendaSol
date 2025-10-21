@@ -189,6 +189,14 @@
     cursor: pointer;
 }
 
+/* asegurar estilos para enlaces con clase checkout-button / view-cart-button */
+.mini-cart-footer .checkout-button,
+.mini-cart-footer .view-cart-button {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+}
+
 /* Ajuste responsivo: en pantallas pequeñas apilar verticalmente */
 @media (max-width: 800px) {
     .mini-cart-wrapper {
