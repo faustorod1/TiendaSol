@@ -6,6 +6,7 @@ import SiteHeader from "./components/mainPage/SiteHeader";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
+import Contacto from './components/Contacto/Contacto';
 
 import "./App.css";
 
@@ -40,6 +41,9 @@ function App() {
 
             {}
             <Route path="/productos" element={<AllProducts />} />
+
+            {}
+            <Route path="/contacto" element={<Contacto />} />
           </Routes>
         </main>
 
