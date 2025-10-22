@@ -4,7 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
-import Checkout from './components/mainPage/Checkout';
+import Checkout from './components/Checkout/Checkout';
+import AllProducts from './components/AllProducts/AllProducts';
 
 import "./App.css";
 
@@ -36,6 +37,9 @@ function App() {
 
             {/* Podés agregar más rutas aquí */}
             <Route path="/checkout" element={<Checkout />} />
+
+            {}
+            <Route path="/productos" element={<AllProducts />} />
           </Routes>
         </main>
 

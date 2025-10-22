@@ -88,7 +88,7 @@
 
 .checkout-button,
 .view-cart-button {
-    background: var(--dark-purple, #5b2b7a);
+    background: var(--dark-purple, #270722);
     color: #fff;
     border: none;
     padding: 10px 14px;
@@ -100,8 +100,8 @@
 
 .view-cart-button {
     background: #fff;
-    color: var(--dark-purple, #5b2b7a);
-    border: 1px solid var(--dark-purple, #5b2b7a);
+    color: var(--dark-purple, #270722);
+    border: 1px solid var(--dark-purple, #270722);
 }
 
 /* Ajustes responsivos */

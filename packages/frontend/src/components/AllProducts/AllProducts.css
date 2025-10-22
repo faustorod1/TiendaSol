@@ -1,0 +1,37 @@
+.all-products-page {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 16px;
+  color: #222;
+}
+
+.all-products-page h1 {
+  margin: 0 0 18px 0;
+  font-size: 1.6rem;
+  text-align: left;
+}
+
+/* Rejilla fluida de tarjetas */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+/* Si quieres un contenedor centrado para cada tarjeta interna */
+.product-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pequeños ajustes en pantallas muy pequeñas */
+@media (max-width: 520px) {
+  .all-products-page {
+    padding: 12px;
+  }
+  .products-grid {
+    gap: 12px;
+  }
+}
