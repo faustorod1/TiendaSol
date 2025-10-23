@@ -59,6 +59,17 @@ export class DireccionEntrega {
 
     
     pasarAString() {
-        return `${this.calle} ${this.altura}, ${this.piso} ${this.departamento}, ${this.ciudad}, ${this.provincia}, ${this.pais} - ${this.codigoPostal}`;
+        const partes = [
+            `${this.calle} ${this.altura}`.trim(),
+            this.piso ? `Piso ${this.piso}` : "",
+            this.departamento ? `Depto ${this.departamento}` : "",
+            this.ciudad,
+            this.provincia,
+            this.pais,
+            this.codigoPostal
+        ];
+
+        // Filtra cualquier string vacío y une con comas
+        return partes.filter(p => p && p.trim() !== "").join(", ");
     }
 }

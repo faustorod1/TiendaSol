@@ -68,4 +68,12 @@ export class Producto {
     aumentarStock(cantidad) {
         this.stock += cantidad;
     }
+
+    /**
+     * @param {number} cantidad
+     */
+    vender(cantidad) {
+        this.reducirStock(cantidad);
+        this.cantidadVendida += cantidad;
+    }
 }
