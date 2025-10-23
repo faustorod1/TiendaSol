@@ -10,18 +10,21 @@ export class UsuarioService {
   async obtenerNotificaciones(usuarioId, leida, { page, limit }) {
         const filtro = { usuarioId };
         if (leida !== undefined) {
-            filtro.leida = leida === 'true';
+            filtro.leida = leida;
         }
 
         const offset = (page - 1) * limit;
 
         const { rows, count } = await this.usuarioRepository.findNotificationsByPage(filtro, limit, offset);
 
+        const totalPaginas = Math.ceil(count / limit);
+
         return {
-            total: count,
             page: page,
-            limit: limit,
-            notificaciones: rows
+            perPage: limit,
+            total: count,
+            totalPages: totalPaginas,
+            data: rows
         };
     }
 

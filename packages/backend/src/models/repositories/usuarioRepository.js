@@ -18,23 +18,45 @@ export class UsuarioRepository {
 
     async findNotificationsByPage(filtro, limit, offset) {
         const { usuarioId, leida } = filtro;
-
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
-        // Busca el usuario por ID
-        const usuario = await this.model.findById(objUsuario).lean();
-        if (!usuario) {
-            throw new Error("Usuario no encontrado");
-        }
-        if (!usuario.notificaciones) return { rows: [], count: 0 };
 
-        // Filtra por si la notificación fue leída o no
-        let notificaciones = usuario.notificaciones;
-        if (typeof leida === "boolean") {
-            notificaciones = notificaciones.filter(n => n.leida === leida);
-        }
+        const matchStage = { $match: { _id: objUsuario } };
 
-        const count = notificaciones.length;
-        const rows = notificaciones.slice(offset, offset + limit);
+        const projectStage = {
+            $project: {
+            _id: 0,
+            notificaciones: {
+                $filter: {
+                input: "$notificaciones",
+                as: "n",
+                cond: typeof leida === "boolean" ? { $eq: ["$$n.leida", leida] } : {}
+                }
+            }
+            }
+        };
+
+        const addPagination = [
+            matchStage,
+            projectStage,
+            { $unwind: "$notificaciones" },
+            { $skip: offset },
+            { $limit: limit },
+            { $group: { _id: null, rows: { $push: "$notificaciones" } } }
+        ];
+
+        const result = await this.model.aggregate(addPagination);
+        
+        // Para contar cuántas hay (sin paginar)
+        const countStage = [
+            matchStage,
+            projectStage,
+            { $unwind: "$notificaciones" },
+            { $count: "total" }
+        ];
+        const countResult = await this.model.aggregate(countStage);
+
+        const count = countResult[0]?.total || 0;
+        const rows = result[0]?.rows || [];
 
         return { rows, count };
     }
@@ -44,8 +66,13 @@ export class UsuarioRepository {
         return await nuevoUsuario.save();
     }
 
-    async update(id, usuario) {
+    async updateById(id, usuario) {
         return await this.model.findByIdAndUpdate(id, usuario, { new: true });
+    }
+
+    // Solo sirve si usuario es un documento de mongo
+    async update(usuario) {
+        return await usuario.save();
     }
 
     async delete(id) {
@@ -69,16 +96,17 @@ export class UsuarioRepository {
 
     async marcarNotificacionComoLeida(usuarioId, notificacionId) {
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
-        const usuarioActualizado = await UsuarioModel.findOneAndUpdate(
+        await this.model.findOneAndUpdate(
             { _id: objUsuario,"notificaciones._id": notificacionId },
-            { $set: { "notificaciones.$.leida": true }},
-            { new: true, projection: { "notificaciones.$": 1 }}
+            { $set: { "notificaciones.$.leida": true, "notificaciones.$.fechaLeida": new Date() }}
         );
+        const usuarioActualizado = await this.model.findOne(
+            { _id: objUsuario,"notificaciones._id": notificacionId },
+            { "notificaciones.$": 1 }
+        )
+
         // El resultado de la proyección es un documento de usuario que contiene
         // únicamente el array 'notificaciones' con un solo elemento dentro.
-        if (usuarioActualizado && usuarioActualizado.notificaciones.length > 0) {
-            return usuarioActualizado.notificaciones[0]; // Devolvemos el objeto de la notificación
-        }
-        return null; 
+        return usuarioActualizado?.notificaciones?.[0] || null;
     }
 }

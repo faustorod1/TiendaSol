@@ -9,12 +9,12 @@ import { cambioEstadoPedidoSchema } from './schemasAnidados/cambioEstadoPedidoSc
 const pedidoSchema = new mongoose.Schema({
     comprador:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Comprador_id",
+        ref: "Usuario",
         required: true,
     },
     vendedor:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Vendedor_id",
+        ref: "Usuario",
         required: true,
     },
 

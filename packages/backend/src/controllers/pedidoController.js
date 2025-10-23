@@ -22,16 +22,16 @@ export class PedidoController {
         const pedido = pedidoResult.data;
         
         this.pedidoService.crearPedido(pedido)
-        .then(() => res.status(201).json({ message: "Pedido creado con éxito" }))
+        .then(pedidoGenerado => res.status(201).json({ message: "Pedido creado con éxito", _id: pedidoGenerado._id }))
         .catch(error => {
             if (error.constructor.name == StockInsuficienteError.name) {
                 return res.status(409).json({
                     error: "Stock insuficiente de productos",
-                    productosFaltantes: error.productosFaltantes.map(producto => producto.nombre)
+                    productosFaltantes: error.productosFaltantes
                 });
             }
             throw error
-        })
+        });
     };
 
 
@@ -88,10 +88,7 @@ const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
 const userIdSchema = objectIdSchema;
 
 const cambiarEstadoSchema = z.object({
-    pedidoId: z
-        .string()
-        .transform(v => Number(v))
-        .pipe(z.number().int().positive()),
+    pedidoId: objectIdSchema,
     estadoNuevo: z.enum(Object.values(EstadoPedido))
 });
 

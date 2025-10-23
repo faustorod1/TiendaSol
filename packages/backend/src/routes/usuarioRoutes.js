@@ -32,7 +32,7 @@ export default function usuarioRoutes(getController) {
 
     router.patch(`${pathNotificacion}/:id`, async (req, res) => {
         try {
-            await controller.marcarComoLeida(req, res);
+            await controller.marcarNotificacionComoLeida(req, res);
         } catch (error) {
             res.status(400).json({ error: error.message });
         }

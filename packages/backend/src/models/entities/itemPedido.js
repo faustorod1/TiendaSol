@@ -7,7 +7,7 @@ export class ItemPedido{
     precioUnitario;
 
     /**
-     * @param {Producto} productom
+     * @param {Producto} producto
      * @param {integer} cantidad
      * @param {double} precioUnitario
      */

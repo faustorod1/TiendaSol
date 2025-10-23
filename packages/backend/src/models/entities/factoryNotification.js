@@ -15,7 +15,15 @@ export class FactoryNotification {
                 mensaje = "El pedido {{ID_PEDIDO}} ha sido cancelado.";
                 break;
             case EstadoPedido.PENDIENTE: 
-                mensaje = "El pedido {{ID_PEDIDO}} está pendiente. Los productos son: {{PRODUCTOS}}. El pedido fue realizado Por: {{COMPRADOR}}. La direccion de entrega es {{DIRECCION_ENTREGA}}. El importe total es {{TOTAL}}.";
+                mensaje = `Pedido: {{ID_PEDIDO}}
+Estado: PENDIENTE
+
+Productos:
+{{PRODUCTOS}}
+
+Comprador: {{COMPRADOR}}
+Dirección de entrega: {{DIRECCION_ENTREGA}}
+Importe total: {{TOTAL}}`;
                 break;
             case EstadoPedido.CONFIRMADO: 
                 mensaje = "El pedido {{ID_PEDIDO}} ha sido confirmado.";
@@ -42,14 +50,18 @@ export class FactoryNotification {
      */
     static crearSegunPedido(pedido){
         const productos = pedido.items.map(item => item.producto);
-        const nombresProductos = productos.map(prod => prod.nombre);
+        const nombresProductos = productos.map(prod => prod.titulo);
+
+        const totalFormateado = pedido.calcularTotal().toLocaleString('es-AR', {
+            style: 'currency',
+            currency: 'ARS'
+        });
 
         let mensaje = FactoryNotification.crearMensajeSegunEstadoPedido(pedido.estado);
-        mensaje = mensaje.replaceAll('{{ID_PEDIDO}}', pedido.id);
+        mensaje = mensaje.replaceAll('{{ID_PEDIDO}}', pedido._id);
         mensaje = mensaje.replaceAll('{{COMPRADOR}}', pedido.comprador.nombre);
-        mensaje = mensaje.replaceAll('{{PRODUCTOS}}', nombresProductos.join('\n'));
-        mensaje = mensaje.replaceAll('{{TOTAL}}', pedido.calcularTotal());
-        console.log(pedido.direccionEntrega);
+        mensaje = mensaje.replaceAll('{{PRODUCTOS}}', '- ' + nombresProductos.join('\n- '));
+        mensaje = mensaje.replaceAll('{{TOTAL}}', totalFormateado);
         
         mensaje = mensaje.replaceAll('{{DIRECCION_ENTREGA}}', pedido.direccionEntrega.pasarAString());
         

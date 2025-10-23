@@ -4,7 +4,7 @@ import { ItemPedido } from '../../models/entities/itemPedido.js';
 export const itemPedidoSchema = new mongoose.Schema({
     producto:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Producto_id",
+        ref: "Producto",
         required: true,
     },
     cantidad:{

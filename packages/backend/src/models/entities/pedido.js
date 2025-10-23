@@ -24,26 +24,33 @@ export class Pedido{
     historialEstados;
 
     /**
+     * @param {mongoose.Types.ObjectId} _id
      * @param {Usuario} comprador
      * @param {Usuario} vendedor
      * @param {ItemPedido[]} items 
      * @param {Moneda} moneda
      * @param {DireccionEntrega} direccionEntrega
-     * @param {EstadoPedido} estado
      * @param {Date} fechaCreacion
      * @param {CambioEstadoPedido[]} historialEstados
      */
-    constructor(comprador, vendedor, items, moneda, direccionEntrega){
+    constructor(_id, comprador, vendedor, items, moneda, direccionEntrega){
+        this._id = _id;
         this.comprador = comprador;
         this.vendedor = vendedor;
         this.items = items;
         this.moneda = moneda;
-        this.direccionEntrega = direccionEntrega;
         this.estado = EstadoPedido.PENDIENTE;
+        this.direccionEntrega = direccionEntrega;
         this.fechaCreacion = new Date();
         this.historialEstados = [];
 
-        const notificacion = FactoryNotification.crearSegunPedido(this);
+        this.validarStock();
+
+        FactoryNotification.crearSegunPedido(this);
+        
+        this.items.forEach(item => {
+            item.producto.vender(item.cantidad);
+        });
         //notificacion.notificar();//ver si lo hacemos asi o no
     }
 
@@ -58,10 +65,27 @@ export class Pedido{
 
     /**
      * @param {EstadoPedido} nuevoEstado
+     * @param {string} motivo
+     */
+    cancelar(usuario, motivo) {
+        if (!this.sePuedeCancelar()) {
+            throw new Error(`El pedido de id ${this._id} no se puede cancelar porque ya fue enviado.`);
+        }
+        this.actualizarEstado(EstadoPedido.CANCELADO, usuario, motivo);
+        this.items.forEach(item => {
+            item.producto.aumentarStock(item.cantidad)
+        });
+    }
+
+    /**
+     * @param {EstadoPedido} nuevoEstado
      * @param {Usuario} usuario
      * @param {string} motivo
      */
     actualizarEstado(nuevoEstado, usuario, motivo){
+        if (this.estado === "CANCELADO") {
+            throw new Error(`El pedido de id ${this._id} no puede pasar a ${nuevoEstado} porque ya fue cancelado.`);
+        }
         this.estado = nuevoEstado;
 
         FactoryNotification.crearSegunPedido(this);
@@ -71,9 +95,15 @@ export class Pedido{
     }
 
     validarStock(){
+        console.log(this);
+        
         const productosFaltantes = this.items.filter(item => !item.producto.estaDisponible(item.cantidad)); 
         if(productosFaltantes.length > 0) {
             throw new StockInsuficienteError(productosFaltantes);
         }
+    }
+
+    sePuedeCancelar() {
+        return ![EstadoPedido.ENVIADO, EstadoPedido.ENTREGADO].includes(this.estado);
     }
 }

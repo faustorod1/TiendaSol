@@ -6,7 +6,7 @@ import { categoriaSchema } from './schemasAnidados/categoriaSchema.js';
 const productoSchema = new mongoose.Schema({
     vendedor:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Vendedor_id",
+        ref: "Usuario",
         required: true,
     },
     titulo:{
