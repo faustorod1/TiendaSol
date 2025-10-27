@@ -5,6 +5,7 @@ import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
 import MainPicture from "./components/mainPage/MainPicture";
 import ProductCarrousel from "./components/mainPage/ProductCarrousel";
+import Shortcuts from "./components/mainPage/Shortcuts";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
@@ -43,6 +44,7 @@ function App() {
                 <div>
                   <MainPicture />
                   <ProductCarrousel products={Productos} />
+                  <Shortcuts />
                   <p>Inicio - contenido principal de tu página</p>
                   
                   {/* --- AGREGA ESTO TEMPORALMENTE --- */}

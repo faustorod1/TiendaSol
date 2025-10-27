@@ -1,0 +1,21 @@
+/* Estilos para el contenedor principal de shortcuts */
+.shortcuts {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.shortcuts-grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive: apilar en pantallas pequeñas */
+@media (max-width: 600px) {
+  .shortcuts-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}

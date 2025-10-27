@@ -1,0 +1,25 @@
+/* Estilos para cada botón de shortcut */
+.shortcuts-container {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem 1.5rem 5rem 1.5rem;
+  background: var(--thistle);
+  color: var(--dark-purple);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  min-width: 140px;
+  min-height: 80px; /* nuevo: altura mínima para hacerlos más alargados */
+}
+
+.shortcuts-container:hover {
+  background: var(--thistle-dark, #b98db9);
+  transform: translateY(-2px);
+}
+
+.shortcuts-label {
+  font-size: 0.95rem;
+  margin-top: 0.25rem; /* pequeño margen superior para centrar en la parte alta */
+}
