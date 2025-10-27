@@ -3,10 +3,13 @@ import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
+import MainPicture from "./components/mainPage/MainPicture";
+import ProductCarrousel from "./components/mainPage/ProductCarrousel";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
 import Contacto from './components/Contacto/Contacto';
+import { Productos } from './components/mockData/Productos.js';
 
 import "./App.css";
 
@@ -31,7 +34,12 @@ function App() {
         <SiteHeader cartItemCount={itemCount} />
         <main>
           <Routes>
-            <Route path="/" element={<p>Inicio - contenido principal de tu página</p>} />
+            <Route path="/" element={
+            <div>
+              <MainPicture />
+              <ProductCarrousel products={Productos} />
+            </div>
+          } />
 
             {/* Ruta dinámica para productos */}
             <Route path="/producto/:id" element={<ProductDetailPage />} />
@@ -39,10 +47,8 @@ function App() {
             {/* Podés agregar más rutas aquí */}
             <Route path="/checkout" element={<Checkout />} />
 
-            {}
             <Route path="/productos" element={<AllProducts />} />
 
-            {}
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
         </main>
