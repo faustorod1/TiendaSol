@@ -1,17 +1,17 @@
-/* Estilos para cada botón de shortcut */
+/* Estilos para cada botón de shortcut - versión más grande */
 .shortcuts-container {
   display: inline-flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 1rem 1.5rem 5rem 1.5rem;
+  padding: 1.5rem 2rem 6rem 2rem; /* aumenté padding horizontal y vertical */
   background: var(--thistle);
   color: var(--dark-purple);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 12px; /* bordes más redondeados */
   font-weight: 600;
   transition: background 0.3s ease, transform 0.2s ease;
-  min-width: 140px;
-  min-height: 80px; /* nuevo: altura mínima para hacerlos más alargados */
+  min-width: 180px; /* más ancho (era 140px) */
+  min-height: 120px; /* más alto (era 80px) */
 }
 
 .shortcuts-container:hover {
@@ -20,6 +20,6 @@
 }
 
 .shortcuts-label {
-  font-size: 0.95rem;
-  margin-top: 0.25rem; /* pequeño margen superior para centrar en la parte alta */
+  font-size: 1.1rem; /* texto más grande (era 0.95rem) */
+  margin-top: 0.5rem; /* más margen superior */
 }
