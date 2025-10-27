@@ -7,6 +7,7 @@ import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage"
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
 import Contacto from './components/Contacto/Contacto';
+import { FilterProvider } from "./contexts/FilterContext";
 
 import "./App.css";
 
@@ -27,11 +28,27 @@ function App() {
   */
  
   return (
+    <FilterProvider>
       <div className="App">
         <SiteHeader cartItemCount={itemCount} />
         <main>
           <Routes>
-            <Route path="/" element={<p>Inicio - contenido principal de tu página</p>} />
+            
+            <Route 
+              path="/" 
+              element={
+                <div>
+                  <p>Inicio - contenido principal de tu página</p>
+                  
+                  {/* --- AGREGA ESTO TEMPORALMENTE --- */}
+                  <div style={{ height: '2000px', background: '#f0f0f0', paddingTop: '20px' }}>
+                    (Esto es solo un espacio alto para probar el scroll)
+                  </div>
+                  {/* ---------------------------------- */}
+
+                </div>
+              } 
+            />
 
             {/* Ruta dinámica para productos */}
             <Route path="/producto/:id" element={<ProductDetailPage />} />
@@ -45,10 +62,13 @@ function App() {
             {}
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
+
+          
         </main>
 
         <Footer />
       </div>
+    </FilterProvider>
   );
 }
 
