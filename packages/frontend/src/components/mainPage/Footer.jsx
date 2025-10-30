@@ -11,7 +11,7 @@ const Footer = () => {
                 <p>{new Date().getFullYear()} Tienda Sol</p>
                 <a href = "/terms"> Términos y Condiciones</a>
                 <a href = "/privacy"> Política de Privacidad</a>
-                <a href = "/contact"> Contáctanos</a>
+                <a href = "/contacto"> Contáctanos</a>
             </div>
         </footer>
     );

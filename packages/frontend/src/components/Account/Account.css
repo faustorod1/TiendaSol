@@ -1,0 +1,141 @@
+/* Estilos para el componente Account */
+
+:root {
+  --dark-purple: #270722;
+  --surface: #ffffff;
+  --muted: #666;
+  --border: #e6e6e6;
+}
+
+.account {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  color: #333;
+}
+
+.account h1 {
+  margin: 0 0 2rem 1rem;
+  font-size: 1.8rem;
+  color: var(--dark-purple);
+  text-align: left;
+}
+
+.account-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Secciones de información */
+.account-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.account-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  color: var(--dark-purple);
+}
+
+/* Grid de información */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Métodos de pago */
+.payment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.payment-type {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.no-payment {
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Acciones */
+.account-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.manage-account-button {
+  display: inline-block;
+  background: var(--dark-purple);
+  color: white;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.manage-account-button:hover {
+  background: #4a1f66;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .account {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-actions {
+    margin-top: 1.5rem;
+  }
+
+  .manage-account-button {
+    width: 100%;
+    text-align: center;
+  }
+}

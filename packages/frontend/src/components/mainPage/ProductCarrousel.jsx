@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ProductCarrousel.css';
 
-const ProductCarrousel = ({ products = [] }) => {
+const ProductCarrousel = ({ products = [], autoPlay = true, autoPlayDelay = 6000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  if (!products || products.length === 0) {
-    return <div className="carousel-empty">No hay productos para mostrar</div>;
-  }
 
   const nextProduct = () => {
     setCurrentIndex((prevIndex) => 
@@ -20,6 +16,23 @@ const ProductCarrousel = ({ products = [] }) => {
       prevIndex === 0 ? products.length - 1 : prevIndex - 1
     );
   };
+
+  // Auto-play functionality - MOVER ANTES del return condicional
+  useEffect(() => {
+    if (!autoPlay || products.length <= 1) return;
+
+    const interval = setInterval(() => {
+      nextProduct();
+    }, autoPlayDelay);
+
+    // Limpiar interval al desmontar o cambiar dependencias
+    return () => clearInterval(interval);
+  }, [autoPlay, autoPlayDelay, products.length, currentIndex]);
+
+  // Return condicional DESPUÉS de todos los hooks
+  if (!products || products.length === 0) {
+    return <div className="carousel-empty">No hay productos para mostrar</div>;
+  }
 
   const currentProduct = products[currentIndex];
 
@@ -52,17 +65,6 @@ const ProductCarrousel = ({ products = [] }) => {
         >
           →
         </button>
-      </div>
-
-      <div className="carousel-indicators">
-        {products.map((_, index) => (
-          <button
-            key={index}
-            className={`indicator ${index === currentIndex ? 'active' : ''}`}
-            onClick={() => setCurrentIndex(index)}
-            aria-label={`Ir al producto ${index + 1}`}
-          />
-        ))}
       </div>
     </div>
   );

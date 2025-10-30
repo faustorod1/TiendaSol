@@ -16,7 +16,6 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  margin-bottom: 1rem;
   position: relative;
 }
 
@@ -58,7 +57,7 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-  min-height: 350px; /* más alto que antes (era 250px) */
+  min-height: 350px;
   text-decoration: none; /* quitar subrayado del enlace */
   color: inherit; /* mantener colores originales */
   transition: transform 0.2s ease; /* efecto hover opcional */
@@ -94,32 +93,6 @@
   line-height: 1.3;
   font-weight: 600;
   text-decoration: none; /* eliminar cualquier subrayado heredado */
-}
-
-/* Indicadores de posición */
-.carousel-indicators {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: none;
-  background: #ccc;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.indicator.active {
-  background: var(--dark-purple);
-  transform: scale(1.3);
-}
-
-.indicator:hover {
-  background: #999;
 }
 
 /* Estado vacío */

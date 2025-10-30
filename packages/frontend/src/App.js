@@ -9,6 +9,8 @@ import Shortcuts from "./components/mainPage/Shortcuts";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
+import Account from './components/Account/Account';
+import AccountInfo from './components/Account/AccountInfo';
 import Contacto from './components/Contacto/Contacto';
 import { Productos } from './components/mockData/Productos.js';
 import { FilterProvider } from "./contexts/FilterContext";
@@ -43,7 +45,7 @@ function App() {
               element={
                 <div>
                   <MainPicture />
-                  <ProductCarrousel products={Productos} />
+                  <ProductCarrousel products={Productos} autoPlay={true} autoPlayDelay={6000} />
                   <Shortcuts />
                   <p>Inicio - contenido principal de tu página</p>
                   
@@ -64,6 +66,10 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
 
             <Route path="/productos" element={<AllProducts />} />
+
+            <Route path="/account" element={<Account />} />
+            
+            <Route path="/account/manage" element={<AccountInfo />} />
 
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
