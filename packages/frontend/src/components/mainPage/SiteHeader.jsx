@@ -18,21 +18,17 @@ const SiteHeader = ({
     handleDecrease, 
     handleRemove 
 }) => {
-
-
     const { isFilterOpen, setIsFilterOpen } = useFilters();
     const location = useLocation();
     
-
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
 
     const handleToggleCart = () => {
         setIsCartOpen(!isCartOpen);
     };
-
-    const [searchTerm, setSearchTerm] = useState("");
-    const navigate = useNavigate();
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -56,6 +52,7 @@ const SiteHeader = ({
                     </Link>
                 </div>
 
+                {/* Barra de búsqueda original */}
                 <form className="search-form" role="search" onSubmit={handleSearchSubmit}>
                     <input
                         className="search-input"
@@ -78,7 +75,6 @@ const SiteHeader = ({
             </header>
 
             <nav className="categories-nav">
-
                 {location.pathname === '/productos' && (
                     <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="filter-toggle-button" aria-label="Mostrar/ocultar filtros">
                         <FontAwesomeIcon icon={faFilter} />

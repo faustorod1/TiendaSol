@@ -3,6 +3,7 @@ import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
+import Breadcrumbs from "./components/mainPage/Breadcrumbs";
 import MainPicture from "./components/mainPage/MainPicture";
 import ProductCarrousel from "./components/mainPage/ProductCarrousel";
 import Shortcuts from "./components/mainPage/Shortcuts";
@@ -37,6 +38,7 @@ function App() {
     <FilterProvider>
       <div className="App">
         <SiteHeader cartItemCount={itemCount} />
+        <Breadcrumbs />
         <main>
           <Routes>
             
