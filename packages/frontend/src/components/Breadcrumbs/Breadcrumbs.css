@@ -6,8 +6,6 @@
 }
 
 .breadcrumbs {
-  background: var(--light-gray);
-  border-bottom: 1px solid var(--border);
   padding: 0.75rem 0;
   font-size: 0.9rem;
 }

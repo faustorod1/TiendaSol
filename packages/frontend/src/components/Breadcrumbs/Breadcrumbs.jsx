@@ -13,7 +13,8 @@ const Breadcrumbs = () => {
     'checkout': 'Checkout',
     'contacto': 'Contacto',
     'account': 'Mi cuenta',
-    'manage': 'Gestionar cuenta'
+    'manage': 'Gestionar cuenta',
+    'signin': 'Iniciar Sesión'
   };
 
   // No mostrar breadcrumbs en la página de inicio

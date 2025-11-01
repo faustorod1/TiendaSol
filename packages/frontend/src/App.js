@@ -3,7 +3,7 @@ import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
-import Breadcrumbs from "./components/mainPage/Breadcrumbs";
+import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
 import MainPicture from "./components/mainPage/MainPicture";
 import ProductCarrousel from "./components/mainPage/ProductCarrousel";
 import Shortcuts from "./components/mainPage/Shortcuts";
@@ -12,6 +12,7 @@ import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
 import Account from './components/Account/Account';
 import AccountInfo from './components/Account/AccountInfo';
+import SignIn from './components/SignIn/SignIn';
 import Contacto from './components/Contacto/Contacto';
 import { Productos } from './components/mockData/Productos.js';
 import { FilterProvider } from "./contexts/FilterContext";
@@ -70,8 +71,10 @@ function App() {
             <Route path="/productos" element={<AllProducts />} />
 
             <Route path="/account" element={<Account />} />
-            
             <Route path="/account/manage" element={<AccountInfo />} />
+
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin/manage" element={<AccountInfo />} />
 
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
