@@ -7,6 +7,7 @@ import MiniCart from './MiniCart.jsx';
 import Notifications from './Notifications.jsx';
 import SideMenu from './SideMenu.jsx';
 import { useFilters } from '../../contexts/FilterContext';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 const mockCartItems = [
     { id: 1, name: 'Producto A', price: 29.99, quantity: 2, image: 'https://via.placeholder.com/60' },
@@ -18,10 +19,9 @@ const SiteHeader = ({
     handleIncrease, 
     handleDecrease, 
     handleRemove,
-    notifications = [],
-    setNotifications
 }) => {
     const { isFilterOpen, setIsFilterOpen } = useFilters();
+    const { notifications, unreadCount, markAsRead } = useNotifications();
     const location = useLocation();
     
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -42,17 +42,6 @@ const SiteHeader = ({
     };
 
     cartItems = mockCartItems;
-    const unreadCount = notifications.filter(n => !n.read).length;
-
-    const markAsRead = (notificationId) => {
-        setNotifications(prev => 
-            prev.map(notification => 
-                notification.id === notificationId 
-                    ? { ...notification, read: true }
-                    : notification
-            )
-        );
-    };
 
     const cartItemCount = cartItems.length;
 

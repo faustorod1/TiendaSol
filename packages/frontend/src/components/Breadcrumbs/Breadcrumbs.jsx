@@ -14,7 +14,8 @@ const Breadcrumbs = () => {
     'contacto': 'Contacto',
     'account': 'Mi cuenta',
     'manage': 'Gestionar cuenta',
-    'signin': 'Iniciar Sesión'
+    'signin': 'Iniciar Sesión',
+    'notifications': 'Notificaciones'
   };
 
   // No mostrar breadcrumbs en la página de inicio

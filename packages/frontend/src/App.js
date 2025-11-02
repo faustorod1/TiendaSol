@@ -12,11 +12,13 @@ import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
 import Account from './components/Account/Account';
 import AccountInfo from './components/Account/AccountInfo';
+import AllNotifications from './components/Notifications/AllNotifications';
 import SignIn from './components/SignIn/SignIn';
 import Contacto from './components/Contacto/Contacto';
 import { Productos } from './components/mockData/Productos.js';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
+import { NotificationProvider } from "./contexts/NotificationContext"; // Nuevo import
 
 import "./App.css";
 
@@ -39,57 +41,61 @@ function App() {
  
   return (
     <FilterProvider>
-      <div className="App">
-        <SiteHeader 
-          cartItemCount={itemCount} 
-          notifications={notifications}
-          setNotifications={setNotifications}
-        />
-        <Breadcrumbs />
-        <main>
-          <Routes>
+      <NotificationProvider> {/* Envolver la app */}
+        <div className="App">
+          <SiteHeader 
+            cartItemCount={itemCount} 
+            notifications={notifications}
+            setNotifications={setNotifications}
+          />
+          <Breadcrumbs />
+          <main>
+            <Routes>
             
-            <Route 
-              path="/" 
-              element={
-                <div>
-                  <MainPicture />
-                  <ProductCarrousel products={Productos} autoPlay={true} autoPlayDelay={6000} />
-                  <Shortcuts />
-                  <p>Inicio - contenido principal de tu página</p>
-                  
-                  {/* --- AGREGA ESTO TEMPORALMENTE --- */}
-                  <div style={{ height: '2000px', background: '#f0f0f0', paddingTop: '20px' }}>
-                    (Esto es solo un espacio alto para probar el scroll)
+              <Route 
+                path="/" 
+                element={
+                  <div>
+                    <MainPicture />
+                    <ProductCarrousel products={Productos} autoPlay={true} autoPlayDelay={6000} />
+                    <Shortcuts />
+                    <p>Inicio - contenido principal de tu página</p>
+                    
+                    {/* --- AGREGA ESTO TEMPORALMENTE --- */}
+                    <div style={{ height: '2000px', background: '#f0f0f0', paddingTop: '20px' }}>
+                      (Esto es solo un espacio alto para probar el scroll)
+                    </div>
+                    {/* ---------------------------------- */}
+
                   </div>
-                  {/* ---------------------------------- */}
+                } 
+              />
 
-                </div>
-              } 
-            />
+              {/* Ruta dinámica para productos */}
+              <Route path="/producto/:id" element={<ProductDetailPage />} />
 
-            {/* Ruta dinámica para productos */}
-            <Route path="/producto/:id" element={<ProductDetailPage />} />
+              {/* Podés agregar más rutas aquí */}
+              <Route path="/checkout" element={<Checkout />} />
 
-            {/* Podés agregar más rutas aquí */}
-            <Route path="/checkout" element={<Checkout />} />
+              <Route path="/productos" element={<AllProducts />} />
 
-            <Route path="/productos" element={<AllProducts />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/account/manage" element={<AccountInfo />} />
 
-            <Route path="/account" element={<Account />} />
-            <Route path="/account/manage" element={<AccountInfo />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signin/manage" element={<AccountInfo />} />
 
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signin/manage" element={<AccountInfo />} />
+              <Route path="/notifications" element={<AllNotifications />} />
 
-            <Route path="/contacto" element={<Contacto />} />
-          </Routes>
+              <Route path="/contacto" element={<Contacto />} />
+            </Routes>
 
-          
-        </main>
+            
+          </main>
 
-        <Footer />
-      </div>
+          <Footer />
+        </div>
+      </NotificationProvider>
     </FilterProvider>
   );
 }
