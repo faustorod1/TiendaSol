@@ -1,9 +1,10 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faShoppingCart, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faShoppingCart, faFilter, faComment, faBell } from '@fortawesome/free-solid-svg-icons';
 import './SiteHeader.css';
 import MiniCart from './MiniCart.jsx';
+import Notifications from './Notifications.jsx';
 import SideMenu from './SideMenu.jsx';
 import { useFilters } from '../../contexts/FilterContext';
 
@@ -16,7 +17,9 @@ const SiteHeader = ({
     cartItems = [], 
     handleIncrease, 
     handleDecrease, 
-    handleRemove 
+    handleRemove,
+    notifications = [],
+    setNotifications
 }) => {
     const { isFilterOpen, setIsFilterOpen } = useFilters();
     const location = useLocation();
@@ -24,6 +27,7 @@ const SiteHeader = ({
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleToggleCart = () => {
@@ -37,7 +41,19 @@ const SiteHeader = ({
         }
     };
 
-    cartItems = mockCartItems; 
+    cartItems = mockCartItems;
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    const markAsRead = (notificationId) => {
+        setNotifications(prev => 
+            prev.map(notification => 
+                notification.id === notificationId 
+                    ? { ...notification, read: true }
+                    : notification
+            )
+        );
+    };
+
     const cartItemCount = cartItems.length;
 
     return (
@@ -52,7 +68,7 @@ const SiteHeader = ({
                     </Link>
                 </div>
 
-                {/* Barra de búsqueda original */}
+                {}
                 <form className="search-form" role="search" onSubmit={handleSearchSubmit}>
                     <input
                         className="search-input"
@@ -65,6 +81,28 @@ const SiteHeader = ({
                 </form>
 
                 <div className="header-group right">
+                    {}
+                    <div className="notifications-container">
+                        <button 
+                            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+                            className="notifications-button" 
+                            aria-label={`Ver notificaciones (${unreadCount} no leídas)`}
+                        >
+                            <FontAwesomeIcon icon={faBell} />
+                            {unreadCount > 0 && (
+                                <span className="notifications-count">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                            )}
+                        </button>
+                        
+                        <Notifications 
+                            isOpen={isNotificationsOpen}
+                            onClose={() => setIsNotificationsOpen(false)}
+                            notifications={notifications}
+                            onMarkAsRead={markAsRead}
+                        />
+                    </div>
+
+                    {}
                     <button onClick={handleToggleCart} className="cart-button" aria-label={`Ver carrito con ${cartItemCount} artículos`}>
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {cartItemCount > 0 && (
@@ -100,6 +138,8 @@ const SiteHeader = ({
                 onDecrease={handleDecrease}
                 onRemove={handleRemove}
             />
+
+            {}
         </div>
     );
 };

@@ -15,14 +15,16 @@ import AccountInfo from './components/Account/AccountInfo';
 import SignIn from './components/SignIn/SignIn';
 import Contacto from './components/Contacto/Contacto';
 import { Productos } from './components/mockData/Productos.js';
+import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
 
 import "./App.css";
 
-
 function App() {
-
   let itemCount = 3; // Cantidad de artículos en el carrito
+
+  // Estado para manejar las notificaciones
+  const [notifications, setNotifications] = useState(Notificaciones);
 
   /*
   const [message, setMessage] = useState("");
@@ -38,7 +40,11 @@ function App() {
   return (
     <FilterProvider>
       <div className="App">
-        <SiteHeader cartItemCount={itemCount} />
+        <SiteHeader 
+          cartItemCount={itemCount} 
+          notifications={notifications}
+          setNotifications={setNotifications}
+        />
         <Breadcrumbs />
         <main>
           <Routes>

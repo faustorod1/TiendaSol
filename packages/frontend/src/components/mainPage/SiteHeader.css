@@ -138,6 +138,54 @@
     padding: 0;
 }
 
+/* Botón de notificaciones - similar al cart-button */
+.notifications-button {
+    background: none;
+    border: none;
+    color: var(--nyanza);
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.notifications-button:hover {
+    color: var(--nyanza);
+}
+
+/* Contador de notificaciones no leídas */
+.notifications-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 20px;
+    padding: 0;
+    box-sizing: border-box;
+    border: 2px solid var(--dark-purple);
+}
+
+/* Para números de más de 2 dígitos, cambiar a "99+" */
+.notifications-count::after {
+    content: attr(data-count);
+}
+
+/* Contenedor para posicionar el dropdown */
+.notifications-container {
+    position: relative;
+    display: inline-block;
+}
+
 /* Media queries para responsividad */
 @media (max-width: 768px) {
   /* Ocultar búsqueda de desktop */
@@ -183,6 +231,19 @@
     padding: 0.5rem;
     font-size: 1.1rem;
   }
+  
+  .notifications-button {
+    padding: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .notifications-count {
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    top: -6px;
+    right: -6px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -205,5 +266,17 @@
   .mobile-search-submit {
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
+  }
+  
+  .notifications-button {
+    font-size: 1rem;
+  }
+  
+  .notifications-count {
+    width: 16px;
+    height: 16px;
+    font-size: 0.65rem;
+    top: -5px;
+    right: -5px;
   }
 }
