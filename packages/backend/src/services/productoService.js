@@ -1,3 +1,4 @@
+import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 import { Producto } from "../models/entities/producto.js";
 import { ProductoRepository } from "../models/repositories/productoRepository.js";
 
@@ -23,5 +24,13 @@ export class ProductoService {
             totalPages: totalPaginas,
             data: productos
         };
+    }
+
+    async buscarPorId(id) {
+        const producto = await this.productoRepository.findById(id);
+        if (producto === null) {
+            throw new ProductoDoesNotExistError(id);
+        }
+        return producto;
     }
 }

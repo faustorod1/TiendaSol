@@ -48,7 +48,8 @@ export class ProductoRepository {
     }
 
     async findById(id) {
-        return await this.model.findById(id);
+        const objId = mongoose.Types.ObjectId.createFromHexString(id);
+        return await this.model.findById(objId);
     }
 
     async findManyById(ids){

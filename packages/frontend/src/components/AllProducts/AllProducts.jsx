@@ -30,7 +30,7 @@ const AllProducts = () => {
 
     try {
       const queryString = searchParams.toString();
-      const response = await fetch(`http://localhost:8000/api/productos?${queryString}`);
+      const response = await fetch(`http://localhost:8000/productos?${queryString}`);
       if (response.status === 204) {
           setProductos([]);
           setTotalPages(1);

@@ -25,6 +25,21 @@ export class ProductoController {
 
         res.status(200).json(productosPaginados)
     }
+
+    async buscarPorId(req, res) {
+        const result = objectIdSchema.safeParse(req.params.id);
+        if (!result.success) {
+            return res.status(400).json(result.error.issues);
+        }
+        const productId = result.data;
+
+        try {
+            const producto = await this.productoService.buscarPorId(productId);
+            res.status(200).json(producto);
+        } catch (error) {
+            res.status(400).json({'error': error.message});
+        }
+    }
 }
 
 const paginationSchema = z.object({
@@ -43,7 +58,7 @@ const paginationSchema = z.object({
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
 
 const filterSchema = z.object({
-    vendedor: objectIdSchema,
+    vendedor: objectIdSchema.optional(),
     titulo: z.string().optional(),
     descripcion: z.string().optional(),
     categoria: z.string().optional(),
