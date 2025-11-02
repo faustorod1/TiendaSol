@@ -30,7 +30,7 @@ export class ProductoRepository {
             case "precio_desc":
                 sort.precio = -1;
                 break;
-            case "mas_vendido":
+            case "ventas_desc":
                 sort.cantidadVendida = -1;
                 break;
             default:
@@ -76,6 +76,24 @@ export class ProductoRepository {
         return await this.model.find({
             precio: { $gte: minPrice, $lte: maxPrice }
         });
+    }
+
+    async updateStockYVentas(productos) {
+        if (!productos || productos.length === 0) return;
+
+        const operaciones = productos.map(p => ({
+            updateOne: {
+                filter: { _id: p._id },
+                update: {
+                    $set: {
+                        stock: p.stock,
+                        cantidadVendida: p.cantidadVendida
+                    }
+                }
+            }
+        }));
+
+        await this.model.bulkWrite(operaciones);
     }
 
     async delete(id) {

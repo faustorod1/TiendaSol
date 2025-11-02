@@ -7,6 +7,10 @@ export class PedidoRepository {
         this.model = PedidoModel;
     }
 
+    generarId() {
+        return new mongoose.Types.ObjectId();
+    }
+
     async save(pedido) {
         const pedidoParaGuardar = {
             comprador: mongoose.Types.ObjectId.createFromHexString(pedido.comprador.id),
@@ -36,12 +40,20 @@ export class PedidoRepository {
         return await this.model.find();
     }
 
-    async findById(id) {
-        return await this.model.findById(id);
+    async findById(id, populateUsuarios = false) {
+        let query = this.model.findById(id);
+        if (populateUsuarios) {
+            query = query.populate('comprador').populate('vendedor');
+        }
+        return await query;
     }
 
     async consultarHistorialPedidos(id_usuario) {
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(id_usuario);
-        return await this.model.find({ "comprador_id": objUsuario });
+        return await this.model.find({ "comprador": objUsuario });
+    }
+
+    async update(pedido) {
+        return await pedido.save();
     }
 }
