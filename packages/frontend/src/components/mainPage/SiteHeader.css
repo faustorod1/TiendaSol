@@ -186,30 +186,72 @@
     display: inline-block;
 }
 
-/* Media queries para responsividad */
+/* Media queries para responsividad - MANTENER BÚSQUEDA EN MÓVIL */
 @media (max-width: 768px) {
-  /* Ocultar búsqueda de desktop */
-  .desktop-search {
-    display: none;
-  }
-  
-  /* Mostrar barra de búsqueda móvil */
-  .mobile-search-bar {
-    display: block;
-  }
-  
-  /* Ajustar header para móvil */
+  /* Ajustar header para móvil - reducir padding y gap */
   .header-main {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem; /* Reducir gap principal */
   }
   
   .brand-text {
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Más pequeño para dar espacio */
+  }
+  
+  /* Ajustar grupos del header */
+  .header-group {
+    gap: 0.5rem; /* Reducir gap entre elementos */
+  }
+  
+  .header-group.left {
+    flex-basis: auto; /* Permitir que se adapte */
+    flex-shrink: 1;
+  }
+  
+  .header-group.right {
+    flex-basis: auto; /* Permitir que se adapte */
+    flex-shrink: 0; /* No permitir que se reduzca tanto */
+  }
+  
+  /* Ajustar barra de búsqueda para móvil */
+  .search-form {
+    max-width: none; /* Quitar límite de ancho */
+    flex-grow: 1;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .search-input {
+    padding: 0.5rem 0.75rem; /* Reducir padding */
+    font-size: 0.9rem;
+  }
+  
+  .search-button {
+    padding: 0.5rem 0.75rem; /* Reducir padding */
+    font-size: 0.9rem;
+  }
+  
+  /* Ajustar botones del header - más compactos */
+  .menu-button,
+  .cart-button,
+  .notifications-button {
+    padding: 0.25rem; /* Muy compacto */
+    font-size: 1.1rem;
+  }
+  
+  /* Ajustar contadores */
+  .notifications-count,
+  .cart-count {
+    width: 16px;
+    height: 16px;
+    font-size: 0.65rem;
+    top: -6px;
+    right: -6px;
   }
   
   /* Ajustar navegación de categorías */
   .categories-nav {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.75rem;
     overflow-x: auto;
     white-space: nowrap;
@@ -220,63 +262,91 @@
     font-size: 0.9rem;
     flex-shrink: 0;
   }
-  
-  /* Ajustar botones del header */
-  .header-group {
-    gap: 0.5rem;
-  }
-  
-  .menu-button,
-  .cart-button {
-    padding: 0.5rem;
-    font-size: 1.1rem;
-  }
-  
-  .notifications-button {
-    padding: 0.5rem;
-    font-size: 1.1rem;
-  }
-  
-  .notifications-count {
-    width: 18px;
-    height: 18px;
-    font-size: 0.7rem;
-    top: -6px;
-    right: -6px;
-  }
 }
 
 @media (max-width: 480px) {
   .header-main {
-    padding: 0.5rem 0.75rem;
+    padding: 0.25rem 0.5rem; /* Muy compacto */
+    gap: 0.5rem;
   }
   
   .brand-text {
-    font-size: 1.1rem;
+    font-size: 1rem; /* Aún más pequeño */
   }
   
-  .categories-nav {
-    padding: 0.5rem 0.75rem;
+  /* Grupos aún más compactos */
+  .header-group {
+    gap: 0.25rem;
   }
   
-  .mobile-search-bar {
-    padding: 0.5rem 0.75rem;
+  /* Búsqueda más compacta */
+  .search-input {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
   }
   
-  .mobile-search-submit {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+  .search-button {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
   }
   
+  /* Botones muy compactos */
+  .menu-button,
+  .cart-button,
   .notifications-button {
+    padding: 0.2rem;
     font-size: 1rem;
   }
   
-  .notifications-count {
-    width: 16px;
-    height: 16px;
-    font-size: 0.65rem;
+  /* Contadores más pequeños */
+  .notifications-count,
+  .cart-count {
+    width: 14px;
+    height: 14px;
+    font-size: 0.6rem;
     top: -5px;
     right: -5px;
+  }
+  
+  .categories-nav {
+    padding: 0.4rem 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .category-link {
+    font-size: 0.85rem;
+  }
+}
+
+/* Media query adicional para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .header-main {
+    padding: 0.2rem 0.4rem;
+    gap: 0.4rem;
+  }
+  
+  .brand-text {
+    font-size: 0.9rem;
+  }
+  
+  .header-group {
+    gap: 0.2rem;
+  }
+  
+  .search-input {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  .search-button {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  .menu-button,
+  .cart-button,
+  .notifications-button {
+    padding: 0.1rem;
+    font-size: 0.9rem;
   }
 }

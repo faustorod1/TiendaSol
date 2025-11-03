@@ -26,33 +26,33 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
 
   return (
     <>
-      {}
-      <div className="notifications-overlay" onClick={onClose}></div>
+      {/* Overlay para cerrar al hacer click fuera */}
+      <div className="notif-overlay" onClick={onClose}></div>
       
-      <div className="notifications-dropdown">
-        <div className="notifications-header">
+      <div className="notif-dropdown">
+        <div className="notif-header">
           <h3>Notificaciones</h3>
-          <button onClick={onClose} className="close-button">×</button>
+          <button onClick={onClose} className="notif-close">×</button>
         </div>
 
-        <div className="notifications-content">
+        <div className="notif-content">
           {notifications.length === 0 ? (
-            <div className="no-notifications">
+            <div className="notif-empty">
               <p>No tienes notificaciones</p>
             </div>
           ) : (
             <>
-              <div className="notifications-list">
+              <div className="notif-list">
                 {displayNotifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className="notification-item"
+                    className="notif-item"
                     onClick={() => handleNotificationClick(notification.id)}
                   >
-                    <div className="notification-content">
-                      <div className="notification-title">{notification.title}</div>
-                      <div className="notification-message">{notification.message}</div>
-                      <div className="notification-time">
+                    <div className="notif-item-content">
+                      <div className="notif-title">{notification.title}</div>
+                      <div className="notif-message">{notification.message}</div>
+                      <div className="notif-time">
                         {formatTimeAgo(notification.timestamp)}
                       </div>
                     </div>
@@ -61,10 +61,10 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
               </div>
 
               {hasMoreNotifications && (
-                <div className="notifications-footer">
+                <div className="notif-footer">
                   <Link 
                     to="/notifications" 
-                    className="view-all-button"
+                    className="notif-view-all"
                     onClick={onClose}
                   >
                     Ver todas ({notifications.length})
