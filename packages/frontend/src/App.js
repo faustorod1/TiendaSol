@@ -59,14 +59,6 @@ function App() {
                     <MainPicture />
                     <ProductCarrousel products={Productos} autoPlay={true} autoPlayDelay={6000} />
                     <Shortcuts />
-                    <p>Inicio - contenido principal de tu página</p>
-                    
-                    {/* --- AGREGA ESTO TEMPORALMENTE --- */}
-                    <div style={{ height: '2000px', background: '#f0f0f0', paddingTop: '20px' }}>
-                      (Esto es solo un espacio alto para probar el scroll)
-                    </div>
-                    {/* ---------------------------------- */}
-
                   </div>
                 } 
               />

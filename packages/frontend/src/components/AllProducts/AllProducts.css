@@ -34,13 +34,13 @@
 }
 
 .layout-col-left {
-  flex-basis: 400px;
+  flex-basis: 500px;
   flex-shrink: 0;
 }
 
 /* columna vacia */
 .layout-col-right {
-  flex-basis: 400px; 
+  flex-basis: 500px; 
   flex-shrink: 0;
 }
 

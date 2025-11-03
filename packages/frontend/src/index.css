@@ -68,6 +68,24 @@ body {
   --thistle-hover:#ddd5e4;
 }
 
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  flex-grow: 1;
+}
+
+header, footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
 a.link-no-style{
     text-decoration: none;
 }
