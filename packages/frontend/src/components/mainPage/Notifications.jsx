@@ -1,14 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Notifications.css';
 
 const Notifications = ({ isOpen, onClose, notifications = [] }) => {
+  const navigate = useNavigate();
+  
   // Limitar a máximo 5 notificaciones para mostrar en el dropdown
   const displayNotifications = notifications.slice(0, 5);
   const hasMoreNotifications = notifications.length > 5;
 
   const handleNotificationClick = (notificationId) => {
-    console.log('Notification clicked:', notificationId);
+    // Navegar al detalle y cerrar dropdown
+    navigate(`/notification/${notificationId}`);
+    onClose();
   };
 
   const formatTimeAgo = (timestamp) => {
@@ -26,7 +30,6 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
 
   return (
     <>
-      {/* Overlay para cerrar al hacer click fuera */}
       <div className="notif-overlay" onClick={onClose}></div>
       
       <div className="notif-dropdown">

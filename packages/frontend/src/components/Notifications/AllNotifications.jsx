@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 import './AllNotifications.css';
 
 const AllNotifications = () => {
@@ -11,6 +12,8 @@ const AllNotifications = () => {
     markAllAsRead, 
     deleteNotification 
   } = useNotifications();
+
+  const navigate = useNavigate();
 
   const [filter, setFilter] = useState('all'); // 'all', 'unread', 'read'
 
@@ -66,6 +69,8 @@ const AllNotifications = () => {
             <div 
               key={notification.id} 
               className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+              onClick={() => navigate(`/notification/${notification.id}`)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="notification-content">
                 <h3>{notification.title}</h3>
@@ -77,11 +82,17 @@ const AllNotifications = () => {
               
               <div className="notification-actions">
                 {!notification.read && (
-                  <button onClick={() => markAsRead(notification.id)}>
+                  <button 
+                    onClick={() => markAsRead(notification.id)}
+                    className="mark-read-btn"
+                  >
                     Marcar como leída
                   </button>
                 )}
-                <button onClick={() => deleteNotification(notification.id)}>
+                <button 
+                  onClick={() => deleteNotification(notification.id)}
+                  className="delete-btn"
+                >
                   Eliminar
                 </button>
               </div>

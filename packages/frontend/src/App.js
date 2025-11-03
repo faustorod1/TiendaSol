@@ -19,6 +19,7 @@ import { Productos } from './components/mockData/Productos.js';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
 import { NotificationProvider } from "./contexts/NotificationContext"; // Nuevo import
+import NotificationDetailPage from './components/Notifications/NotificationDetailPage';
 
 import "./App.css";
 
@@ -78,6 +79,7 @@ function App() {
               <Route path="/signin/manage" element={<AccountInfo />} />
 
               <Route path="/notifications" element={<AllNotifications />} />
+              <Route path="/notification/:id" element={<NotificationDetailPage />} />
 
               <Route path="/contacto" element={<Contacto />} />
             </Routes>
