@@ -64,7 +64,7 @@ function App() {
               />
 
               {/* Ruta dinámica para productos */}
-              <Route path="/producto/:id" element={<ProductDetailPage />} />
+              <Route path="/productos/:id" element={<ProductDetailPage />} />
 
               {/* Podés agregar más rutas aquí */}
               <Route path="/checkout" element={<Checkout />} />

@@ -8,8 +8,7 @@ const Breadcrumbs = () => {
 
   // Mapeo de rutas a nombres amigables
   const routeNames = {
-    'productos': 'Todos los productos',
-    'producto': 'Producto',
+    'productos': 'Productos',
     'checkout': 'Checkout',
     'contacto': 'Contacto',
     'account': 'Mi cuenta',
