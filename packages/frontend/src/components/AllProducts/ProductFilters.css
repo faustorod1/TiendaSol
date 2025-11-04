@@ -35,3 +35,55 @@
   font-size: 0.95rem;
   box-sizing: border-box;
 }
+
+/* Estilos responsivos para ProductFilters dentro de AllProducts */
+@media (max-width: 1200px) {
+  /* Hacer filtros más compactos */
+  .product-filters {
+    padding: 1rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-filters {
+    padding: 0.75rem;
+  }
+  
+  .filter-input,
+  .filter-select {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* En móvil, mostrar filtros en formato horizontal compacto */
+  .product-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .filter-group {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-filters {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+}

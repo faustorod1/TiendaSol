@@ -60,7 +60,245 @@
   }
 }
 
-.products-grid-wrapper.is-centered {
-  flex-grow: 0; 
-  margin: 0 auto; 
+@media (min-width: 1201px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .layout-col-left {
+    width: 200px;
+    max-width: 13rem;
+  }
+  
+  .layout-col-middle {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .layout-col-left {
+    width: 180px; /* Más angosto */
+  }
+  
+  .all-products-layout {
+    gap: 0.75rem; /* Reducir gap entre columnas */
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Móvil grande - mantener layout lateral pero muy angosto */
+@media (max-width: 768px) {
+  .layout-col-left {
+    width: 140px; /* Muy angosto pero manteniendo lateral */
+  }
+  
+  .layout-col-right {
+    display: none; /* Ocultar columna derecha para dar más espacio */
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .all-products-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .layout-col-middle {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Móvil mediano - filtros muy compactos, 2 columnas de productos */
+@media (max-width: 600px) {
+  .layout-col-left {
+    width: 120px; /* Extremadamente angosto */
+  }
+  
+  .all-products-layout {
+    gap: 0.5rem;
+  }
+  
+  .products-grid {
+    gap: 0.5rem;
+  }
+}
+
+/* Móvil pequeño - una columna de productos, filtros muy angostos */
+@media (max-width: 480px) {
+  .layout-col-left {
+    width: 100px; /* Súper angosto */
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr; /* Una sola columna */
+    gap: 1rem;
+  }
+  
+  .all-products-page {
+    padding: 0.75rem 0.25rem;
+  }
+  
+  .layout-col-middle {
+    padding: 0 0.25rem;
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+}
+
+/* Móvil muy pequeño - mantener layout pero ultra compacto */
+@media (max-width: 360px) {
+  .layout-col-left {
+    width: 80px; /* Ultra angosto */
+  }
+  
+  .all-products-page {
+    padding: 0.5rem 0.1rem;
+  }
+  
+  .products-grid {
+    gap: 0.75rem;
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Estilos responsivos para ProductFilters - mantener compacto */
+@media (max-width: 1200px) {
+  .product-filters {
+    padding: 0.75rem;
+    max-width: 13rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 0.75rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-filters {
+    padding: 0.5rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 0.5rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .filter-input,
+  .filter-select {
+    padding: 0.3rem;
+    font-size: 0.75rem;
+    width: 100%;
+  }
+  
+  .filter-checkbox-group {
+    gap: 0.25rem;
+  }
+  
+  .filter-checkbox-group label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-filters {
+    padding: 0.4rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.75rem;
+  }
+  
+  .filter-input,
+  .filter-select {
+    padding: 0.25rem;
+    font-size: 0.7rem;
+  }
+  
+  .filter-checkbox-group label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .product-filters {
+    padding: 0.3rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 0.4rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.7rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .filter-input,
+  .filter-select {
+    padding: 0.2rem;
+    font-size: 0.65rem;
+  }
+}
+
+/* Ajustes para controles de paginación */
+@media (max-width: 768px) {
+  .pagination-controls {
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .pagination-controls button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .pagination-controls span {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-controls button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .pagination-controls span {
+    font-size: 0.8rem;
+  }
 }
