@@ -4,9 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
 import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
-import MainPicture from "./components/mainPage/MainPicture";
-import ProductCarrousel from "./components/mainPage/ProductCarrousel";
-import Shortcuts from "./components/mainPage/Shortcuts";
+import Landing from "./components/Landing/Landing.jsx";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';
@@ -15,7 +13,6 @@ import AccountInfo from './components/Account/AccountInfo';
 import AllNotifications from './components/Notifications/AllNotifications';
 import SignIn from './components/SignIn/SignIn';
 import Contacto from './components/Contacto/Contacto';
-import { Productos } from './components/mockData/Productos.js';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
 import { NotificationProvider } from "./contexts/NotificationContext"; // Nuevo import
@@ -53,16 +50,7 @@ function App() {
           <main>
             <Routes>
             
-              <Route 
-                path="/" 
-                element={
-                  <div>
-                    <MainPicture />
-                    <ProductCarrousel products={Productos} autoPlay={true} autoPlayDelay={6000} />
-                    <Shortcuts />
-                  </div>
-                } 
-              />
+              <Route path="/" element={<Landing />} />
 
               {/* Ruta dinámica para productos */}
               <Route path="/productos/:id" element={<ProductDetailPage />} />

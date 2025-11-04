@@ -47,7 +47,7 @@ const ProductCarrousel = ({ products = [], autoPlay = true, autoPlayDelay = 6000
           ←
         </button>
 
-        <Link to={`/productos/${currentProduct.id}`} className="carousel-content">
+        <Link to={`/productos/${currentProduct._id}`} className="carousel-content">
           <img 
             src={currentProduct.fotos?.[0]} 
             alt={currentProduct.titulo} 

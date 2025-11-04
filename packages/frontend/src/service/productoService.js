@@ -34,3 +34,22 @@ export async function fetchProducts(searchParams) {
     }
   }
 };
+
+
+export async function fetchProductById(id) {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+        if (error.response.status === 404) {
+        return null;
+      }
+      throw new Error(`Error ${error.response.status} al cargar producto: ${error.response.statusText}`);
+    } else if (error.request) {
+      throw new Error("No se pudo conectar con el servidor.");
+    } else {
+      throw new Error(`Error al procesar la petición: ${error.message}`);
+    }
+  }
+}

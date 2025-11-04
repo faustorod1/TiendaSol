@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom";
-import {Productos} from "../mockData/Productos.js";
+import { fetchProductById } from '../../service/productoService.js';
 import "./ProductDetailPage.css"
 
 const ProductDetailPage = (props) => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
-  //const product = Productos.find(p => p.id === id);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/productos/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Error al obtener producto");
-        return res.json();
-      })
-      .then(data => setProduct(data))
-      .finally(() => setLoading(false));
+    const loadProduct = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchProductById(id);
+        setProduct(data);
+      } catch (err) {
+        console.error("Error al cargar producto:", err);
+        setError(err.message);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProduct();
   }, [id]);
 
   if (loading) {
