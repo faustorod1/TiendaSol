@@ -5,42 +5,33 @@ export class ProductoRepository {
     constructor() {
         this.model = ProductoModel;
     }
+
     async findByPage(nroPagina, elemsXPagina, filtros) {
-        const filtrosValidos = {};
-        if (filtros.vendedor) {
-            filtrosValidos.vendedor = mongoose.Types.ObjectId.createFromHexString(filtros.vendedor);
-        }
-        if (filtros.titulo) {
-            filtrosValidos.titulo = RegExp(filtros.titulo, "i");
-        }
-        if (filtros.descripcion) {
-            filtrosValidos.descripcion = RegExp(filtros.descripcion, "i");
-        }
-        if (filtros.precioMin || filtros.precioMax) {
-            filtrosValidos.precio = {};
-            if (filtros.precioMin) filtrosValidos.precio.$gte = filtros.precioMin;
-            if (filtros.precioMax) filtrosValidos.precio.$lte = filtros.precioMax;
+        const filtrosValidos = this._buildFilters(filtros);
+        const sort = this._buildSort(filtros);
+
+        const totalItems = await this.model.countDocuments(filtrosValidos);
+
+        const totalPages = Math.ceil(totalItems / elemsXPagina);
+        const skipAmount = (nroPagina - 1) * elemsXPagina;
+
+        let data = [];
+        
+        if (totalItems > 0 && nroPagina <= totalPages) {
+            data = await this.model.find(filtrosValidos)
+                .sort(sort)
+                .skip(skipAmount)
+                .limit(elemsXPagina)
+                .lean();
         }
 
-        const sort = {};
-        switch (filtros.orderBy) {
-            case "precio_asc":
-                sort.precio = 1;
-                break;
-            case "precio_desc":
-                sort.precio = -1;
-                break;
-            case "ventas_desc":
-                sort.cantidadVendida = -1;
-                break;
-            default:
-                sort._id = -1;
-        }
-
-        return await this.model.find(filtrosValidos)
-        .sort(sort)
-        .skip((nroPagina - 1) * elemsXPagina)
-        .limit(elemsXPagina);
+        return {
+            page: nroPagina,
+            perPage: elemsXPagina,
+            total: totalItems,
+            totalPages: totalPages,
+            data: data
+        };
     }
 
     async findAll() {
@@ -56,8 +47,9 @@ export class ProductoRepository {
         return await this.model.find({ _id: { $in : ids } });
     }
 
-    async count() {
-        return await this.model.countDocuments();
+    async count(filtros) {
+        const filtrosValidos = this._buildFilters(filtros);
+        return await this.model.countDocuments(filtrosValidos);
     }
 
     async findByTitle(titulo) {
@@ -109,5 +101,48 @@ export class ProductoRepository {
         }));
 
         return await this.model.bulkWrite(operaciones);
+    }
+
+
+
+    // Métodos privados
+
+    _buildFilters(filtros) {
+        const filtrosValidos = {};
+        if (filtros.vendedor) {
+            filtrosValidos.vendedor = mongoose.Types.ObjectId.createFromHexString(filtros.vendedor);
+        }
+        if (filtros.titulo) {
+            filtrosValidos.titulo = RegExp(filtros.titulo, "i");
+        }
+        if (filtros.descripcion) {
+            filtrosValidos.descripcion = RegExp(filtros.descripcion, "i");
+        }
+        if (filtros.precioMin || filtros.precioMax) {
+            filtrosValidos.precio = {};
+            if (filtros.precioMin) filtrosValidos.precio.$gte = filtros.precioMin;
+            if (filtros.precioMax) filtrosValidos.precio.$lte = filtros.precioMax;
+        }
+
+        return filtrosValidos;
+    }
+
+    _buildSort(filtros) {
+        const sort = {};
+        switch (filtros.orderBy) {
+            case "precio_asc":
+                sort.precio = 1;
+                break;
+            case "precio_desc":
+                sort.precio = -1;
+                break;
+            case "ventas_desc":
+                sort.cantidadVendida = -1;
+                break;
+            default:
+                sort._id = -1;
+        }
+
+        return sort;
     }
 }

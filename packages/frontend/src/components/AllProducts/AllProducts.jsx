@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-//import { Productos } from '../mockData/Productos.js';
+import { fetchProducts } from '../../service/productoService';
 import ProductCard from './ProductCard';
 import ProductFilters from './ProductFilters';
 import { useFilters } from '../../contexts/FilterContext';
 import './AllProducts.css';
 
 const AllProducts = () => {
-
-  
-  //const [filteredProducts, setFilteredProducts] = useState(Productos); datos mockeados fuera, ya implemente la llamda al backend
-
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,31 +20,18 @@ const AllProducts = () => {
 
   useEffect(() => {
 
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       setLoading(true);
       setError(null);
 
     try {
-      const queryString = searchParams.toString();
-      const response = await fetch(`http://localhost:8000/productos?${queryString}`);
-      if (response.status === 204) {
-          setProductos([]);
-          setTotalPages(1);
-          setCurrentPage(1);
-          return; 
-        }
-      
-      if (!response.ok) {
-        throw new Error(`Error ${response.status} al cargar productos: ${response.statusText}`);
-      }
+      const result = await fetchProducts(searchParams);
+      setProductos(result.data);
+      setTotalPages(result.totalPages);
+      setCurrentPage(result.page);
 
-      const data = await response.json();
-
-      setProductos(data.data || []);
-      setTotalPages(data.totalPages || 1);
-      setCurrentPage(data.page || 1);
       } catch (err) {
-        console.error("Error al traer productos:", err);
+        console.error("Error al traer productos:", err.message);
         setError(err.message);
         setProductos([]);
       } finally {
@@ -56,7 +39,7 @@ const AllProducts = () => {
       }
     };
     
-    fetchProducts();
+    loadProducts();
 
   }, [searchParams]);
 
@@ -68,6 +51,10 @@ const AllProducts = () => {
     } else {
       newParams.delete(name);
     }
+    if (newParams.has('page')) {
+        newParams.delete('page');
+    }
+
     setSearchParams(newParams);
   };
 
@@ -95,6 +82,15 @@ const AllProducts = () => {
     );
   };
 
+  const handlePageChange = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', newPage.toString());
+
+    setSearchParams(newSearchParams);
+  }
+
   return (
     <div className="all-products-page">
       <div className="all-products-layout">
@@ -116,9 +112,19 @@ const AllProducts = () => {
 
             {!loading && !error && totalPages > 1 && (
               <div className="pagination-controls" style={{ marginTop: '2rem' }}>
-                <button disabled={currentPage === 1}>Anterior</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Anterior
+                </button>
                 <span> Página {currentPage} de {totalPages} </span>
-                <button disabled={currentPage === totalPages}>Siguiente</button>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Siguiente
+                </button>
               </div>
             )}
         </div>
