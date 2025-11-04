@@ -11,6 +11,7 @@ export class StockInsuficienteError extends Error {
         
         const prodStr = productosYCantidades.join(", ");
         super(`No hay suficiente stock para los siguientes productos: ${prodStr}`);
+
         this.name = "StockInsuficienteError";
         this.productosFaltantes = productosFaltantes.map(item => ({
             producto: {
@@ -19,5 +20,6 @@ export class StockInsuficienteError extends Error {
             },
             cantidad: item.cantidad
         }));
+        this.isOperational = true;
     }
 }

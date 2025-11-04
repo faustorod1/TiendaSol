@@ -1,7 +1,5 @@
-import { Pedido } from "../models/entities/pedido.js";
 import { EstadoPedido } from "../models/entities/estadoPedido.js"
 import { Moneda } from "../models/entities/moneda.js"
-import { StockInsuficienteError} from "../models/entities/errors/stockInsuficienteError.js"
 import { z } from "zod";
 
 export class PedidoController {
@@ -10,7 +8,7 @@ export class PedidoController {
     }
     
 
-    crearPedido(req, res){
+    async crearPedido(req, res){
         const pedidoSinValidar = {
             ...req.body,
             comprador: req.user.id
@@ -20,23 +18,14 @@ export class PedidoController {
             return res.status(400).json(pedidoResult.error.issues);
         }
         const pedido = pedidoResult.data;
-        
-        this.pedidoService.crearPedido(pedido)
-        .then(pedidoGenerado => res.status(201).json({ message: "Pedido creado con éxito", _id: pedidoGenerado._id }))
-        .catch(error => {
-            if (error.constructor.name == StockInsuficienteError.name) {
-                return res.status(409).json({
-                    error: "Stock insuficiente de productos",
-                    productosFaltantes: error.productosFaltantes
-                });
-            }
-            throw error
-        });
+
+        const pedidoGenerado = await this.pedidoService.crearPedido(pedido);
+        return res.status(201).json({ message: "Pedido creado con éxito", _id: pedidoGenerado._id });
     };
 
 
 
-    cambiarEstado(req, res){
+    async cambiarEstado(req, res){
         const params = {
             pedidoId: req.params.id,
             estadoNuevo: req.body.estado
@@ -54,27 +43,21 @@ export class PedidoController {
         }
         const usuarioId = userIdResult.data;
 
-        this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId, req.body.motivo)
-        .then(() => {
-            res.status(200).json({ message: "Estado del pedido actualizado con éxito" });
-        })
-        .catch((error) => {
-            res.status(401).json({ error: error.message });
-        });
+        await this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId, req.body.motivo);
+        res.status(200).json({ message: "Estado del pedido actualizado con éxito" });
     };
 
 
 
-    consultarHistorialPedidos(req, res){
+    async consultarHistorialPedidos(req, res){
         const userIdResult = userIdSchema.safeParse(req.user.id);
         if (!userIdResult.success) {
             return res.status(400).json(userIdResult.error.issues);
         }
         const usuarioId = userIdResult.data;
 
-        this.pedidoService.consultarHistorialPedidos(usuarioId)
-            .then(historial => res.status(200).json(historial))
-            .catch(error => res.status(400).json({ error: error.message }));
+        const historial = await this.pedidoService.consultarHistorialPedidos(usuarioId);
+        res.status(200).json(historial);
     };
 }
 

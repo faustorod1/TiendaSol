@@ -1,6 +1,7 @@
 import { Usuario } from '../models/entities/usuario.js';
 import { Notificacion } from '../models/entities/notificacion.js';
-import { UsuarioRepository } from "../models/repositories/usuarioRepository.js"
+import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
+import { NotificacionDoesNotExistError } from '../errors/NotificacionDoesNotExistError.js';
 
 export class UsuarioService {
   constructor(usuarioRepository) {
@@ -31,7 +32,7 @@ export class UsuarioService {
   async marcarNotificacionComoLeida(usuarioId, id) {
     const notificacionActualizada = await this.usuarioRepository.marcarNotificacionComoLeida(usuarioId, id);
     if (notificacionActualizada === null) {
-      throw new Error("No se pudo encontrar la notificación para marcarla como leída.");
+      throw new NotificacionDoesNotExistError(usuarioId, id);
     }
 
     return notificacionActualizada;

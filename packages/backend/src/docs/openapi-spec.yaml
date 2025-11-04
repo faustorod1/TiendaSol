@@ -141,54 +141,113 @@ paths:
           description: Usuario no autorizado para realizar esta acción.
 
   /productos:
-    summary: Productos de la aplicación web.
-    description: Path predeterminado para obtener los productos por páginas.
     get:
       tags:
         - Productos
-      summary: Retorna todos los productos
-      description: >-
-        Retorna todos los productos en la base de datos ordenados por páginas y 
-        cantidad de productos por página. También acepta filtros como categoría, 
-        nombre y descripción.
+      summary: Retorna productos paginados y filtrados
+      description: >
+        Retorna todos los productos de la base de datos, ordenados y filtrados según los parámetros de búsqueda.  
+        Soporta paginación y filtros por vendedor, título, descripción, categoría, rango de precios y orden.
       parameters:
-        - name: Categoria
+        - name: page
           in: query
-          description: Categoria del producto.
-          required: false
-          schema:
-            type: string
-        - name: Nombre
-          in: query
-          description: Nombre del producto.
-          required: false
-          schema:
-            type: string
-        - name: Descripcion
-          in: query
-          description: Descripcion del producto.
-          required: false
-          schema:
-            type: string
-        - name: Page
-          in: query
-          description: Numero de pagina.
-          required: false
+          description: Número de página (entero positivo).
           schema:
             type: integer
-        - name: Limit
+            default: 1
+            minimum: 1
+        - name: limit
           in: query
-          description: Cantidad de productos por pagina.
-          required: false
+          description: Cantidad de productos por página (1 a 100).
           schema:
             type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: vendedor
+          in: query
+          description: ID del vendedor (ObjectId de MongoDB).
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+        - name: titulo
+          in: query
+          description: Filtra productos cuyo título contenga el texto dado.
+          schema:
+            type: string
+        - name: descripcion
+          in: query
+          description: Filtra productos por coincidencias en la descripción.
+          schema:
+            type: string
+        - name: categoria
+          in: query
+          description: Nombre de la categoría a filtrar.
+          schema:
+            type: string
+        - name: precioMin
+          in: query
+          description: Precio mínimo del producto (entero positivo).
+          schema:
+            type: number
+            minimum: 0
+        - name: precioMax
+          in: query
+          description: Precio máximo del producto (entero positivo).
+          schema:
+            type: number
+            minimum: 0
+        - name: orderBy
+          in: query
+          description: Criterio de ordenamiento.
+          schema:
+            type: string
+            enum: [precio_asc, precio_desc, ventas_desc]
       responses:
         '200':
-          description: Retorna lista de productos paginados.
+          description: Lista de productos obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaDeProductos'
         '204':
-          description: Lista de productos vacía o objeto null.
+          description: No se encontraron productos.
         '400':
-          description: Verificar query params, filtros enviados y productos por pagina con numero de pagina.
+          description: Parámetros inválidos (paginación o filtros).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /productos/{id}:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene un producto por ID
+      description: Devuelve la información del producto correspondiente al ID proporcionado.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del producto (ObjectId válido de MongoDB).
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+      responses:
+        '200':
+          description: Producto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: ID inválido o error en la búsqueda.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Producto no encontrado.
 
   '/usuarios/{usuarioId}/notificaciones':
     get:
@@ -248,3 +307,80 @@ paths:
           description: Notificación no encontrada.
         '500':
           description: El servidor no puede marcar la notificación como leída.
+
+components:
+  schemas:
+    Producto:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único del producto (ObjectId de MongoDB).
+          example: "671e79a472eebc5e2c86efab"
+        titulo:
+          type: string
+          example: "Notebook Gamer"
+        descripcion:
+          type: string
+          example: "Notebook con RTX 3050"
+        precio:
+          type: number
+          example: 350000
+        moneda:
+          type: string
+          example: "PESO_ARG"
+        stock:
+          type: integer
+          example: 10
+        activo:
+          type: boolean
+          example: true
+        categorias:
+          type: array
+          items:
+            type: string
+          example: ["Electrónica", "Computadoras"]
+        vendedor:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: "671e79a472eebc5e2c86efac"
+            nombre:
+              type: string
+              example: "Tienda Sol"
+            email:
+              type: string
+              example: "tienda@example.com"
+      required:
+        - _id
+        - titulo
+        - descripcion
+        - precio
+        - moneda
+        - stock
+        - activo
+
+    PaginaDeProductos:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 52
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Producto'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Id inválido"

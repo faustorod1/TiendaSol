@@ -1,6 +1,6 @@
 import { VendedorDoesNotExistError } from "../errors/VendedorDoesNotExistError.js";
 
-export function vendedorErrorHandler(err, _req, res, _next) {
+export function vendedorErrorHandler(err, _req, res, next) {
   console.log(err.message);
 
   if (err.constructor.name == VendedorDoesNotExistError.name) {
@@ -8,5 +8,5 @@ export function vendedorErrorHandler(err, _req, res, _next) {
     return;
   }
 
-  res.status(500).json({ error: "Ups. Algo sucedio en el servidor." });
+  next(err);
 }

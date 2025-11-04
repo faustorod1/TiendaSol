@@ -1,6 +1,6 @@
 import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 
-export function productoErrorHandler(err, _req, res, _next) {
+export function productoErrorHandler(err, _req, res, next) {
   console.log(err.message);
 
   if (err.constructor.name == ProductoDoesNotExistError.name) {
@@ -8,5 +8,5 @@ export function productoErrorHandler(err, _req, res, _next) {
     return;
   }
 
-  res.status(500).json({ error: "Ups. Algo sucedio en el servidor." });
+  next(err);
 }

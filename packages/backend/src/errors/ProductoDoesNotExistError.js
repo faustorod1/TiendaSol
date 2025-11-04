@@ -1,6 +1,14 @@
 export class ProductoDoesNotExistError extends Error {
   constructor(id) {
-    super();
-    this.message = "Producto con id: " + id + " no existe.";
+    super(`Producto con id: ${id} no existe.`);
+    this.name = 'ProductoDoesNotExistError';
+
+    this.id = id;
+
+    this.statusCode = 404;
+    this.status = 'error';
+    this.isOperational = true;
+
+    Error.captureStackTrace(this, this.constructor);
   }
 }

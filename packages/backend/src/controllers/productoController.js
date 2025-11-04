@@ -33,12 +33,8 @@ export class ProductoController {
         }
         const productId = result.data;
 
-        try {
-            const producto = await this.productoService.buscarPorId(productId);
-            res.status(200).json(producto);
-        } catch (error) {
-            res.status(400).json({'error': error.message});
-        }
+        const producto = await this.productoService.buscarPorId(productId);
+        res.status(200).json(producto);
     }
 }
 

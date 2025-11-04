@@ -15,32 +15,31 @@ export default function pedidoRoutes(getController) {
     // ? Para desarrollo
     router.use(authMockMiddleware);
 
-    router.post(pathPedido, async (req, res) => {
+    router.post(pathPedido, async (req, res, next) => {
         try {
             await controller.crearPedido(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
 
 
-    router.patch(`${pathPedido}/:id`, async (req, res) => {
+    router.patch(`${pathPedido}/:id`, async (req, res, next) => {
         try {
             await controller.cambiarEstado(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
     
 
-    router.get(pathPedido, async (req, res) => {
+    router.get(pathPedido, async (req, res, next) => {
         try {
             await controller.consultarHistorialPedidos(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
-
-    router.use(pedidoErrorHandler);
+    
     return router;
 }

@@ -12,24 +12,21 @@ export default function productoRoutes(getController) {
     
     router.use(loggerMiddleware);
 
-    router.get(pathProducto, async (req, res) => {
+    router.get(pathProducto, async (req, res, next) => {
         try {
             await controller.buscarTodos(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
 
-    router.get(`${pathProducto}/:id`, async (req, res) => {
+    router.get(`${pathProducto}/:id`, async (req, res, next) => {
         try {
             await controller.buscarPorId(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
-
-    router.use(vendedorErrorHandler);
-    router.use(productoErrorHandler);
 
     return router;
 }

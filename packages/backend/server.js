@@ -1,5 +1,9 @@
 import express from "express";
 import { errorHandler } from "./errorHandler.js";
+import { pedidoErrorHandler } from "./src/middlewares/pedidoMiddleware.js";
+import { productoErrorHandler } from "./src/middlewares/productoMiddleware.js";
+import { usuarioErrorHandler } from "./src/middlewares/usuarioMiddleware.js";
+import { vendedorErrorHandler } from "./src/middlewares/vendedorMiddleware.js";
 
 export class Server {
   #controllers = {}
@@ -38,12 +42,17 @@ export class Server {
     this.#routes.forEach(route => this.#app.use(route(this.getController.bind(this)))) 
 
     // Middleware para manejar rutas no encontradas
-    this.#app.use((req, res, next) => {
+    this.#app.use((_req, res) => {
       res.status(404).json({
         status: 'fail',
         message: "La ruta solicitada no existe"
       });
     });
+
+    this.#app.use(pedidoErrorHandler);
+    this.#app.use(productoErrorHandler);
+    this.#app.use(usuarioErrorHandler);
+    this.#app.use(vendedorErrorHandler);
 
     // Middleware global de manejo de errores
     this.#app.use(errorHandler);

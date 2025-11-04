@@ -78,21 +78,7 @@ export class UsuarioRepository {
     async delete(id) {
         return await this.model.findByIdAndDelete(id);
     }
- 
-    async marcarNotificacionComoLeida(usuarioId, notificacionId) {
-        const resultado = await UsuarioModel.updateOne(
-            { _id: usuarioId },
-            // 2. Operación de actualización: Modifica solo el campo 'leida' del elemento del array.
-            { $set: { "notificaciones.$[elem].leida": true } },
-            // 3. Opciones: Aquí le decimos a MongoDB cómo encontrar el elemento 'elem' correcto.
-            {
-                arrayFilters: [
-                    { "elem._id": notificacionId }
-                ]
-            }
-        );
-        return resultado.modifiedCount === 1;
-    }
+
 
     async marcarNotificacionComoLeida(usuarioId, notificacionId) {
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);

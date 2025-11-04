@@ -1,6 +1,7 @@
+import { NotificacionDoesNotExistError } from "../errors/NotificacionDoesNotExistError.js";
 import { UsuarioDoesNotExistError } from "../errors/UsuarioDoesNotExistError.js";
 
-export function usuarioErrorHandler(err, _req, res, _next) {
+export function usuarioErrorHandler(err, _req, res, next) {
   console.log(err.message);
 
   if (err.constructor.name == UsuarioDoesNotExistError.name) {
@@ -8,5 +9,10 @@ export function usuarioErrorHandler(err, _req, res, _next) {
     return;
   }
 
-  res.status(500).json({ error: "Ups. Algo sucedio en el servidor." });
+  if (err.constructor.name == NotificacionDoesNotExistError.name) {
+    res.status(404).json({ id: err.id, message: err.message });
+    return;
+  }
+
+  next(err);
 }

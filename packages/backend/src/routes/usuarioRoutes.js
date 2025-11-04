@@ -22,23 +22,21 @@ export default function usuarioRoutes(getController) {
     // ? Para desarrollo
     router.use(authMockMiddleware);
 
-    router.get(pathNotificacion, async (req, res) => {
+    router.get(pathNotificacion, async (req, res, next) => {
         try {
             await controller.obtenerNotificaciones(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
 
-    router.patch(`${pathNotificacion}/:id`, async (req, res) => {
+    router.patch(`${pathNotificacion}/:id`, async (req, res, next) => {
         try {
             await controller.marcarNotificacionComoLeida(req, res);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
-
-    router.use(usuarioErrorHandler);
-
+    
     return router;
 }

@@ -1,12 +1,10 @@
 import { Pedido } from "../models/entities/pedido.js";
 import { ItemPedido } from "../models/entities/itemPedido.js";
 import { EstadoPedido } from "../models/entities/estadoPedido.js";
-import { PedidoRepository } from "../models/repositories/pedidoRepository.js";
-import { ProductoRepository } from "../models/repositories/productoRepository.js";
-import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
-import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
+import { ForbiddenError } from "../errors/ForbiddenError.js";
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js";
+import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 
 export class PedidoService {
     constructor(pedidoRepository, productoRepository, usuarioRepository) {
@@ -56,7 +54,7 @@ export class PedidoService {
         switch (nuevoEstado) {
             case EstadoPedido.CANCELADO:
                 if (pedido.comprador.id !== usuarioId) {
-                    throw new Error("Solo el comprador puede marcar el pedido como cancelado");
+                    throw new ForbiddenError("Solo el comprador puede marcar el pedido como cancelado");
                 }
 
                 // Cargo los productos al pedido para que se les actualice el stock
@@ -74,7 +72,7 @@ export class PedidoService {
                 break;
             case EstadoPedido.ENVIADO:
                 if (pedido.vendedor.id !== usuarioId) {
-                    throw new Error("Solo el vendedor puede marcar el pedido como enviado");
+                    throw new ForbiddenError("Solo el vendedor puede marcar el pedido como enviado");
                 }
                 await this.efectuarCambioEstado(pedido, nuevoEstado, pedido.vendedor, motivoNuevo);
 
@@ -101,7 +99,7 @@ export class PedidoService {
         pedido.items.forEach(item => {
             const prod = productosMap.get(item.producto.toString());
             if (!prod) {
-                throw new Error(`Producto con id ${item.producto} no encontrado`);
+                throw new ProductoDoesNotExistError(item.producto);
             }
             item.producto = prod;
         });

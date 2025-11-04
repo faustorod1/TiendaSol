@@ -1,6 +1,7 @@
 import { EstadoPedido } from "./estadoPedido.js";
 import { FactoryNotification } from "./factoryNotification.js"
 import { CambioEstadoPedido } from "./cambioEstadoPedido.js";
+import { CambioEstadoInvalidoError } from "./errors/cambioEstadoInvalidoError.js";
 import { StockInsuficienteError } from "./errors/stockInsuficienteError.js";
 
 export class Pedido{
@@ -69,7 +70,11 @@ export class Pedido{
      */
     cancelar(usuario, motivo) {
         if (!this.sePuedeCancelar()) {
-            throw new Error(`El pedido de id ${this._id} no se puede cancelar porque ya fue enviado.`);
+            throw new CambioEstadoInvalidoError(
+                this.estado,
+                EstadoPedido.CANCELADO,
+                `El pedido de id ${this._id} no se puede cancelar porque ya fue enviado.`
+            );
         }
         this.actualizarEstado(EstadoPedido.CANCELADO, usuario, motivo);
         this.items.forEach(item => {
@@ -84,7 +89,11 @@ export class Pedido{
      */
     actualizarEstado(nuevoEstado, usuario, motivo){
         if (this.estado === "CANCELADO") {
-            throw new Error(`El pedido de id ${this._id} no puede pasar a ${nuevoEstado} porque ya fue cancelado.`);
+            throw new CambioEstadoInvalidoError(
+                this.estado,
+                nuevoEstado,
+                `El pedido de id ${this._id} no puede pasar a ${nuevoEstado} porque ya fue cancelado.`
+            );
         }
         this.estado = nuevoEstado;
 
@@ -95,8 +104,6 @@ export class Pedido{
     }
 
     validarStock(){
-        console.log(this);
-        
         const productosFaltantes = this.items.filter(item => !item.producto.estaDisponible(item.cantidad)); 
         if(productosFaltantes.length > 0) {
             throw new StockInsuficienteError(productosFaltantes);

@@ -19,17 +19,14 @@ export class UsuarioController {
         }
         const { usuarioId, leida, page, limit } = reqResult.data;
 
-        try {
-            const paginated = await this.usuarioService.obtenerNotificaciones(usuarioId, leida, {
-                page: page,
-                limit: limit
-            });
+        const paginated = await this.usuarioService.obtenerNotificaciones(usuarioId, leida, {
+            page: page,
+            limit: limit
+        });
 
-            res.status(200).json(paginated);
-        } catch (error) {
-            res.status(500).json({ error: error.message || 'Error al obtener notificaciones' });
-        }
+        res.status(200).json(paginated);
     }
+
 
     async marcarNotificacionComoLeida(req, res) {
         const reqSinValidar = {
@@ -42,22 +39,17 @@ export class UsuarioController {
         }
         const { usuarioId, id } = reqResult.data;
 
-        try {
-            const notificacion = await this.usuarioService.marcarNotificacionComoLeida(usuarioId, id);
+        const notificacion = await this.usuarioService.marcarNotificacionComoLeida(usuarioId, id);
 
-            if (!notificacion) {
-            return res.status(404).json({ error: 'Notificación no encontrada o no pertenece al usuario' });
-            }
-
-            res.status(200).json({
+        res.status(200).json({
             mensaje: 'Notificación marcada como leída',
             notificacion
-            });
-        } catch (error) {
-            res.status(500).json({ error: 'Error al actualizar la notificación' });
-        }
+        });
     }
 }
+
+
+
 
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
 
