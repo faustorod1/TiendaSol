@@ -208,7 +208,7 @@ paths:
           description: Criterio de ordenamiento.
           schema:
             type: string
-            enum: [precio_asc, precio_desc, ventas_desc]
+            enum: [precio_asc, precio_desc, ventas_desc, fecha_creacion_desc]
       responses:
         '200':
           description: Lista de productos obtenida correctamente.
