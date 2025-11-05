@@ -1,10 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchCategorias } from '../../service/categoriaService';
 import './ProductFilters.css';
+import { height } from '@fortawesome/free-solid-svg-icons/fa0';
 
 const ProductFilters = ({ currentFilters, onFilterChange }) => {
+  const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
+
+  useEffect(() => {
+    const loadCategorias = async () => {
+      try {
+        const result = await fetchCategorias();
+        console.log(result);
+        
+        setCategoriasDisponibles(result.data);
+      } catch (error) {
+        
+      }
+    };
+    loadCategorias();
+  }, []);
 
   const handleChange = (e) => {
-    onFilterChange(e.target.name, e.target.value);
+    onFilterChange({ [e.target.name]: e.target.value });
+  };
+
+  const handleCategoryToggle = (categoriaId) => {
+    const currentCategories = currentFilters.categorias || [];
+    let newCategories;
+
+    if (currentCategories.includes(categoriaId)) {
+        newCategories = currentCategories.filter(id => id !== categoriaId);
+    } else {
+        newCategories = [...currentCategories, categoriaId]; 
+    }
+
+    onFilterChange({categorias: newCategories});
   };
 
   return (
@@ -51,6 +81,27 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
             <option value="fecha_creacion_desc">Últimos agregados</option>
           </select>
         </div>
+
+        <div className="filter-group category-filter">
+                    <h4>Categorías</h4>
+                    <div className="category-filter-list">
+                      {categoriasDisponibles.length > 0 ? (
+                          categoriasDisponibles.map(category => (
+                              <div key={category._id} className="checkbox-item">
+                                  <input
+                                      type="checkbox"
+                                      id={`cat-${category._id}`}
+                                      checked={currentFilters.categorias.includes(category._id)}
+                                      onChange={() => handleCategoryToggle(category._id)}
+                                  />
+                                  <label htmlFor={`cat-${category._id}`}>{category.nombre}</label>
+                              </div>
+                          ))
+                      ) : (
+                          <p>Cargando categorías...</p>
+                      )}
+                    </div>
+                </div>
 
       </form>
     </aside>

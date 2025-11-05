@@ -44,21 +44,39 @@ const AllProducts = () => {
   }, [searchParams]);
 
 
-  const handleFilterChange = (name, value) => {
+  const handleFilterChange = (newFilters) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(name, value);
-    } else {
-      newParams.delete(name);
+    
+    for (const [name, value] of Object.entries(newFilters)) {
+      if (name === 'categorias') {
+        handleCategoryUrl(newParams, value);
+      } else if (value) {
+        newParams.set(name, value);
+      } else {
+        newParams.delete(name);
+      }
     }
-    if (newParams.has('page')) {
-        newParams.delete('page');
-    }
+    newParams.delete('page');
 
     setSearchParams(newParams);
   };
 
-  const currentFilters = Object.fromEntries(searchParams);
+  const handleCategoryUrl = (params, categoriaIds) => {
+    const name = 'categorias';
+    params.delete(name);
+
+    if (categoriaIds && Array.isArray(categoriaIds) && categoriaIds.length > 0) {
+      categoriaIds.forEach(id => {
+        params.append(name, id);
+      });
+    }
+  }
+
+  const urlCategories = searchParams.getAll('categorias');
+  const currentFilters = {
+    ...Object.fromEntries(searchParams),
+    categorias: Array.isArray(urlCategories) ? urlCategories : (urlCategories ? [urlCategories] : [])
+  };
 
   const renderContent = () => {
     if (loading) {

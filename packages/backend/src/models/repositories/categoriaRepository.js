@@ -7,6 +7,6 @@ export class CategoriaRepository {
     }
 
     async findAll() {
-        return this.model.find({}).lean();
+        return this.model.find({}).sort({nombre: 1}).lean();
     }
 }

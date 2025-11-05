@@ -80,6 +80,20 @@
   }
 }
 
+.category-filter-list {
+  max-height: 200px;
+  overflow-y: auto  ;
+}
+
+.checkbox-item {
+  display: flex;
+  gap: 0.5em;
+  margin-block: 0.5em;
+}
+.checkbox-item label {
+  margin: 0;
+}
+
 @media (max-width: 480px) {
   .product-filters {
     grid-template-columns: 1fr;
