@@ -10,9 +10,30 @@ tags:
     description: ''
   - name: Productos
     description: ''
+  - name: Categorías
+    description: Operaciones para obtener la lista maestra de categorías del sistema.
   - name: Notificaciones
     description: ''
 paths:
+  /categorias:
+    get:
+      tags:
+        - Categorías
+      summary: Lista maestra de categorías
+      description: Retorna la lista de todas las categorías disponibles en el sistema. Utilizado por el frontend para construir los filtros de búsqueda.
+      responses:
+        '200':
+          description: Lista de categorías obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+        '204':
+          description: No Content. No hay categorías disponibles.
+        '500':
+          description: Error interno del servidor al consultar la base de datos.
   /pedidos:
     summary: Operaciones de pedidos.
     get:
@@ -72,7 +93,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorStockResponse'
-  '/pedidos/{id}':
+  /pedidos/{id}:
     patch:
       tags:
         - Pedidos
@@ -153,7 +174,7 @@ paths:
       summary: Retorna productos paginados y filtrados
       description: >
         Retorna todos los productos de la base de datos, ordenados y filtrados según los parámetros de búsqueda. 
-        Soporta paginación y filtros por vendedor, título, descripción, categoría, rango de precios y orden.
+        Soporta paginación y filtros por vendedor, título, descripción, *múltiples categorías (por ID)*, rango de precios y orden.
       parameters:
         - name: page
           in: query
@@ -186,11 +207,16 @@ paths:
           description: Filtra productos por coincidencias en la descripción.
           schema:
             type: string
-        - name: categoria
+        - name: categorias
           in: query
-          description: Nombre de la categoría a filtrar.
+          description: Lista de IDs de categorías (ObjectId de MongoDB) a filtrar. Los productos deben pertenecer a *al menos una* de las categorías proporcionadas (lógica OR).
+          style: form
+          explode: true
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              pattern: '^[0-9a-fA-F]{24}$'
         - name: precioMin
           in: query
           description: Precio mínimo del producto (entero positivo).
@@ -332,6 +358,21 @@ paths:
                 $ref: '#/components/schemas/ErrorNotificacionNoEncontrada'
 components:
   schemas:
+    Categoria:
+      description: Schema de la categoría maestra (colección separada).
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único de la categoría (ObjectId de MongoDB).
+          pattern: '^[0-9a-fA-F]{24}$'
+          example: "654c6c9a29a67a001a1d1d1d"
+        nombre:
+          type: string
+          example: "Calzado"
+      required:
+        - _id
+        - nombre
     Producto:
       type: object
       properties:
@@ -359,14 +400,15 @@ components:
           example: true
         categorias:
           type: array
+          description: Lista de categorías a las que pertenece el producto (desnormalizada).
           items:
-            type: object
-            properties:
-              nombre:
-                type: string
+            # **ACTUALIZACIÓN 2: Usar ID y nombre para desnormalización**
+            $ref: '#/components/schemas/Categoria'
           example:
-            - nombre: "Electrónica"
-            - nombre: "Computadoras"
+            - _id: "654c6c9a29a67a001a1d1d1d"
+              nombre: "Electrónica"
+            - _id: "654c6c9a29a67a001a1d1d1e"
+              nombre: "Computadoras"
         vendedor:
           type: object
           properties:

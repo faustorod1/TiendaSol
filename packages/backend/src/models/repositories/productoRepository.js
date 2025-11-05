@@ -52,24 +52,6 @@ export class ProductoRepository {
         return await this.model.countDocuments(filtrosValidos);
     }
 
-    async findByTitle(titulo) {
-        return await this.model.find({ "titulo": titulo });
-    }
-
-    async findByCategory(nombreCategoria) {
-        return await this.model.find({ "categorias.nombre": nombreCategoria });
-    }
-
-    async findByDescription(descripcion) {
-        return await this.model.find({ "descripcion": descripcion });
-    }
-
-    async findByPriceRange(minPrice, maxPrice) {
-        return await this.model.find({
-            precio: { $gte: minPrice, $lte: maxPrice }
-        });
-    }
-
     async updateStockYVentas(productos) {
         if (!productos || productos.length === 0) return;
 
@@ -117,6 +99,10 @@ export class ProductoRepository {
         }
         if (filtros.descripcion) {
             filtrosValidos.descripcion = RegExp(filtros.descripcion, "i");
+        }
+        if (filtros.categorias && filtros.categorias.length > 0) {
+            const objIds = filtros.categorias.map(id => mongoose.Types.ObjectId.createFromHexString(id));
+            filtrosValidos['categorias._id'] = { $in: objIds };
         }
         if (filtros.precioMin || filtros.precioMax) {
             filtrosValidos.precio = {};

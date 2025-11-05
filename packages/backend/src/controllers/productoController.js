@@ -52,12 +52,16 @@ const paginationSchema = z.object({
 });
 
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Id inválido');
+const objectIdArraySchema = z.union([
+    objectIdSchema,
+    z.array(objectIdSchema)
+]).transform(val => (Array.isArray(val) ? val : [val]));
 
 const filterSchema = z.object({
     vendedor: objectIdSchema.optional(),
     titulo: z.string().optional(),
     descripcion: z.string().optional(),
-    categoria: z.string().optional(),
+    categorias: objectIdArraySchema.optional(),
     precioMin: z
         .string()
         .transform(v => Number(v))
