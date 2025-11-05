@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
 import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
-import Landing from "./components/Landing/Landing.jsx";
+import Landing from "./components/mainPage/Landing.jsx";
 import ProductDetailPage from "./components/ProductDetailPage/ProductDetailPage";
 import Checkout from './components/Checkout/Checkout';
 import AllProducts from './components/AllProducts/AllProducts';

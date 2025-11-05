@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchProducts } from '../../service/productoService';
-import MainPicture from '../mainPage/MainPicture';
-import ProductCarrousel from '../mainPage/ProductCarrousel';
-import Shortcuts from '../mainPage/Shortcuts';
+import MainPicture from './MainPicture';
+import ProductCarrousel from './ProductCarrousel';
+import Shortcuts from './Shortcuts';
 
 export default function Landing() {
     const [productos, setProductos] = useState([]);
