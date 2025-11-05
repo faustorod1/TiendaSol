@@ -139,6 +139,8 @@ export class ProductoRepository {
             case "ventas_desc":
                 sort.cantidadVendida = -1;
                 break;
+            case "fecha_creacion_desc":
+                sort.createdAt = -1;
             default:
                 sort._id = -1;
         }

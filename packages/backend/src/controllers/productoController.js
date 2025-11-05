@@ -68,7 +68,7 @@ const filterSchema = z.object({
         .transform(v => Number(v))
         .pipe(z.number().positive())
         .optional(),
-    orderBy: z.enum(["precio_asc", "precio_desc", "ventas_desc"]).optional()
+    orderBy: z.enum(["precio_asc", "precio_desc", "ventas_desc", "fecha_creacion_desc"]).optional()
 }).refine(
     (data) => {
         if (data.precioMin !== undefined && data.precioMax !== undefined) {

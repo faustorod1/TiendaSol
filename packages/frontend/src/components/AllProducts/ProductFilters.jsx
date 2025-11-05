@@ -48,6 +48,7 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
             <option value="precio_asc">Precio (menor a mayor)</option>
             <option value="precio_desc">Precio (mayor a menor)</option>
             <option value="ventas_desc">Más vendidos</option>
+            <option value="fecha_creacion_desc">Últimos agregados</option>
           </select>
         </div>
 

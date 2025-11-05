@@ -106,7 +106,7 @@ const SiteHeader = (props) => {
                 )}
 
                 <a href="/categoria/ofertas" className="category-link">Ofertas</a>
-                <a href="/categoria/nuevos" className="category-link">Nuevos</a>
+                <a href="/productos?orderBy=fecha_creacion_desc" className="category-link">Nuevos</a>
                 <a href="/categoria/electronica" className="category-link">Electrónica</a>
                 <a href="/categoria/ropa" className="category-link">Ropa</a>
             </nav>
