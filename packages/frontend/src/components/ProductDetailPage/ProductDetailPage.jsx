@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom";
 import { fetchProductById } from '../../service/productoService.js';
 import "./ProductDetailPage.css"
+import { useCartContext } from '../../contexts/CartContext.jsx';
 
 const ProductDetailPage = (props) => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { aumentarCantidadProducto } = useCartContext();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -93,7 +95,7 @@ const ProductDetailPage = (props) => {
         </div>
 
         <div className="comprar-container">
-        <button className="comprar">Comprar</button>
+        <button className="comprar" onClick={() => aumentarCantidadProducto(product)}>Comprar</button>
         </div>
     </div>
     );

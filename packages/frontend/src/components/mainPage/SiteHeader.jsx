@@ -8,20 +8,19 @@ import Notifications from './Notifications.jsx';
 import SideMenu from './SideMenu.jsx';
 import { useFilters } from '../../contexts/FilterContext';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useCartContext } from '../../contexts/CartContext';
 
-const mockCartItems = [
-    { id: 1, name: 'Producto A', price: 29.99, quantity: 2, image: 'https://via.placeholder.com/60' },
-    { id: 2, name: 'Producto B', price: 49.99, quantity: 1, image: 'https://via.placeholder.com/60' },
-];
 
-const SiteHeader = ({ 
-    cartItems = [], 
-    handleIncrease, 
-    handleDecrease, 
-    handleRemove,
-}) => {
+const SiteHeader = (props) => {
     const { isFilterOpen, setIsFilterOpen } = useFilters();
     const { notifications, unreadCount, markAsRead } = useNotifications();
+    const {
+        productos,
+        aumentarCantidadProducto,
+        reducirCantidadProducto,
+        eliminarProducto,
+    } = useCartContext();
+
     const location = useLocation();
     
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -41,9 +40,7 @@ const SiteHeader = ({
         }
     };
 
-    cartItems = mockCartItems;
-
-    const cartItemCount = cartItems.length;
+    const cartItemCount = productos.length;
 
     return (
         <div className="header-wrapper">
@@ -122,10 +119,10 @@ const SiteHeader = ({
             <MiniCart 
                 isOpen={isCartOpen}
                 onClose={() => setIsCartOpen(false)}
-                items={cartItems}
-                onIncrease={handleIncrease}
-                onDecrease={handleDecrease}
-                onRemove={handleRemove}
+                items={productos}
+                onIncrease={aumentarCantidadProducto}
+                onDecrease={reducirCantidadProducto}
+                onRemove={eliminarProducto}
             />
 
             {}

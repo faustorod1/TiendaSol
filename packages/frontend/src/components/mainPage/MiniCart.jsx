@@ -6,12 +6,16 @@ import './MiniCart.css';
 
 const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) => {
     const [showCartPanel, setShowCartPanel] = useState(false);
+    
 
     if (!isOpen) {
         return null;
     }
+
     //aca tal vez es conveniente calcular el subtotal y comparar con lo que viene del backend
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    console.log(items);
+    
+    const subtotal = items.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
 
     return (
         <div className="mini-cart-overlay" onClick={onClose}>
@@ -34,15 +38,15 @@ const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) 
                         ) : (
                             items.map(item => (
                                 <div key={item.id} className="cart-item">
-                                    <img src={item.image} alt={item.name} className="item-image" />
+                                    <img src={item.fotos[0]} alt={item.titulo} className="item-image" />
                                     <div className="item-details">
-                                        <p className="item-name">{item.name}</p>
-                                        <p className="item-price">${item.price.toFixed(2)}</p>
+                                        <p className="item-name">{item.titulo}</p>
+                                        <p className="item-price">${item.precio.toFixed(2)}</p>
                                     </div>
                                     <div className="item-quantity-controls">
-                                        <button onClick={() => onDecrease(item.id)}>-</button>
-                                        <span>{item.quantity}</span>
-                                        <button onClick={() => onIncrease(item.id)}>+</button>
+                                        <button onClick={() => onDecrease(item)}>-</button>
+                                        <span>{item.cantidad}</span>
+                                        <button onClick={() => onIncrease(item)}>+</button>
                                     </div>
                                 </div>
                             ))

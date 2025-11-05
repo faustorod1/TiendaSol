@@ -19,9 +19,9 @@ import { NotificationProvider } from "./contexts/NotificationContext"; // Nuevo 
 import NotificationDetailPage from './components/Notifications/NotificationDetailPage';
 
 import "./App.css";
+import { CartProvider } from "./contexts/CartContext.jsx";
 
 function App() {
-  let itemCount = 3; // Cantidad de artículos en el carrito
 
   // Estado para manejar las notificaciones
   const [notifications, setNotifications] = useState(Notificaciones);
@@ -38,47 +38,48 @@ function App() {
   */
  
   return (
-    <FilterProvider>
-      <NotificationProvider> {/* Envolver la app */}
-        <div className="App">
-          <SiteHeader 
-            cartItemCount={itemCount} 
-            notifications={notifications}
-            setNotifications={setNotifications}
-          />
-          <Breadcrumbs />
-          <main>
-            <Routes>
-            
-              <Route path="/" element={<Landing />} />
+    <CartProvider>
+      <FilterProvider>
+        <NotificationProvider> {/* Envolver la app */}
+          <div className="App">
+            <SiteHeader 
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
+            <Breadcrumbs />
+            <main>
+              <Routes>
+              
+                <Route path="/" element={<Landing />} />
 
-              {/* Ruta dinámica para productos */}
-              <Route path="/productos/:id" element={<ProductDetailPage />} />
+                {/* Ruta dinámica para productos */}
+                <Route path="/productos/:id" element={<ProductDetailPage />} />
 
-              {/* Podés agregar más rutas aquí */}
-              <Route path="/checkout" element={<Checkout />} />
+                {/* Podés agregar más rutas aquí */}
+                <Route path="/checkout" element={<Checkout />} />
 
-              <Route path="/productos" element={<AllProducts />} />
+                <Route path="/productos" element={<AllProducts />} />
 
-              <Route path="/account" element={<Account />} />
-              <Route path="/account/manage" element={<AccountInfo />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/account/manage" element={<AccountInfo />} />
 
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signin/manage" element={<AccountInfo />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signin/manage" element={<AccountInfo />} />
 
-              <Route path="/notifications" element={<AllNotifications />} />
-              <Route path="/notification/:id" element={<NotificationDetailPage />} />
+                <Route path="/notifications" element={<AllNotifications />} />
+                <Route path="/notification/:id" element={<NotificationDetailPage />} />
 
-              <Route path="/contacto" element={<Contacto />} />
-            </Routes>
+                <Route path="/contacto" element={<Contacto />} />
+              </Routes>
 
-            
-          </main>
+              
+            </main>
 
-          <Footer />
-        </div>
-      </NotificationProvider>
-    </FilterProvider>
+            <Footer />
+          </div>
+        </NotificationProvider>
+      </FilterProvider>
+    </CartProvider>
   );
 }
 

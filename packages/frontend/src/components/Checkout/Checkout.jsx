@@ -15,7 +15,7 @@ const Checkout = () => {
     }
   }, [items, navigate]);
 
-  const total = items.reduce((s, it) => s + (it.price ?? 0) * (it.quantity ?? 0), 0);
+  const total = items.reduce((s, it) => s + (it.precio ?? 0) * (it.cantidad ?? 0), 0);
 
   // Campos simples (comportamiento mínimo, controlado como la barra de búsqueda)
   const [paymentMethod, setPaymentMethod] = useState('card');

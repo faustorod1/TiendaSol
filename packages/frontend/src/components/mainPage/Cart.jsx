@@ -19,11 +19,11 @@ const Cart = ({ items: propsItems, onClosePanel }) => {
       ) : (
         <ul className="cart-list">
           {items.map(item => (
-            <li key={item.id} className="cart-list-item">
-              <img src={item.image} alt={item.name} className="cart-item-image" />
+            <li key={item._id} className="cart-list-item">
+              <img src={item.fotos[0]} alt={item.titulo} className="cart-item-image" />
               <div className="cart-item-info">
-                <strong>{item.name}</strong>
-                <div className="cart-item-meta">{item.quantity} x ${item.price.toFixed(2)}</div>
+                <strong>{item.titulo}</strong>
+                <div className="cart-item-meta">{item.cantidad} x ${item.precio.toFixed(2)}</div>
               </div>
             </li>
           ))}
