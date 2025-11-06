@@ -6,6 +6,11 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.04);
   overflow: hidden;
   transition: transform .12s ease, box-shadow .12s ease;
+  
+  /* AGREGAR: Flexbox para estructura vertical */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupar toda la altura disponible del grid */
 }
 
 .product-card:hover {
@@ -14,7 +19,9 @@
 }
 
 .product-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupar toda la altura */
   color: inherit;
   text-decoration: none;
 }
@@ -26,6 +33,7 @@
   object-fit: cover;
   display: block;
   background: #f6f6f6;
+  flex-shrink: 0; /* No se reduce */
 }
 
 /* Información debajo de la imagen */
@@ -33,7 +41,16 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  flex-grow: 1; /* Ocupa todo el espacio restante */
+  justify-content: space-between; /* Distribuye contenido */
+}
+
+/* COMPONENTE TÍTULO - ocupa el espacio disponible */
+.product-title-section {
+  flex-grow: 1; /* Crece para ocupar espacio */
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
 }
 
 .product-title {
@@ -42,6 +59,16 @@
   line-height: 1.2;
   color: #111;
   font-weight: 600;
+  /* Limitar líneas para evitar desbordamiento */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* COMPONENTE PRECIO/STOCK - siempre al fondo */
+.product-meta-section {
+  margin-top: auto; /* Empuja hacia abajo */
 }
 
 .product-meta {
@@ -68,7 +95,17 @@
   .product-thumb {
     height: 140px;
   }
+  
   .product-info {
     padding: 10px;
+  }
+  
+  .product-title {
+    font-size: 0.9rem;
+    -webkit-line-clamp: 2; /* Menos líneas en móvil */
+  }
+  
+  .product-meta {
+    font-size: 0.85rem;
   }
 }

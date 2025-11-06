@@ -148,8 +148,8 @@ const AllProducts = () => {
         </div>
 
         {/*  COLUMNA 3: DERECHA (Vacio para que quede centrado)  */}
-        <div className="layout-col-right">
-        </div>
+        {/*<div className="layout-col-right">
+        </div>*/}
 
       </div>
     </div>

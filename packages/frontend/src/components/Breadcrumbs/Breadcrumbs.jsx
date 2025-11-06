@@ -9,13 +9,13 @@ const Breadcrumbs = () => {
   // Mapeo de rutas a nombres amigables
   const routeNames = {
     'productos': 'Productos',
+    'producto': 'Producto',
     'checkout': 'Checkout',
     'contacto': 'Contacto',
     'account': 'Mi cuenta',
     'manage': 'Gestionar cuenta',
     'signin': 'Iniciar Sesión',
-    'notifications': 'Notificaciones',
-    'notification': 'Notificaciones'
+    'notifications': 'Notificaciones'
   };
 
   // No mostrar breadcrumbs en la página de inicio

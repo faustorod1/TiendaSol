@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Agregar useNavigate
 import { fetchProductById } from '../../service/productoService.js';
 import "./ProductDetailPage.css"
 import { useCartContext } from '../../contexts/CartContext.jsx';
 
 const ProductDetailPage = (props) => {
   const { id } = useParams();
+  const navigate = useNavigate(); // Agregar hook de navegación
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,6 +29,14 @@ const ProductDetailPage = (props) => {
     };
     loadProduct();
   }, [id]);
+
+  // Función para comprar directamente
+  const handleComprarAhora = () => {
+    // Agregar el producto al carrito
+    aumentarCantidadProducto(product);
+    // Redirigir al checkout
+    //navigate('/checkout');
+  };
 
   if (loading) {
     return (
@@ -94,8 +103,20 @@ const ProductDetailPage = (props) => {
         </div>
         </div>
 
+        {/* ACTUALIZAR: Contenedor de botones con dos botones */}
         <div className="comprar-container">
-        <button className="comprar" onClick={() => aumentarCantidadProducto(product)}>Comprar</button>
+          <button 
+            className="agregar-carrito" 
+            onClick={() => aumentarCantidadProducto(product)}
+          >
+            Agregar a Carrito
+          </button>
+          {/*<button 
+            className="comprar-ahora" 
+            onClick={handleComprarAhora}
+          >
+            Comprar Ahora
+          </button>*/}
         </div>
     </div>
     );

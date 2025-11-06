@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -119,22 +118,60 @@ body {
   justify-content: right;
 }
 
-.product-vendedor-section {
-  margin-top: 1rem;
-  font-size: 14px;
-  color: #555;
+/* Contenedor de botones actualizado */
+.comprar-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: right;
+  margin: 2rem 0;
+  padding: 0 1rem;
 }
 
-.product-vendedor {
-  font-weight: bold;
-  margin-bottom: 4px;
+/* Botón Agregar a Carrito - estilo secundario */
+.agregar-carrito {
+  flex: 1;
+  max-width: 200px;
+  padding: 1rem 2rem;
+  background: var(--dark-purple, #270722);
+  color: #f5f5f5;
+  border: 2px solid var(--dark-purple, #270722);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.product-email {
-  font-style: italic;
-  color: #777;
+.agregar-carrito:hover {
+  background: var(--dark-purple, #270722);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 7, 34, 0.3);
 }
 
+/* Botón Comprar Ahora - estilo primario */
+.comprar-ahora {
+  flex: 1;
+  max-width: 200px;
+  padding: 1rem 2rem;
+  background: var(--dark-purple, #270722);
+  color: white;
+  border: 2px solid var(--dark-purple, #270722);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.comprar-ahora:hover {
+  background: #4a1f66;
+  border-color: #4a1f66;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 7, 34, 0.4);
+}
+
+/* Responsive para móviles */
 @media (max-width: 768px) {
   .product-content {
     flex-direction: column;
@@ -163,4 +200,38 @@ body {
   .product-info-section {
     padding: 16px 20px;
   }
+  
+  .comprar-container {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+  
+  .agregar-carrito,
+  .comprar-ahora {
+    max-width: none;
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .comprar-container {
+    margin: 1.5rem 0;
+    padding: 0 0.75rem;
+  }
+  
+  .agregar-carrito,
+  .comprar-ahora {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* REMOVER O COMENTAR el estilo anterior si existe */
+/*
+.comprar {
+  // estilos anteriores del botón único
+}
+*/

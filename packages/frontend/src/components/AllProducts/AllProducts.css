@@ -16,8 +16,8 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr); /* Cambiar de auto-fill a 4 columnas por defecto */
+  gap: 1.5rem; /* Aumentar gap por defecto */
   align-items: start;
 }
 
@@ -34,20 +34,20 @@
 }
 
 .layout-col-left {
-  flex-basis: 500px;
+  flex-basis: 250px; /* Reducir de 500px a 250px */
   flex-shrink: 0;
 }
 
 /* columna vacia */
 .layout-col-right {
-  flex-basis: 500px; 
+  flex-basis: 250px; /* Reducir de 500px a 250px */
   flex-shrink: 0;
 }
 
 .layout-col-middle.products-grid-wrapper {
   flex-grow: 1; 
   min-width: 0;
-  max-width: 800px; 
+  max-width: none; /* Quitar límite de 800px para permitir más ancho */
 }
 
 
@@ -64,6 +64,31 @@
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
+  }
+  
+  /* Agregar: Asegurar que los contenedores sean visibles en pantallas grandes */
+  .layout-col-left {
+    flex-basis: 250px;
+  }
+  
+  .layout-col-right {
+    flex-basis: 250px;
+  }
+}
+
+/* AGREGAR: Media query para pantallas muy grandes */
+@media (min-width: 1400px) {
+  .products-grid {
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas en pantallas muy grandes */
+    gap: 2rem;
+  }
+  
+  .layout-col-left {
+    flex-basis: 280px;
+  }
+  
+  .layout-col-right {
+    flex-basis: 280px;
   }
 }
 
