@@ -16,8 +16,8 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Cambiar de auto-fill a 4 columnas por defecto */
-  gap: 1.5rem; /* Aumentar gap por defecto */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
   align-items: start;
 }
 
@@ -34,20 +34,19 @@
 }
 
 .layout-col-left {
-  flex-basis: 250px; /* Reducir de 500px a 250px */
+  flex-basis: 250px;
   flex-shrink: 0;
 }
 
-/* columna vacia */
 .layout-col-right {
-  flex-basis: 250px; /* Reducir de 500px a 250px */
+  flex-basis: 250px;
   flex-shrink: 0;
 }
 
 .layout-col-middle.products-grid-wrapper {
   flex-grow: 1; 
   min-width: 0;
-  max-width: none; /* Quitar límite de 800px para permitir más ancho */
+  max-width: none;
 }
 
 
@@ -66,7 +65,6 @@
     gap: 1.5rem;
   }
   
-  /* Agregar: Asegurar que los contenedores sean visibles en pantallas grandes */
   .layout-col-left {
     flex-basis: 250px;
   }
@@ -76,10 +74,9 @@
   }
 }
 
-/* AGREGAR: Media query para pantallas muy grandes */
 @media (min-width: 1400px) {
   .products-grid {
-    grid-template-columns: repeat(5, 1fr); /* 5 columnas en pantallas muy grandes */
+    grid-template-columns: repeat(5, 1fr);
     gap: 2rem;
   }
   
@@ -115,11 +112,11 @@
   }
   
   .layout-col-left {
-    width: 180px; /* Más angosto */
+    width: 180px;
   }
   
   .all-products-layout {
-    gap: 0.75rem; /* Reducir gap entre columnas */
+    gap: 0.75rem;
   }
   
   .products-grid-wrapper h1 {
@@ -127,14 +124,13 @@
   }
 }
 
-/* Móvil grande - mantener layout lateral pero muy angosto */
 @media (max-width: 768px) {
   .layout-col-left {
-    width: 140px; /* Muy angosto pero manteniendo lateral */
+    width: 140px;
   }
   
   .layout-col-right {
-    display: none; /* Ocultar columna derecha para dar más espacio */
+    display: none;
   }
   
   .products-grid {
@@ -151,10 +147,9 @@
   }
 }
 
-/* Móvil mediano - filtros muy compactos, 2 columnas de productos */
 @media (max-width: 600px) {
   .layout-col-left {
-    width: 120px; /* Extremadamente angosto */
+    width: 120px;
   }
   
   .all-products-layout {
@@ -166,14 +161,13 @@
   }
 }
 
-/* Móvil pequeño - una columna de productos, filtros muy angostos */
 @media (max-width: 480px) {
   .layout-col-left {
-    width: 100px; /* Súper angosto */
+    width: 100px;
   }
   
   .products-grid {
-    grid-template-columns: 1fr; /* Una sola columna */
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
   
@@ -191,10 +185,9 @@
   }
 }
 
-/* Móvil muy pequeño - mantener layout pero ultra compacto */
 @media (max-width: 360px) {
   .layout-col-left {
-    width: 80px; /* Ultra angosto */
+    width: 80px;
   }
   
   .all-products-page {
@@ -210,7 +203,6 @@
   }
 }
 
-/* Estilos responsivos para ProductFilters - mantener compacto */
 @media (max-width: 1200px) {
   .product-filters {
     padding: 0.75rem;
@@ -298,7 +290,6 @@
   }
 }
 
-/* Ajustes para controles de paginación */
 @media (max-width: 768px) {
   .pagination-controls {
     margin-top: 1.5rem;

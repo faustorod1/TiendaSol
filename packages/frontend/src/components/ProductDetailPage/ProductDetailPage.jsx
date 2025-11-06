@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from "react-router-dom"; // Agregar useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchProductById } from '../../service/productoService.js';
 import "./ProductDetailPage.css"
 import { useCartContext } from '../../contexts/CartContext.jsx';
 
 const ProductDetailPage = (props) => {
   const { id } = useParams();
-  const navigate = useNavigate(); // Agregar hook de navegación
+  const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -103,7 +103,6 @@ const ProductDetailPage = (props) => {
         </div>
         </div>
 
-        {/* ACTUALIZAR: Contenedor de botones con dos botones */}
         <div className="comprar-container">
           <button 
             className="agregar-carrito" 
@@ -111,12 +110,6 @@ const ProductDetailPage = (props) => {
           >
             Agregar a Carrito
           </button>
-          {/*<button 
-            className="comprar-ahora" 
-            onClick={handleComprarAhora}
-          >
-            Comprar Ahora
-          </button>*/}
         </div>
     </div>
     );

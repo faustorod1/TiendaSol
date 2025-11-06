@@ -13,12 +13,10 @@ const ProductCard = ({ product }) => {
           className="product-thumb"
         />
         <div className="product-info">
-          {/* Componente del título - ocupará el espacio disponible */}
           <div className="product-title-section">
             <h3 className="product-title">{product.titulo}</h3>
           </div>
           
-          {/* Componente del precio/stock - siempre al fondo */}
           <div className="product-meta-section">
             <div className="product-meta">
               <span className="product-price">${product.precio}</span>

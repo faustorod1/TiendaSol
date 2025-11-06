@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './Account.css';
 
 const Account = ({ user }) => {
-  // Datos de ejemplo si no se pasa user
+  // Datos de ejemplo
   const userData = user || {
     nombre: 'Juan',
     apellido: 'Pérez',

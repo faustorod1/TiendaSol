@@ -22,7 +22,6 @@ const Contacto = () => {
     console.log('Contacto enviado (simulado):', payload);
     alert('Mensaje enviado (simulación).');
 
-    // reset sencillo como la barra de búsqueda
     setEmail('');
     setTelefono('');
     setAsunto('');

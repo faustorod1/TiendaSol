@@ -1,5 +1,3 @@
-/* Estilos pensados para parecerse al MiniCart: tarjetas por producto, imagen a la izquierda y detalles a la derecha */
-
 .cart-page {
     max-width: 980px;
     margin: 24px auto;
@@ -64,7 +62,6 @@
     align-items: center;
 }
 
-/* Controles y cantidad (si los implementas) */
 .cart-item-controls {
     display: flex;
     gap: 8px;

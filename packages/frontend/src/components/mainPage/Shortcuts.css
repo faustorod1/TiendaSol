@@ -1,13 +1,13 @@
 /* Estilos para el contenedor principal de shortcuts */
 .shortcuts {
-  max-width: 1000px; /* más ancho (era 800px) */
-  margin: 3rem auto; /* más margen vertical */
-  padding: 1.5rem; /* más padding */
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 1.5rem;
 }
 
 .shortcuts-grid {
   display: flex;
-  gap: 1.5rem; /* más gap entre elementos */
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
 }

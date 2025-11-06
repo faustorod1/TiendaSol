@@ -65,8 +65,9 @@ body {
 
 .product-info-section {
   flex: 1;
-  padding: 20px 24px;
+  padding: 20px 40px;
   position: relative;
+  text-align: left;
 }
 
 .product-description {
@@ -118,7 +119,6 @@ body {
   justify-content: right;
 }
 
-/* Contenedor de botones actualizado */
 .comprar-container {
   display: flex;
   gap: 1rem;
@@ -127,7 +127,6 @@ body {
   padding: 0 1rem;
 }
 
-/* Botón Agregar a Carrito - estilo secundario */
 .agregar-carrito {
   flex: 1;
   max-width: 200px;
@@ -196,9 +195,13 @@ body {
     border-radius: 8px;
   }
   
-  .product-header,
+  .product-header {
+    padding: 16px 20px;
+  }
+
   .product-info-section {
     padding: 16px 20px;
+    text-align: center;
   }
   
   .comprar-container {
@@ -228,10 +231,3 @@ body {
     font-size: 0.9rem;
   }
 }
-
-/* REMOVER O COMENTAR el estilo anterior si existe */
-/*
-.comprar {
-  // estilos anteriores del botón único
-}
-*/
