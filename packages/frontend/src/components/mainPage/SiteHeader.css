@@ -132,7 +132,7 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--dark-purple);
+    color: transparent;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0;
@@ -237,6 +237,10 @@
   .notifications-button {
     padding: 0.25rem; /* Muy compacto */
     font-size: 1.1rem;
+  }
+
+  .filter-toggle-button {
+    color: var(--dark-purple);
   }
   
   /* Ajustar contadores */

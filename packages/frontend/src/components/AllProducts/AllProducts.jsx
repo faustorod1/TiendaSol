@@ -111,15 +111,16 @@ const AllProducts = () => {
 
   return (
     <div className="all-products-page">
+      {/* ProductFilters siempre se renderiza, pero se controla con CSS */}
+      <ProductFilters 
+        currentFilters={currentFilters} 
+        onFilterChange={handleFilterChange} 
+      />
+
       <div className="all-products-layout">
         
         <div className="layout-col-left"> 
-          {isFilterOpen && (
-            <ProductFilters 
-              currentFilters={currentFilters} 
-              onFilterChange={handleFilterChange} 
-            />
-          )}
+          {/* En desktop, los filtros aparecen aquí a través del CSS */}
         </div>
       
         <div className="layout-col-middle products-grid-wrapper">
