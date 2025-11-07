@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react';
 const FilterContext = createContext();
 
 export const FilterProvider = ({ children }) => {
-    const [isFilterOpen, setIsFilterOpen] = useState(true); 
+    const [isFilterOpen, setIsFilterOpen] = useState(false); 
 
     return (
         <FilterContext.Provider value={{ isFilterOpen, setIsFilterOpen }}>

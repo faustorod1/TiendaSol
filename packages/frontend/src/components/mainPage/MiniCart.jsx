@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import Cart from './Cart';
 import './MiniCart.css';
@@ -29,7 +31,9 @@ const MiniCart = ({ isOpen, onClose, items, onIncrease, onDecrease, onRemove }) 
                 <div className="mini-cart-content">
                     <div className="mini-cart-header">
                         <h3>Tu Carrito</h3>
-                        <button onClick={onClose} className="close-button">&times;</button>
+                        <button onClick={onClose} className="close-button">
+                            <FontAwesomeIcon icon={faXmark} />
+                        </button>
                     </div>
 
                     <div className="mini-cart-items">

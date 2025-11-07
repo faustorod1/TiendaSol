@@ -98,8 +98,8 @@
     position: fixed;
     top: 0;
     left: -100%;
-    width: 80%;
-    max-width: 300px;
+    width: 100%;
+    max-width: auto;
     height: 100vh;
     background-color: transparent;
     z-index: 1000;

@@ -68,7 +68,7 @@
 .close-button {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1rem;
     cursor: pointer;
     color: var(--dark-purple);
 }
@@ -151,7 +151,6 @@
 }
 
 .view-cart-button {
-    width: 91.5%;
     background-color: white;
     border: 1px solid var(--dark-purple, #270722);
     color: var(--dark-purple, #270722);
@@ -204,7 +203,11 @@
     }
     .cart-panel,
     .mini-cart-content {
-        width: 100%;
-        max-width: 45%;
+        width: auto;
+        left: 2rem;
+        max-width: none;
+    }
+    .mini-cart-footer .view-cart-button {
+        display: none;
     }
 }

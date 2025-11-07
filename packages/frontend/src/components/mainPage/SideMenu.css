@@ -60,8 +60,8 @@
 .close-button {
     background: none;
     border: none;
-    font-size: 2rem;
-    color: var(--nyanza);
+    font-size: 1rem;
+    color: var(--dark-purple);
     cursor: pointer;
 }
 

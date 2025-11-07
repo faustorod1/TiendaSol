@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCategorias } from '../../service/categoriaService';
 import { useFilters } from '../../contexts/FilterContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import './ProductFilters.css';
 
 const ProductFilters = ({ currentFilters, onFilterChange }) => {
@@ -52,16 +54,15 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
       
       {/* Contenedor de filtros */}
       <div className={`filters-container ${isFilterOpen ? 'open' : ''}`}>
-          {/* Botón de cerrar para móvil
-          <button 
-              className="filters-close-button"
-              onClick={() => setIsFilterOpen(false)}
-              aria-label="Cerrar filtros"
-          >
-              ×
-          </button>*/}
 
           <aside className="product-filters">
+            <button 
+                className="filters-close-button"
+                onClick={() => setIsFilterOpen(false)}
+                aria-label="Cerrar filtros"
+            >
+                <FontAwesomeIcon icon={faXmark} />
+            </button>
             <h3>Filtros</h3>
             <form onSubmit={(e) => e.preventDefault()}>
               
