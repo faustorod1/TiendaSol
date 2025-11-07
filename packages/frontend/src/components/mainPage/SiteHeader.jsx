@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart, faFilter, faComment, faBell } from '@fortawesome/free-solid-svg-icons';
@@ -29,13 +29,23 @@ const SiteHeader = (props) => {
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const navigate = useNavigate();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const handleToggleCart = () => {
         setIsCartOpen(!isCartOpen);
     };
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        if (searchTerm.trim()) {
+        const targetPath = '/productos';
+
+        if (location.pathname === targetPath) {
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set('titulo', encodeURIComponent(searchTerm));
+                return newParams;
+            });
+        } else {
             navigate(`/productos?titulo=${encodeURIComponent(searchTerm)}`);
         }
     };
