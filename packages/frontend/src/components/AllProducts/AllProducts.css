@@ -94,7 +94,6 @@
     width: 100%;
   }
 
-  /* Filtros como overlay en móvil */
   .filters-container {
     position: fixed;
     top: 0;

@@ -10,7 +10,11 @@ const ProductDetailPage = (props) => {
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { aumentarCantidadProducto } = useCartContext();
+  const { aumentarCantidadProducto, productos } = useCartContext();
+
+  // Obtener la cantidad del producto actual en el carrito
+  const productInCart = productos.find(p => p._id === id);
+  const cantidadEnCarrito = productInCart ? productInCart.cantidad : 0;
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -104,6 +108,12 @@ const ProductDetailPage = (props) => {
         </div>
 
         <div className="comprar-container">
+          <div className="feedback-carrito">
+            {cantidadEnCarrito > 0 
+              ? `Tienes ${cantidadEnCarrito} ejemplar${cantidadEnCarrito > 1 ? 'es' : ''} de este producto en tu carrito`
+              : 'Este producto no está en tu carrito'
+            }
+          </div>
           <button 
             className="agregar-carrito" 
             onClick={() => aumentarCantidadProducto(product)}
