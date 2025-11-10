@@ -18,7 +18,8 @@ const Breadcrumbs = () => {
     'account': 'Mi cuenta',
     'manage': 'Gestionar cuenta',
     'signin': 'Iniciar Sesión',
-    'notifications': 'Notificaciones'
+    'notifications': 'Notificaciones',
+    'pedidos': 'Pedidos'
   };
 
   useEffect(() => {

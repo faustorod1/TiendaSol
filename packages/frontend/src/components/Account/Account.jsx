@@ -66,6 +66,9 @@ const Account = ({ user }) => {
           <Link to="/account/manage" className="manage-account-button">
             Gestionar Cuenta
           </Link>
+          <Link to="/account/pedidos" className="orders-list-button">
+            Mis Pedidos
+          </Link>
         </div>
       </div>
     </div>
