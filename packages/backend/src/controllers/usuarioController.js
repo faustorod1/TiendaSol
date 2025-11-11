@@ -46,6 +46,26 @@ export class UsuarioController {
             notificacion
         });
     }
+
+    async registrar(req, res) {
+        const reqResult = registrarUsuarioSchema.safeParse(req.body);
+        if (!reqResult.success) {
+            return res.status(400).json({
+                message: 'Datos de registro inválidos',
+                errors: reqResult.error.issues
+            });
+        }
+
+        const { email, password, nombre, telefono, tipo } = reqResult.data;
+        const userData = { nombre, telefono, tipo };
+
+        const usuarioNuevo = await this.usuarioService.registrar(email, password, userData);
+
+        return res.status(201).json({
+            mensaje: 'Usuario registrado exitosamente',
+            usuario: usuarioNuevo
+        });
+    }
 }
 
 
@@ -82,4 +102,21 @@ const obtenerNotificacionesSchema = z.object({
 const marcarNotificacionComoLeidaSchema = z.object({
     id: objectIdSchema,
     usuarioId: objectIdSchema
+});
+
+const passwordSchema = z.string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres.")
+    .regex(/[A-Z]/, "Debe incluir al menos una mayúscula.")
+    .regex(/[a-z]/, "Debe incluir al menos una minúscula.")
+    .regex(/[0-9]/, "Debe incluir al menos un número.")
+    .regex(/[^a-zA-Z0-9]/, "Debe incluir al menos un carácter especial (ej. !, @, #, $).");
+
+const registrarUsuarioSchema = z.object({
+    nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+    email: z.email('Formato de correo electrónico inválido'),
+    password: passwordSchema,
+    telefono: z.string().optional(),
+    tipo: z.enum(['COMPRADOR', 'VENDEDOR'], {
+        required_error: "El tipo de usuario es requerido"
+    })
 });

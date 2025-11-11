@@ -16,6 +16,10 @@ export class UsuarioRepository {
         return await this.model.findById(objUsuario);
     }
 
+    async findByEmail(email) {
+        return await this.model.findOne({email: email});
+    }
+
     async findNotificationsByPage(filtro, limit, offset) {
         const { usuarioId, leida } = filtro;
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
@@ -61,8 +65,12 @@ export class UsuarioRepository {
         return { rows, count };
     }
 
-    async save(usuario) {
-        const nuevoUsuario = new this.model(usuario);
+    async save(usuario, password) {
+        const usuarioParaGuardar = {
+            ...usuario,
+            password: password
+        };
+        const nuevoUsuario = new this.model(usuarioParaGuardar);
         return await nuevoUsuario.save();
     }
 

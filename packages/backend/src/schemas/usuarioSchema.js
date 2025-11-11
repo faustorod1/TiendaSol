@@ -14,9 +14,14 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    telefono:{
+    password: {
         type: String,
         required: true,
+        select: false // Para que no lo traiga en las queries si no especifico
+    },
+    telefono:{
+        type: String,
+        required: false,
         trim: true,
     },
     tipo: {

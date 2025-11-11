@@ -37,6 +37,14 @@ export default function usuarioRoutes(getController) {
             next(error);
         }
     });
+
+    router.post(`${pathUsuario}/register`, async (req, res, next) => {
+        try {
+            await controller.registrar(req, res);
+        } catch (error) {
+            next(error);
+        }
+    })
     
     return router;
 }

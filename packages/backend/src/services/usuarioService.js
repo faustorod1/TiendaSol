@@ -2,6 +2,8 @@ import { Usuario } from '../models/entities/usuario.js';
 import { Notificacion } from '../models/entities/notificacion.js';
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { NotificacionDoesNotExistError } from '../errors/NotificacionDoesNotExistError.js';
+import bcrypt from "bcryptjs";
+import { EmailUnavailableError } from '../errors/EmailUnavailableError.js';
 
 export class UsuarioService {
   constructor(usuarioRepository) {
@@ -36,5 +38,21 @@ export class UsuarioService {
     }
 
     return notificacionActualizada;
+  }
+
+  async registrar(email, password, data) {
+    const existente = await this.usuarioRepository.findByEmail(email);
+    if (existente) {
+      throw new EmailUnavailableError();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHasheada = await bcrypt.hash(password, salt);
+
+    const usuario = new Usuario({...data, email: email});
+
+    const usuarioGuardado = await this.usuarioRepository.save(usuario, passwordHasheada);
+
+    return usuarioGuardado;
   }
 }

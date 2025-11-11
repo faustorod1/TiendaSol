@@ -1,8 +1,21 @@
-export class Usuario{
-    /** @type mongoose.Types.ObjectId */
+/**
+ * @typedef {Object} UsuarioProps
+ * @property {mongoose.Types.ObjectId | string} _id
+ * @property {string} nombre
+ * @property {string} email
+ * @property {string} [telefono] - Opcional
+ * @property {TipoUsuario} tipo
+ * @property {Date} [fechaAlta] - Opcional, se puede inicializar por defecto
+ * @property {Notificacion[]} [notificaciones] - Opcional
+ */
+
+export class Usuario {
+    /** @type mongoose.Types.ObjectId | string */
     _id;
     /** @type string */
     nombre;
+    /** @type string */
+    email;
     /** @type string */
     telefono;
     /** @type TipoUsuario */
@@ -13,23 +26,20 @@ export class Usuario{
     notificaciones;
 
     /**
-     * @param {string} id
-     * @param {string} nombre
-     * @param {string} email
-     * @param {string} telefono
-     * @param {TipoUsuario} tipo
-     * @param {Date} fechaAlta
-     * @param {Notificacion[]} notificaciones
+     * @param {UsuarioProps} props - Objeto de propiedades del usuario
      */
-    constructor(id, nombre, email, telefono, tipo, fechaAlta) {
-        this._id = id;
+    constructor({ _id, nombre, email, telefono, tipo, fechaAlta, notificaciones }) {
+        this._id = _id;
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
         this.tipo = tipo;
-        this.fechaAlta = fechaAlta;
-        this.notificaciones = [];
+        
+        this.fechaAlta = fechaAlta || new Date(); 
+        this.notificaciones = notificaciones || [];
     }
+
+    // --- Métodos de Dominio ---
 
     /**
      * @param {Notificacion} notificacion
