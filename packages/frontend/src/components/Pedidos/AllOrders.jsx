@@ -6,6 +6,8 @@ import './AllOrders.css';
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(5); //Cantidad de pedidos por pagina
   const navigate = useNavigate();
 
   // Por ahora usamos un usuario mock - después esto vendría del contexto de autenticación
@@ -17,6 +19,8 @@ const AllOrders = () => {
       try {
         // Filtrar pedidos del usuario actual (como comprador)
         const userOrders = pedidos.filter(pedido => pedido.comprador._id === currentUserId);
+        // Ordenar por fecha de creación (más recientes primero)
+        userOrders.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
         setOrders(userOrders);
       } catch (error) {
         console.error("Error al cargar pedidos:", error);
@@ -27,6 +31,18 @@ const AllOrders = () => {
 
     loadOrders();
   }, [currentUserId]);
+
+  // Cálculos de paginación
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const startIndex = (currentPage - 1) * ordersPerPage;
+  const endIndex = startIndex + ordersPerPage;
+  const currentOrders = orders.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll hacia arriba al cambiar de página
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('es-AR', {
@@ -107,9 +123,15 @@ const AllOrders = () => {
 
   return (
     <div className="all-orders-container">
-      <h1>Mis Pedidos</h1>
+      <div className="orders-header">
+        <h1>Mis Pedidos</h1>
+        <div className="orders-summary">
+          <span className="total-orders">Total: {orders.length} pedidos</span>
+        </div>
+      </div>
+
       <div className="orders-list">
-        {orders.map(order => (
+        {currentOrders.map(order => (
           <div key={order.id} className="order-card">
             <div className="order-header">
               <div className="order-id">
@@ -153,6 +175,30 @@ const AllOrders = () => {
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="pagination-controls">
+          <button 
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            Anterior
+          </button>
+          
+          <span className="page-info">
+            Página {currentPage} de {totalPages}
+          </span>
+          
+          <button 
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 };

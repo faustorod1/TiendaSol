@@ -216,6 +216,85 @@
   transform: translateY(-1px);
 }
 
+/* Nueva sección para encabezado y paginación */
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.orders-header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2.5rem;
+}
+
+.orders-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.total-orders {
+  font-size: 1rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Controles de paginación simplificados */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 0.2rem 0.2rem;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #495057;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8f9fa;
+}
+
+.page-info {
+  font-size: 1rem;
+  color: #495057;
+  font-weight: 500;
+  text-align: center;
+  min-width: 120px;
+}
+
+.pagination-info {
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .all-orders-container {
@@ -250,6 +329,35 @@
   .view-details-btn, .review-btn {
     width: 100%;
   }
+  
+  .orders-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .orders-header h1 {
+    font-size: 2rem;
+  }
+  
+  .orders-summary {
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .pagination-controls {
+    gap: 1rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+    min-width: 80px;
+  }
+  
+  .page-info {
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -261,5 +369,23 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+  
+  .orders-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .pagination-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .pagination-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .pagination-info {
+    font-size: 0.8rem;
   }
 }

@@ -269,6 +269,44 @@
   font-size: 1.2rem;
 }
 
+/* Cancel Order Section */
+.cancel-order-section {
+  margin-bottom: 1.3rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.cancel-order-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 0.75rem;
+}
+
+.cancel-order-button:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.cancel-order-button:active {
+  transform: translateY(0);
+}
+
+.cancel-order-note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .order-detail-container {
@@ -302,6 +340,10 @@
   .item-details {
     grid-template-columns: 1fr;
   }
+  
+  .cancel-order-section {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -320,5 +362,10 @@
   .back-button {
     width: 100%;
     margin-bottom: 1rem;
+  }
+  
+  .cancel-order-button {
+    width: 100%;
+    padding: 1rem;
   }
 }

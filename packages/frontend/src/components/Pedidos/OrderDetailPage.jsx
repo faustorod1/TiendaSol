@@ -88,7 +88,18 @@ const OrderDetailPage = () => {
   };
 
   const handleGoBack = () => {
-    navigate('/pedidos');
+    navigate('/account/pedidos');
+  };
+
+  // Función para determinar si se puede cancelar el pedido
+  const canCancelOrder = () => {
+    const cancellableStates = ['pendiente', 'confirmado', 'en_preparacion'];
+    return cancellableStates.includes(order.estado.toLowerCase());
+  };
+
+  // Función para manejar la cancelación del pedido
+  const handleCancelOrder = () => {
+    navigate(`/pedidos/${order.id}/cancelar`);
   };
 
   if (loading) {
@@ -178,6 +189,18 @@ const OrderDetailPage = () => {
             <p>{order.direccionEntrega.codigoPostal}, {order.direccionEntrega.pais}</p>
           </div>
         </div>
+
+        {/* Botón de cancelación (solo si se puede cancelar) */}
+        {canCancelOrder() && (
+          <div className="cancel-order-section">
+            <button onClick={handleCancelOrder} className="cancel-order-button">
+              Cancelar Pedido
+            </button>
+            <p className="cancel-order-note">
+              Puedes cancelar este pedido mientras no haya sido enviado.
+            </p>
+          </div>
+        )}
 
         {/* Lista de items */}
         <div className="order-items-section">
