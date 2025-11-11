@@ -125,9 +125,6 @@ const AllOrders = () => {
     <div className="all-orders-container">
       <div className="orders-header">
         <h1>Mis Pedidos</h1>
-        <div className="orders-summary">
-          <span className="total-orders">Total: {orders.length} pedidos</span>
-        </div>
       </div>
 
       <div className="orders-list">

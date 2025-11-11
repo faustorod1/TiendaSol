@@ -35,6 +35,10 @@ const OrderDetailPage = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('es-AR', {
       year: 'numeric',
@@ -91,7 +95,6 @@ const OrderDetailPage = () => {
     navigate('/account/pedidos');
   };
 
-  // Función para determinar si se puede cancelar el pedido
   const canCancelOrder = () => {
     const cancellableStates = ['pendiente', 'confirmado', 'en_preparacion'];
     return cancellableStates.includes(order.estado.toLowerCase());
@@ -99,7 +102,7 @@ const OrderDetailPage = () => {
 
   // Función para manejar la cancelación del pedido
   const handleCancelOrder = () => {
-    navigate(`/pedidos/${order.id}/cancelar`);
+    navigate(`/account/pedidos/${order.id}/cancelar`);
   };
 
   if (loading) {
@@ -132,7 +135,7 @@ const OrderDetailPage = () => {
         <button onClick={handleGoBack} className="back-button">
           ← Volver
         </button>
-        <h1>Detalles del Pedido</h1>
+        <h1>Detalle del Pedido</h1>
       </div>
 
       <div className="order-detail-card">

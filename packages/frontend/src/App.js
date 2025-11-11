@@ -13,6 +13,7 @@ import AccountInfo from './components/Account/AccountInfo';
 import AllNotifications from './components/Notifications/AllNotifications';
 import AllOrders from './components/Pedidos/AllOrders';
 import OrderDetailPage from './components/Pedidos/OrderDetailPage';
+import CancelOrder from './components/Pedidos/CancelOrder';
 import SignIn from './components/SignIn/SignIn';
 import Contacto from './components/Contacto/Contacto';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
@@ -73,6 +74,7 @@ function App() {
 
                 <Route path="/account/pedidos" element={<AllOrders />} />
                 <Route path="/account/pedidos/:id" element={<OrderDetailPage />} />
+                <Route path="/account/pedidos/:id/cancelar" element={<CancelOrder />} />
 
                 <Route path="/contacto" element={<Contacto />} />
               </Routes>

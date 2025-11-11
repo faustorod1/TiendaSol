@@ -19,7 +19,8 @@ const Breadcrumbs = () => {
     'manage': 'Gestionar cuenta',
     'signin': 'Iniciar Sesión',
     'notifications': 'Notificaciones',
-    'pedidos': 'Pedidos'
+    'pedidos': 'Pedidos',
+    'cancelar': 'Cancelar Pedido'
   };
 
   useEffect(() => {
