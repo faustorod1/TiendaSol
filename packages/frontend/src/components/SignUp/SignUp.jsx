@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SignUp.css';
+import { registerUser } from '../../service/usuarioService';
 
 const SignUp = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ const SignUp = ({ user }) => {
     telefono: user?.telefono || '',
     email: user?.email || '',
     direccion: user?.direccion || '',
+    password: '',
+    confirmPassword: ''
   });
 
   // Inicializar con 3 métodos de pago fijos (opcionales)
@@ -37,6 +40,8 @@ const SignUp = ({ user }) => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +57,37 @@ const SignUp = ({ user }) => {
     ));
   };
 
-  const handleSubmit = (e) => {
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const validatePassword = (password) => {
+    const errors = [];
+    
+    if (password.length < 8) {
+      errors.push('La contraseña debe tener al menos 8 caracteres');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Debe incluir al menos una mayúscula');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('Debe incluir al menos una minúscula');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('Debe incluir al menos un número');
+    }
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+      errors.push('Debe incluir al menos un carácter especial');
+    }
+    
+    return errors;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
@@ -62,7 +97,23 @@ const SignUp = ({ user }) => {
       return;
     }
 
-    // Filtrar solo los métodos de pago que tienen información
+    // Validación de contraseña
+    if (!formData.password.trim()) {
+      setError('La contraseña es obligatoria');
+      return;
+    }
+
+    const passwordErrors = validatePassword(formData.password);
+    if (passwordErrors.length > 0) {
+      setError(passwordErrors.join('. '));
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     const metodosPagoCompletos = metodosPago.filter(metodo => {
       if (metodo.tipo === 'tarjeta') {
         return metodo.numeroTarjeta.trim() && metodo.nombreTitular.trim() && metodo.vencimiento.trim();
@@ -70,14 +121,29 @@ const SignUp = ({ user }) => {
       return true; // Para otros tipos como PayPal o efectivo
     });
 
-    // Simulación de guardado
-    console.log('Datos guardados:', { 
-      ...formData, 
-      metodosPago: metodosPagoCompletos 
-    });
-    setSuccess('Cuenta creada correctamente');
-    
-    setTimeout(() => setSuccess(''), 3000);
+    try {
+      const userData = {
+        nombre: formData.nombre,
+        email: formData.email,
+        password: formData.password,
+        telefono: formData.telefono || undefined, // opcional
+        tipo: 'COMPRADOR' // o permitir que el usuario elija
+      };
+
+      const result = await registerUser(userData);
+      
+      if (result.success) {
+        setSuccess('Cuenta creada correctamente');
+        // Opcional: redirigir al login o dashboard
+        // navigate('/login');
+      } else {
+        setError(result.error || 'Error al crear la cuenta');
+      }
+      
+    } catch (error) {
+      console.error('Error en registro:', error);
+      setError('Error inesperado al crear la cuenta');
+    }
   };
 
   return (
@@ -237,6 +303,63 @@ const SignUp = ({ user }) => {
               )}
             </div>
           ))}
+        </section>
+
+        {/* Sección de contraseña */}
+        <section className="form-section">
+          <h3>Configurar contraseña</h3>
+          
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="password">Contraseña *</label>
+              <div className="password-input-container">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="Ingresa tu contraseña"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={togglePasswordVisibility}
+                  title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                >
+                  {showPassword ? "👁️" : "🙈"}
+                </button>
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirmar contraseña *</label>
+              <div className="password-input-container">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="Confirma tu contraseña"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={toggleConfirmPasswordVisibility}
+                  title={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                >
+                  {showConfirmPassword ? "👁️" : "🙈"}
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="password-info">
+            <p>Tu contraseña será utilizada para iniciar sesión en tu cuenta.</p>
+          </div>
         </section>
 
         {/* Mensajes y botón guardar */}

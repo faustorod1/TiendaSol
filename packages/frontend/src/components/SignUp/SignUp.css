@@ -248,6 +248,48 @@
   font-size: 0.9rem;
 }
 
+/* Password input styles */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  flex: 1;
+  padding-right: 2.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.password-toggle:hover {
+  background: #f8f9fa;
+}
+
+.password-info {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #e7f3ff;
+  border: 1px solid #b6d7ff;
+  border-radius: 6px;
+}
+
+.password-info p {
+  margin: 0;
+  color: #0066cc;
+  font-size: 0.9rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .signup-info {
