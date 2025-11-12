@@ -362,7 +362,6 @@ const SignUp = ({ user }) => {
           </div>
         </section>
 
-        {/* Mensajes y botón guardar */}
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 

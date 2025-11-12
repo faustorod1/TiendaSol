@@ -29,7 +29,6 @@
   gap: 2rem;
 }
 
-/* Secciones del formulario */
 .form-section {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -57,7 +56,6 @@
   margin-bottom: 1rem;
 }
 
-/* Filas y grupos de formulario */
 .form-row {
   display: flex;
   gap: 1rem;
@@ -102,7 +100,6 @@
   color: #bbb;
 }
 
-/* Botones */
 .add-payment-button {
   background: var(--dark-purple);
   color: white;
@@ -124,7 +121,6 @@
   cursor: not-allowed;
 }
 
-/* Métodos de pago */
 .payment-method {
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -196,7 +192,6 @@
   gap: 1rem;
 }
 
-/* Botón guardar */
 .save-button {
   align-self: flex-start;
   background: var(--dark-purple);
@@ -215,7 +210,6 @@
   transform: translateY(-1px);
 }
 
-/* Mensajes */
 .error-message {
   background: rgba(176, 0, 32, 0.1);
   color: var(--error);

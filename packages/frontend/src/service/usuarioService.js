@@ -11,7 +11,6 @@ export async function registerUser(userData) {
       }
     });
 
-    // Verificar si la respuesta es exitosa
     if (response.status === 200 || response.status === 201) {
       return {
         success: true,
