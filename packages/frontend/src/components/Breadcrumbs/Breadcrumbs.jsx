@@ -18,6 +18,7 @@ const Breadcrumbs = () => {
     'account': 'Mi cuenta',
     'manage': 'Gestionar cuenta',
     'signin': 'Iniciar Sesión',
+    'signup': 'Registrarse',
     'notifications': 'Notificaciones',
     'pedidos': 'Pedidos',
     'cancelar': 'Cancelar Pedido'

@@ -33,10 +33,8 @@ const SignIn = () => {
     }
 
     try {
-      // Simulación de login
       console.log('Datos de login:', { ...formData, rememberMe });
       
-      // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Aquí iría la lógica real de autenticación
@@ -107,7 +105,7 @@ const SignIn = () => {
         </form>
 
         <div className="signup-link">
-          ¿No tienes cuenta? <Link to="/signin/manage">Regístrate aquí</Link>
+          ¿No tienes cuenta? <Link to="/signup">Regístrate aquí</Link>
         </div>
       </div>
     </div>

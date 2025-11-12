@@ -27,6 +27,7 @@ const SideMenu = ({ isOpen, onClose }) => {
                 <div className="side-menu-footer">
                     <ul className="side-menu-links">
                     <li><Link to="/account" onClick={onClose}>Mi Cuenta</Link></li>
+                    <li><Link to="/log-out" onClick={onClose}>Cerrar Sesion</Link></li>
                     </ul>
                     <p>© 2025 Tienda Sol. Todos los derechos reservados.</p>
                 </div>

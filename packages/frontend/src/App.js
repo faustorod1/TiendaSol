@@ -15,6 +15,7 @@ import AllOrders from './components/Pedidos/AllOrders';
 import OrderDetailPage from './components/Pedidos/OrderDetailPage';
 import CancelOrder from './components/Pedidos/CancelOrder';
 import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
 import Contacto from './components/Contacto/Contacto';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
@@ -68,6 +69,8 @@ function App() {
 
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signin/manage" element={<AccountInfo />} />
+
+                <Route path="/signup" element={<SignUp />} />
 
                 <Route path="/notifications" element={<AllNotifications />} />
                 <Route path="/notification/:id" element={<NotificationDetailPage />} />
