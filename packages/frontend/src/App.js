@@ -19,8 +19,10 @@ import SignUp from './components/SignUp/SignUp';
 import Contacto from './components/Contacto/Contacto';
 import { Notificaciones } from './components/mockData/Notificaciones.js';
 import { FilterProvider } from "./contexts/FilterContext";
-import { NotificationProvider } from "./contexts/NotificationContext"; // Nuevo import
+import { NotificationProvider } from "./contexts/NotificationContext";
 import NotificationDetailPage from './components/Notifications/NotificationDetailPage';
+import Terms from './components/Terms&Privacy/Terms';
+import Privacy from './components/Terms&Privacy/Privacy';
 
 import "./App.css";
 import { CartProvider } from "./contexts/CartContext.jsx";
@@ -80,6 +82,8 @@ function App() {
                 <Route path="/account/pedidos/:id/cancelar" element={<CancelOrder />} />
 
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
               </Routes>
 
               

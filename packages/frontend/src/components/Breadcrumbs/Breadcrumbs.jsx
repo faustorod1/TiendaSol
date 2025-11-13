@@ -15,6 +15,8 @@ const Breadcrumbs = () => {
     'producto': 'Producto',
     'checkout': 'Checkout',
     'contacto': 'Contacto',
+    'terms': 'Términos y Condiciones',
+    'privacy': 'Política de Privacidad',
     'account': 'Mi cuenta',
     'manage': 'Gestionar cuenta',
     'signin': 'Iniciar Sesión',
