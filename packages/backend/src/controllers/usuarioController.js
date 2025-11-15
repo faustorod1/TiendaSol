@@ -47,6 +47,21 @@ export class UsuarioController {
         });
     }
 
+    async login(req, res) {
+        const reqResult = loginUsuarioSchema.safeParse(req.body);
+        if (!reqResult.success) {
+            return res.status(400).json({
+                message: 'Datos de login inválidos',
+                errors: reqResult.error.issues
+            });
+        }
+        const { email, password } = reqResult.data;
+
+        const response = await this.usuarioService.login(email, password);
+
+        return res.status(200).json(response);
+    }
+
     async registrar(req, res) {
         const reqResult = registrarUsuarioSchema.safeParse(req.body);
         if (!reqResult.success) {
@@ -102,6 +117,11 @@ const obtenerNotificacionesSchema = z.object({
 const marcarNotificacionComoLeidaSchema = z.object({
     id: objectIdSchema,
     usuarioId: objectIdSchema
+});
+
+const loginUsuarioSchema = z.object({
+    email: z.email('Formato de correo electrónico inválido'),
+    password: z.string().min(1, 'La contraseña no puede estar vacía')
 });
 
 const passwordSchema = z.string()

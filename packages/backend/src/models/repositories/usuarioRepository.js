@@ -20,6 +20,13 @@ export class UsuarioRepository {
         return await this.model.findOne({email: email});
     }
 
+    async findByEmailWithPassword(email) {
+        return await this.model
+            .findOne({email: email})
+            .select('+password _id email nombre tipo')
+            .lean();
+    }
+
     async findNotificationsByPage(filtro, limit, offset) {
         const { usuarioId, leida } = filtro;
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);

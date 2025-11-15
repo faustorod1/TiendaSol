@@ -1,8 +1,8 @@
 import { UsuarioController } from '../controllers/usuarioController.js';
 import { usuarioErrorHandler } from '../middlewares/usuarioMiddleware.js';
 import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
-import { authMockMiddleware } from '../middlewares/authMockMiddleware.js';
 import express from 'express';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const pathUsuario = "/usuarios";
 const pathNotificacion = "/usuarios/notificaciones";
@@ -19,10 +19,7 @@ export default function usuarioRoutes(getController) {
 
     router.use(loggerMiddleware);
 
-    // ? Para desarrollo
-    router.use(authMockMiddleware);
-
-    router.get(pathNotificacion, async (req, res, next) => {
+    router.get(pathNotificacion, authMiddleware, async (req, res, next) => {
         try {
             await controller.obtenerNotificaciones(req, res);
         } catch (error) {
@@ -30,9 +27,17 @@ export default function usuarioRoutes(getController) {
         }
     });
 
-    router.patch(`${pathNotificacion}/:id`, async (req, res, next) => {
+    router.patch(`${pathNotificacion}/:id`, authMiddleware, async (req, res, next) => {
         try {
             await controller.marcarNotificacionComoLeida(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    router.post(`${pathUsuario}/login`, async (req, res, next) => {
+        try {
+            await controller.login(req, res);
         } catch (error) {
             next(error);
         }
@@ -44,7 +49,7 @@ export default function usuarioRoutes(getController) {
         } catch (error) {
             next(error);
         }
-    })
+    });
     
     return router;
 }

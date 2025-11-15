@@ -3,7 +3,12 @@ import { Notificacion } from '../models/entities/notificacion.js';
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { NotificacionDoesNotExistError } from '../errors/NotificacionDoesNotExistError.js';
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken';
 import { EmailUnavailableError } from '../errors/EmailUnavailableError.js';
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+
+const TOKEN_DURATION = '24h';
+
 
 export class UsuarioService {
   constructor(usuarioRepository) {
@@ -38,6 +43,35 @@ export class UsuarioService {
     }
 
     return notificacionActualizada;
+  }
+
+  async login(email, password) {
+    // Así se asegura de devolver lo mismo en ambos casos.
+    const ERR_MSG = 'Credenciales inválidas.';
+
+    const usuario = await this.usuarioRepository.findByEmailWithPassword(email);
+    if (!usuario) {
+      throw new UnauthorizedError(ERR_MSG);
+    }
+    
+    const passCorrecta = await bcrypt.compare(password, usuario.password);
+    if (!passCorrecta) {
+      throw new UnauthorizedError(ERR_MSG);
+    }
+
+    const payload = {
+      id: usuario._id.toString(),
+      email: usuario.email,
+      rol: usuario.rol
+    }
+    
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: TOKEN_DURATION
+    });
+
+    const { password: _, ...usuarioSinHash } = usuario;
+
+    return { token: token, usuario: usuarioSinHash };
   }
 
   async registrar(email, password, data) {
