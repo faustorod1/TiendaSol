@@ -63,15 +63,6 @@ const SignIn = () => {
           localStorage.setItem('userId', userData._id || userData.id);
         }
 
-        // Configurar opción "recordarme"
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-          localStorage.setItem('savedEmail', formData.email);
-        } else {
-          localStorage.removeItem('rememberMe');
-          localStorage.removeItem('savedEmail');
-        }
-
         navigate('/', { replace: true });
         
       } else if (result && result.success === false) {
@@ -103,7 +94,6 @@ const SignIn = () => {
     }
   };
 
-  // Cargar email guardado al montar el componente (si existe)
   React.useEffect(() => {
     const savedEmail = localStorage.getItem('savedEmail');
     const rememberMeStatus = localStorage.getItem('rememberMe') === 'true';

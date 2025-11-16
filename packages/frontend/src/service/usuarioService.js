@@ -4,7 +4,6 @@ const API_URL = 'http://localhost:8000/usuarios';
 
 export async function registerUser(userData) {
   try {
-    // Realizar petición POST al endpoint de registro
     const response = await axios.post(`${API_URL}/register`, userData, {
       headers: {
         'Content-Type': 'application/json'
