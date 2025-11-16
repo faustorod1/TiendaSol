@@ -22,8 +22,6 @@ export async function registerUser(userData) {
     throw new Error('Error en el registro del usuario');
     
   } catch (error) {
-    console.error('Error en registerUser:', error);
-    
     if (error.response) {
       const errorMessage = error.response.data?.message || 
                           error.response.data?.error || 
@@ -67,9 +65,8 @@ export async function loginUser(credentials) {
     throw new Error('Error en el login');
     
   } catch (error) {
-    console.error('Error en loginUser:', error);
-    
     if (error.response) {
+      
       const errorMessage = error.response.data?.message || 
                           error.response.data?.error || 
                           'Credenciales incorrectas';
@@ -114,8 +111,6 @@ export async function getUserProfile(userId) {
     throw new Error('Error al obtener perfil de usuario');
     
   } catch (error) {
-    console.error('Error en getUserProfile:', error);
-    
     if (error.response) {
       return {
         success: false,

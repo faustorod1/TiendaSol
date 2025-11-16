@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../../service/usuarioService';
 import './SignIn.css';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -32,20 +34,85 @@ const SignIn = () => {
       return;
     }
 
+    // Validación de formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Por favor, ingresa un correo electrónico válido');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      console.log('Datos de login:', { ...formData, rememberMe });
+      const credentials = {
+        email: formData.email.trim(),
+        password: formData.password
+      };
+
+      const result = await loginUser(credentials);
       
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Aquí iría la lógica real de autenticación
-      alert('Inicio de sesión exitoso (simulación)');
+      if (result && result.success) {
+        
+        // Guardar información de autenticación
+        if (result.data && result.data.token) {
+          localStorage.setItem('authToken', result.data.token);
+        }
+        
+        if (result.data && (result.data.usuario || result.data.user)) {
+          const userData = result.data.usuario || result.data.user;
+          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem('userId', userData._id || userData.id);
+        }
+
+        // Configurar opción "recordarme"
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('savedEmail', formData.email);
+        } else {
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('savedEmail');
+        }
+
+        navigate('/', { replace: true });
+        
+      } else if (result && result.success === false) {
+    
+        if (result.status === 401) {
+          setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+        } else if (result.status === 404) {
+          setError('Usuario no encontrado. ¿Te has registrado?');
+        } else if (result.status === 500) {
+          setError('Error del servidor. Inténtalo de nuevo más tarde.');
+        } else {
+          setError(result.error || 'Error al iniciar sesión. Verifica tus credenciales.');
+        }
+      } else {
+        setError('Respuesta inesperada del servidor. Inténtalo de nuevo.');
+      }
       
     } catch (err) {
-      setError('Error al iniciar sesión. Verifica tus credenciales.');
+
+      if (err.name === 'NetworkError' || err.message.includes('Network')) {
+        setError('Error de conexión. Verifica tu conexión a internet.');
+      } else if (err.message.includes('timeout')) {
+        setError('El servidor tardó demasiado en responder. Inténtalo de nuevo.');
+      } else {
+        setError('Error de conexión. Por favor, inténtalo de nuevo.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Cargar email guardado al montar el componente (si existe)
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem('savedEmail');
+    const rememberMeStatus = localStorage.getItem('rememberMe') === 'true';
+    
+    if (savedEmail && rememberMeStatus) {
+      setFormData(prev => ({ ...prev, email: savedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <div className="signin-container">
@@ -69,6 +136,7 @@ const SignIn = () => {
               onChange={handleInputChange}
               placeholder="tu@ejemplo.com"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -84,11 +152,13 @@ const SignIn = () => {
                 onChange={handleInputChange}
                 placeholder="Tu contraseña"
                 required
+                disabled={isLoading}
               />
               <button
                 type="button"
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
               >
                 {showPassword ? '👁️' : '🙈'}
               </button>
@@ -100,7 +170,7 @@ const SignIn = () => {
             className={`signin-button ${isLoading ? 'loading' : ''}`}
             disabled={isLoading}
           >
-            {isLoading ? '' : 'Iniciar Sesión'}
+            {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
 
