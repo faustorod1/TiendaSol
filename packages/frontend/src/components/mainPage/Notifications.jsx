@@ -3,14 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Notifications.css';
 
 const Notifications = ({ isOpen, onClose, notifications = [] }) => {
+  
+  const isAuthenticated = () => {
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('user');
+    return token && user;
+  };
+
   const navigate = useNavigate();
   
-  // Limitar a máximo 5 notificaciones para mostrar en el dropdown
   const displayNotifications = notifications.slice(0, 5);
   const hasMoreNotifications = notifications.length > 5;
 
   const handleNotificationClick = (notificationId) => {
-    // Navegar al detalle y cerrar dropdown
     navigate(`/notification/${notificationId}`);
     onClose();
   };
@@ -38,45 +43,59 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
           <button onClick={onClose} className="notif-close">×</button>
         </div>
 
-        <div className="notif-content">
-          {notifications.length === 0 ? (
-            <div className="notif-empty">
-              <p>No tienes notificaciones</p>
+        {!isAuthenticated() ? (
+          <div className="notif-signin-prompt">
+            <div className="signin-message">
+              <Link 
+                to="/signin" 
+                className="signin-link"
+                onClick={onClose}
+              >
+                Inicie sesión para ver las notificaciones
+              </Link>
             </div>
-          ) : (
-            <>
-              <div className="notif-list">
-                {displayNotifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className="notif-item"
-                    onClick={() => handleNotificationClick(notification.id)}
-                  >
-                    <div className="notif-item-content">
-                      <div className="notif-title">{notification.title}</div>
-                      <div className="notif-message">{notification.message}</div>
-                      <div className="notif-time">
-                        {formatTimeAgo(notification.timestamp)}
+          </div>
+        ) : (
+          <div className="notif-content">
+            {notifications.length === 0 ? (
+              <div className="notif-empty">
+                <p>No tienes notificaciones</p>
+              </div>
+            ) : (
+              <>
+                <div className="notif-list">
+                  {displayNotifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className="notif-item"
+                      onClick={() => handleNotificationClick(notification.id)}
+                    >
+                      <div className="notif-item-content">
+                        <div className="notif-title">{notification.title}</div>
+                        <div className="notif-message">{notification.message}</div>
+                        <div className="notif-time">
+                          {formatTimeAgo(notification.timestamp)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-
-              {hasMoreNotifications && (
-                <div className="notif-footer">
-                  <Link 
-                    to="/notifications" 
-                    className="notif-view-all"
-                    onClick={onClose}
-                  >
-                    Ver todas ({notifications.length})
-                  </Link>
+                  ))}
                 </div>
-              )}
-            </>
-          )}
-        </div>
+
+                {hasMoreNotifications && (
+                  <div className="notif-footer">
+                    <Link 
+                      to="/notifications" 
+                      className="notif-view-all"
+                      onClick={onClose}
+                    >
+                      Ver todas ({notifications.length})
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

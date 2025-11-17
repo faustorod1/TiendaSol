@@ -12,6 +12,12 @@ import { useCartContext } from '../../contexts/CartContext';
 
 
 const SiteHeader = (props) => {
+    const isAuthenticated = () => {
+        const token = localStorage.getItem('authToken');
+        const user = localStorage.getItem('user');
+        return token && user;
+    };
+
     const { isFilterOpen, setIsFilterOpen } = useFilters();
     const { notifications, unreadCount, markAsRead } = useNotifications();
     const {
@@ -85,7 +91,7 @@ const SiteHeader = (props) => {
                             aria-label={`Ver notificaciones (${unreadCount} no leídas)`}
                         >
                             <FontAwesomeIcon icon={faBell} />
-                            {unreadCount > 0 && (
+                            {unreadCount > 0 && isAuthenticated() && (
                                 <span className="notifications-count">{unreadCount > 99 ? '99+' : unreadCount}</span>
                             )}
                         </button>

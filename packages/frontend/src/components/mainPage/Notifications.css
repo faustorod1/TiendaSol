@@ -180,6 +180,58 @@
   background: #4a1f66;
 }
 
+.notif-signin-prompt {
+  padding: 2rem 1rem;
+  text-align: center;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--nyanza);
+}
+
+.signin-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signin-message > p:first-child {
+  font-size: 2rem;
+  margin: 0;
+  opacity: 0.7;
+}
+
+.signin-message > p:nth-child(2) {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-width: 220px;
+  text-align: center;
+}
+
+.signin-link {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  background-color: var(--dark-purple, #270722);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.signin-link:hover {
+  background-color: rgba(39, 7, 34, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(39, 7, 34, 0.3);
+}
+
 /* Responsive para dropdown */
 @media (max-width: 768px) {
   .notif-dropdown {
@@ -204,5 +256,20 @@
   
   .notif-message {
     font-size: 0.75rem;
+  }
+  
+  .notif-signin-prompt {
+    padding: 1.5rem 0.75rem;
+    min-height: 120px;
+  }
+  
+  .signin-message > p:nth-child(2) {
+    font-size: 0.9rem;
+    max-width: 200px;
+  }
+  
+  .signin-link {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
   }
 }

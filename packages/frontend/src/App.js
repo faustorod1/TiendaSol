@@ -89,7 +89,7 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-                
+
                 <Route 
                   path="/account/pedidos" 
                   element={
@@ -106,7 +106,14 @@ function App() {
 
                 <Route path="/signup" element={<SignUp />} />
 
-                <Route path="/notifications" element={<AllNotifications />} />
+                <Route 
+                  path="/notifications" 
+                  element={
+                    <ProtectedRoute>
+                      <AllNotifications />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route path="/notification/:id" element={<NotificationDetailPage />} />
 
                 <Route path="/contacto" element={<Contacto />} />
