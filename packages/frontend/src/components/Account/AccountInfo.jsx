@@ -1,18 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './AccountInfo.css';
 
 const AccountInfo = ({ user }) => {
   const [formData, setFormData] = useState({
-    nombre: user?.nombre || '',
-    apellido: user?.apellido || '',
-    telefono: user?.telefono || '',
-    email: user?.email || '',
-    direccion: user?.direccion || '',
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    email: '',
+    direccion: '',
   });
 
-  const [metodosPago, setMetodosPago] = useState(user?.metodosPago || []);
+  const [metodosPago, setMetodosPago] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    try {
+      const userString = localStorage.getItem('user');
+      if (userString) {
+        const userData = JSON.parse(userString);
+
+        setFormData({
+          nombre: userData.nombre || '',
+          apellido: userData.apellido || '',
+          telefono: userData.telefono || '',
+          email: userData.email || '',
+          direccion: userData.direccion || '',
+        });
+
+        setMetodosPago(userData.metodosPago || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar datos del usuario:', error);
+      if (user) {
+        setFormData({
+          nombre: user.nombre || '',
+          apellido: user.apellido || '',
+          telefono: user.telefono || '',
+          email: user.email || '',
+          direccion: user.direccion || '',
+        });
+        setMetodosPago(user.metodosPago || []);
+      }
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,17 +86,30 @@ const AccountInfo = ({ user }) => {
     e.preventDefault();
     setError('');
     
-    // Validación básica
     if (!formData.nombre.trim() || !formData.email.trim()) {
       setError('Nombre y email son obligatorios');
       return;
     }
 
-    // Simulación de guardado
-    console.log('Datos guardados:', { ...formData, metodosPago });
-    setSuccess('Información actualizada correctamente');
-    
-    setTimeout(() => setSuccess(''), 3000);
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const updatedUser = {
+        ...currentUser,
+        ...formData,
+        metodosPago: metodosPago
+      };
+      
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      console.log('Datos guardados:', { ...formData, metodosPago });
+      setSuccess('Información actualizada correctamente');
+      
+      setTimeout(() => setSuccess(''), 3000);
+      
+    } catch (error) {
+      console.error('Error al guardar datos:', error);
+      setError('Error al guardar los cambios');
+    }
   };
 
   return (
@@ -72,7 +117,6 @@ const AccountInfo = ({ user }) => {
       <h2>Información de la cuenta</h2>
       
       <form onSubmit={handleSubmit} className="account-form">
-        {/* Información personal */}
         <section className="form-section">
           <h3>Datos personales</h3>
           
@@ -140,7 +184,6 @@ const AccountInfo = ({ user }) => {
           </div>
         </section>
 
-        {/* Métodos de pago */}
         <section className="form-section">
           <div className="section-header">
             <h3>Métodos de pago ({metodosPago.length}/3)</h3>
@@ -217,7 +260,6 @@ const AccountInfo = ({ user }) => {
           ))}
         </section>
 
-        {/* Mensajes y botón guardar */}
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 

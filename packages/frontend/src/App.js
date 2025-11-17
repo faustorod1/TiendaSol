@@ -80,7 +80,16 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-                <Route path="/account/manage" element={<AccountInfo />} />
+
+                <Route 
+                  path="/account/manage" 
+                  element={
+                    <ProtectedRoute>
+                      <AccountInfo />
+                    </ProtectedRoute>
+                  } 
+                />
+                
                 <Route 
                   path="/account/pedidos" 
                   element={
