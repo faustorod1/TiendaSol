@@ -9,7 +9,6 @@ const Checkout = () => {
   const items = location.state?.items ?? [];
 
   useEffect(() => {
-    // Si no hay items en state (p. ej. acceso directo o recarga), redirigir al inicio
     if (!items || items.length === 0) {
       navigate('/', { replace: true });
     }
@@ -21,6 +20,21 @@ const Checkout = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    try {
+      const userString = localStorage.getItem('user');
+      if (userString) {
+        const user = JSON.parse(userString);
+
+        setFirstName(user.nombre || '');
+        setLastName(user.apellido || '');
+        setAddress(user.direccion || '');
+      }
+    } catch (error) {
+      console.error('Error al cargar datos del usuario:', error);
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -98,7 +112,7 @@ const Checkout = () => {
                   </select>
                 </div>
 
-                <button /*type="submit"*/ className="place-order-button">
+                <button type="submit" className="place-order-button">
                   Finalizar compra
                 </button>
               </form>

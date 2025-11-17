@@ -47,7 +47,7 @@ function App() {
   return (
     <CartProvider>
       <FilterProvider>
-        <NotificationProvider> {/* Envolver la app */}
+        <NotificationProvider>
           <div className="App">
             <SiteHeader 
               notifications={notifications}

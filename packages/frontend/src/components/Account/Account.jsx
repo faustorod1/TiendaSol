@@ -7,7 +7,6 @@ const Account = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Cargar datos del usuario desde localStorage
     const loadUserData = () => {
       try {
         const userString = localStorage.getItem('user');
@@ -17,7 +16,6 @@ const Account = () => {
           const user = JSON.parse(userString);
           setUserData(user);
         } else {
-          // Datos por defecto si no hay información guardada
           setUserData({
             nombre: 'Usuario',
             apellido: '',
@@ -29,7 +27,6 @@ const Account = () => {
         }
       } catch (error) {
         console.error('Error al cargar datos del usuario:', error);
-        // Datos por defecto en caso de error
         setUserData({
           nombre: 'Usuario',
           apellido: '',

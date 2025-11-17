@@ -104,7 +104,6 @@
   font-weight: 700;
 }
 
-/* responsive: apilar columnas en pantallas pequeñas */
 @media (max-width: 880px) {
   .cart-page {
     grid-template-columns: 1fr;
