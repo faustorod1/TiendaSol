@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductSearchBar from './components/ProductSearchBar/ProductSearchBar';
-import { Route, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // SIN BrowserRouter
 import Footer from "./components/mainPage/Footer";
 import SiteHeader from "./components/mainPage/SiteHeader";
 import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
@@ -23,6 +23,7 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import NotificationDetailPage from './components/Notifications/NotificationDetailPage';
 import Terms from './components/Terms&Privacy/Terms';
 import Privacy from './components/Terms&Privacy/Privacy';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 import "./App.css";
 import { CartProvider } from "./contexts/CartContext.jsx";
@@ -55,19 +56,41 @@ function App() {
             <Breadcrumbs />
             <main>
               <Routes>
-              
+                
                 <Route path="/" element={<Landing />} />
 
-                {/* Ruta dinámica para productos */}
                 <Route path="/productos/:id" element={<ProductDetailPage />} />
 
-                {/* Podés agregar más rutas aquí */}
-                <Route path="/checkout" element={<Checkout />} />
+                <Route 
+                  path="/checkout" 
+                  element={
+                    <ProtectedRoute>
+                      <Checkout />
+                    </ProtectedRoute>
+                  } 
+                />
 
                 <Route path="/productos" element={<AllProducts />} />
 
-                <Route path="/account" element={<Account />} />
+                <Route 
+                  path="/account" 
+                  element={
+                    <ProtectedRoute>
+                      <Account />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route path="/account/manage" element={<AccountInfo />} />
+                <Route 
+                  path="/account/pedidos" 
+                  element={
+                    <ProtectedRoute>
+                      <AllOrders />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="/account/pedidos/:id" element={<OrderDetailPage />} />
+                <Route path="/account/pedidos/:id/cancelar" element={<CancelOrder />} />
 
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signin/manage" element={<AccountInfo />} />
@@ -76,10 +99,6 @@ function App() {
 
                 <Route path="/notifications" element={<AllNotifications />} />
                 <Route path="/notification/:id" element={<NotificationDetailPage />} />
-
-                <Route path="/account/pedidos" element={<AllOrders />} />
-                <Route path="/account/pedidos/:id" element={<OrderDetailPage />} />
-                <Route path="/account/pedidos/:id/cancelar" element={<CancelOrder />} />
 
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/terms" element={<Terms />} />

@@ -6,6 +6,16 @@ import './SideMenu.css';
 const SideMenu = ({ isOpen, onClose }) => {
     const containerClasses = `side-menu-container ${isOpen ? 'open' : ''}`;
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('savedEmail');
+    
+        window.location.href = '/';
+    };
+
     return (
         <div className={containerClasses}>
             <div className="menu-overlay" onClick={onClose}></div>
@@ -27,7 +37,7 @@ const SideMenu = ({ isOpen, onClose }) => {
                 <div className="side-menu-footer">
                     <ul className="side-menu-links">
                     <li><Link to="/account" onClick={onClose}>Mi Cuenta</Link></li>
-                    <li><Link to="/log-out" onClick={onClose}>Cerrar Sesion</Link></li>
+                    <li><Link to="/" onClick={() => { handleLogout(); onClose(); }}>Cerrar Sesion</Link></li>
                     </ul>
                     <p>© 2025 Tienda Sol. Todos los derechos reservados.</p>
                 </div>

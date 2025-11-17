@@ -1,24 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Account.css';
 
-const Account = ({ user }) => {
-  // Datos de ejemplo
-  const userData = user || {
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    email: 'juan.perez@email.com',
-    telefono: '+54 9 11 1234 5678',
-    direccion: 'Av. Corrientes 1234, CABA',
-    metodosPago: [
-      { tipo: 'tarjeta', ultimosDigitos: '1234' },
-      { tipo: 'paypal', email: 'juan@email.com' }
-    ]
-  };
+const Account = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Cargar datos del usuario desde localStorage
+    const loadUserData = () => {
+      try {
+        const userString = localStorage.getItem('user');
+        const userId = localStorage.getItem('userId');
+        
+        if (userString) {
+          const user = JSON.parse(userString);
+          setUserData(user);
+        } else {
+          // Datos por defecto si no hay información guardada
+          setUserData({
+            nombre: 'Usuario',
+            apellido: '',
+            email: 'email@ejemplo.com',
+            telefono: '',
+            direccion: '',
+            metodosPago: []
+          });
+        }
+      } catch (error) {
+        console.error('Error al cargar datos del usuario:', error);
+        // Datos por defecto en caso de error
+        setUserData({
+          nombre: 'Usuario',
+          apellido: '',
+          email: 'email@ejemplo.com',
+          telefono: '',
+          direccion: '',
+          metodosPago: []
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="account">
+        <div className="loading-message">
+          <p>Cargando información de la cuenta...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="account">
-      <h1>Mi Cuenta</h1>
+      <div className="account-header">
+        <h1>Mi Cuenta</h1>
+      </div>
       
       <div className="account-overview">
         <section className="account-section">
@@ -26,7 +68,9 @@ const Account = ({ user }) => {
           <div className="info-grid">
             <div className="info-item">
               <span className="info-label">Nombre:</span>
-              <span className="info-value">{userData.nombre} {userData.apellido}</span>
+              <span className="info-value">
+                {userData.nombre} {userData.apellido || ''}
+              </span>
             </div>
             <div className="info-item">
               <span className="info-label">Email:</span>
