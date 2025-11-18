@@ -19,7 +19,7 @@ export class PedidoService {
 
         const idsProductos = pedidoJSON.items.map(item => item.productoId);
         const productos = await this.productoRepository.findManyById(idsProductos);
-        const productosMap = new Map(productos.map(p => [p.id.toString(), p]));
+        const productosMap = new Map(productos.map(p => [p._id.toString(), p]));
         
         const items = pedidoJSON.items.map(item => {
             const producto = productosMap.get(item.productoId.toString());

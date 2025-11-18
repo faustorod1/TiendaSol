@@ -104,7 +104,7 @@ const Checkout = () => {
         // Limpiar carrito si tienes esa función
         // clearCart();
         
-        navigate('/account/pedidos', { 
+        navigate('/', { 
           replace: true,
           state: { 
             message: 'Pedido creado exitosamente',
