@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createOrder } from '../../service/pedidoService';
 import Cart from '../mainPage/Cart';
 import './Checkout.css';
 
@@ -17,9 +18,11 @@ const Checkout = () => {
   const total = items.reduce((s, it) => s + (it.precio ?? 0) * (it.cantidad ?? 0), 0);
 
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [currency, setCurrency] = useState('PESO_ARG');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     try {
@@ -36,11 +39,89 @@ const Checkout = () => {
     }
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Checkout submit:', { paymentMethod, firstName, lastName, address, items, total });
-    alert('Simulación: formulario enviado. Revisa la consola.');
-    navigate('/', { replace: true });
+    setIsSubmitting(true);
+
+    try {
+      // Validación básica
+      if (!firstName.trim() || !lastName.trim() || !address.trim()) {
+        alert('Por favor, completa todos los campos obligatorios');
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!items || items.length === 0) {
+        alert('No hay productos en el carrito');
+        setIsSubmitting(false);
+        return;
+      }
+
+      console.log('Creando pedido con datos:', { firstName, lastName, address, items, currency, total });
+      
+      // Verificar datos del usuario
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+      console.log('Usuario actual:', user);
+      console.log('ID del usuario:', user?.id || user?._id);
+
+      // Formatear datos del pedido con el ID del vendedor real
+      const orderData = {
+        vendedor: '68f1041224f41c0dc863b55f', // ← ID del vendedor real de tu base de datos
+        items: items.map(item => {
+          console.log('Procesando item:', item);
+          return {
+            productoId: item.id || item._id || item.productoId,
+            cantidad: item.cantidad.toString()
+          };
+        }),
+        moneda: currency,
+        direccionEntrega: {
+          calle: address.split(',')[0]?.trim() || address,
+          altura: address.split(',')[1]?.trim() || '1',
+          piso: '',
+          departamento: '',
+          codigoPostal: '1000',
+          ciudad: 'Buenos Aires',
+          provincia: 'Buenos Aires',
+          pais: 'Argentina',
+          lat: '',
+          lon: ''
+        }
+      };
+
+      console.log('Datos del pedido formateados:', orderData);
+
+      const result = await createOrder(orderData);
+
+      if (result.success) {
+        console.log('Pedido creado exitosamente:', result.data);
+        alert(`¡Pedido creado con éxito! 
+        ID del pedido: ${result.pedidoId || result.data?._id}
+        Total: $${total.toFixed(2)}
+        Moneda: ${currency}`);
+        
+        // Limpiar carrito si tienes esa función
+        // clearCart();
+        
+        navigate('/account/pedidos', { 
+          replace: true,
+          state: { 
+            message: 'Pedido creado exitosamente',
+            pedidoId: result.pedidoId || result.data?._id 
+          }
+        });
+      } else {
+        console.error('Error al crear pedido:', result.error);
+        alert(`Error al crear el pedido: ${result.error}`);
+      }
+
+    } catch (error) {
+      console.error('Error inesperado en handleSubmit:', error);
+      alert('Error inesperado al procesar el pedido. Inténtalo de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -73,6 +154,8 @@ const Checkout = () => {
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="Nombre"
+                      disabled={isSubmitting}
+                      required
                     />
                   </div>
 
@@ -84,6 +167,8 @@ const Checkout = () => {
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       placeholder="Apellido"
+                      disabled={isSubmitting}
+                      required
                     />
                   </div>
                 </div>
@@ -96,6 +181,8 @@ const Checkout = () => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Calle, número, ciudad"
+                    disabled={isSubmitting}
+                    required
                   />
                 </div>
 
@@ -105,6 +192,7 @@ const Checkout = () => {
                     id="payment"
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
+                    disabled={isSubmitting}
                   >
                     <option value="card">Tarjeta (crédito/débito)</option>
                     <option value="paypal">PayPal</option>
@@ -112,8 +200,26 @@ const Checkout = () => {
                   </select>
                 </div>
 
-                <button type="submit" className="place-order-button">
-                  Finalizar compra
+                <div className="form-group">
+                  <label htmlFor="currency">Moneda</label>
+                  <select
+                    id="currency"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    disabled={isSubmitting}
+                  >
+                    <option value="PESO_ARG">PESO_ARG</option>
+                    <option value="DOLAR_USA">DOLAR_USA</option>
+                    <option value="REAL">REAL</option>
+                  </select>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className="place-order-button"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Procesando...' : 'Finalizar compra'}
                 </button>
               </form>
             </div>
