@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../service/usuarioService';
+import { useNotifications } from '../../contexts/NotificationContext';
 import './SignIn.css';
 
 const SignIn = () => {
@@ -13,6 +14,8 @@ const SignIn = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  const { loadNotifications } = useNotifications();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,6 +66,7 @@ const SignIn = () => {
           localStorage.setItem('userId', userData._id || userData.id);
         }
 
+        loadNotifications();
         navigate('/', { replace: true });
         
       } else if (result && result.success === false) {

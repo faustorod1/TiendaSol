@@ -20,12 +20,14 @@ export class UsuarioService {
         if (leida !== undefined) {
             filtro.leida = leida;
         }
+        const nroPage = Number(page);
+        const nroLimit = Number(limit);
 
-        const offset = (page - 1) * limit;
+        const offset = (nroPage - 1) * nroLimit;
 
-        const { rows, count } = await this.usuarioRepository.findNotificationsByPage(filtro, limit, offset);
+        const { rows, count } = await this.usuarioRepository.findNotificationsByPage(filtro, nroLimit, offset);
 
-        const totalPaginas = Math.ceil(count / limit);
+        const totalPaginas = Math.ceil(count / nroLimit);
 
         return {
             page: page,

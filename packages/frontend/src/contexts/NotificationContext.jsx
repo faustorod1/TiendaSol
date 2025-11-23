@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Notificaciones } from '../components/mockData/Notificaciones.js';
+import { fetchNotifications } from '../service/notificationService.js';
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState(Notificaciones);
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
 
   // Funciones para manejar notificaciones
   const markAsRead = (notificationId) => {
@@ -32,19 +36,18 @@ export const NotificationProvider = ({ children }) => {
   };
 
   // Función para obtener notificaciones desde el backend (para el futuro)
-  const fetchNotifications = async () => {
+  const loadNotifications = async () => {
     setLoading(true);
     setError(null);
     try {
-      // const response = await fetch('http://localhost:8000/notifications');
-      // const data = await response.json();
-      // setNotifications(data);
+      const response = await fetchNotifications();
       
-      // Por ahora usar mock data
-      setNotifications(Notificaciones);
+      setNotifications(response.data);
     } catch (err) {
+      console.log(err);
       setError(err.message);
     } finally {
+      
       setLoading(false);
     }
   };
@@ -60,7 +63,7 @@ export const NotificationProvider = ({ children }) => {
     markAsRead,
     markAllAsRead,
     deleteNotification,
-    fetchNotifications
+    loadNotifications
   };
 
   return (

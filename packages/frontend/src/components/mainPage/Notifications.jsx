@@ -66,15 +66,15 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
                 <div className="notif-list">
                   {displayNotifications.map((notification) => (
                     <div
-                      key={notification.id}
+                      key={notification._id}
                       className="notif-item"
-                      onClick={() => handleNotificationClick(notification.id)}
+                      onClick={() => handleNotificationClick(notification._id)}
                     >
                       <div className="notif-item-content">
-                        <div className="notif-title">{notification.title}</div>
-                        <div className="notif-message">{notification.message}</div>
+                        {/* <div className="notif-title">{notification.title}</div> */}
+                        <div className="notif-message">{notification.mensaje}</div>
                         <div className="notif-time">
-                          {formatTimeAgo(notification.timestamp)}
+                          {formatTimeAgo(notification.fechaAlta)}
                         </div>
                       </div>
                     </div>

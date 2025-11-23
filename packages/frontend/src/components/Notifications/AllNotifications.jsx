@@ -67,30 +67,30 @@ const AllNotifications = () => {
         ) : (
           filteredNotifications.map(notification => (
             <div 
-              key={notification.id} 
-              className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-              onClick={() => navigate(`/notification/${notification.id}`)}
+              key={notification._id} 
+              className={`notification-item ${notification.leida ? 'read' : 'unread'}`}
+              onClick={() => navigate(`/notification/${notification._id}`)}
               style={{ cursor: 'pointer' }}
             >
               <div className="notification-content">
-                <h3>{notification.title}</h3>
-                <p>{notification.message}</p>
+                {/* <h3>{notification.title}</h3> */}
+                <p>{notification.mensaje}</p>
                 <span className="notification-time">
-                  {new Date(notification.timestamp).toLocaleString()}
+                  {new Date(notification.fechaAlta).toLocaleString()}
                 </span>
               </div>
               
               <div className="notification-actions">
-                {!notification.read && (
+                {!notification.leida && (
                   <button 
-                    onClick={() => markAsRead(notification.id)}
+                    onClick={() => markAsRead(notification._id)}
                     className="mark-read-btn"
                   >
                     Marcar como leída
                   </button>
                 )}
                 <button 
-                  onClick={() => deleteNotification(notification.id)}
+                  onClick={() => deleteNotification(notification._id)}
                   className="delete-btn"
                 >
                   Eliminar

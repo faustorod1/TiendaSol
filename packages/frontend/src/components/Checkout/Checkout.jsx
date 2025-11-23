@@ -67,7 +67,7 @@ const Checkout = () => {
 
       // Formatear datos del pedido con el ID del vendedor real
       const orderData = {
-        vendedor: '68f1041224f41c0dc863b55f', // ← ID del vendedor real de tu base de datos
+        vendedor: items[0].vendedor,
         items: items.map(item => {
           console.log('Procesando item:', item);
           return {
