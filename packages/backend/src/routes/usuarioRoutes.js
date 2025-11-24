@@ -27,6 +27,14 @@ export default function usuarioRoutes(getController) {
         }
     });
 
+    router.get(`${pathNotificacion}/:id`, authMiddleware, async (req, res, next) => {
+        try {
+            await controller.obtenerNotificacion(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
     router.patch(`${pathNotificacion}/:id`, authMiddleware, async (req, res, next) => {
         try {
             await controller.marcarNotificacionComoLeida(req, res);

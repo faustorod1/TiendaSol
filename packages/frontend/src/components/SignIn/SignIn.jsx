@@ -15,7 +15,7 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { loadNotifications } = useNotifications();
+  const { refreshContext: refreshNotifications } = useNotifications();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +66,7 @@ const SignIn = () => {
           localStorage.setItem('userId', userData._id || userData.id);
         }
 
-        loadNotifications();
+        refreshNotifications();
         navigate('/', { replace: true });
         
       } else if (result && result.success === false) {

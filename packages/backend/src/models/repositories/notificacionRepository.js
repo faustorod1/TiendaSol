@@ -7,6 +7,11 @@ export class NotificacionRepository {
         this.model = NotificacionModel;
     }
 
+    async findById(id) {
+        const objId = mongoose.Types.ObjectId.createFromHexString(id);
+        return await this.model.findById(objId);
+    }
+
     async findByPage(page, limit, filtros) {
         const { usuarioId, leida } = filtros;
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
@@ -21,7 +26,7 @@ export class NotificacionRepository {
         const queryUnread = { usuarioDestino: objUsuario, leida: false };
 
         // Esto ejecuta las 3 queries en paralelo
-        const [notificaciones, totalFiltered, totalUnread] = await Promise.all([
+        const [notificaciones, totalFiltered, totalUnfiltered, totalUnread] = await Promise.all([
             this.model.find(filtrosValidos)
                 .sort({ fechaAlta: -1 })
                 .skip(skip)
@@ -29,6 +34,8 @@ export class NotificacionRepository {
                 .lean(),
             // Cuenta cuántas hay en total (que cumplan los filtros) para paginar
             this.model.countDocuments(filtrosValidos),
+            // Cuenta cuántas hay en total de este usuario (sin otros filtros)
+            this.model.countDocuments({usuarioDestino: objUsuario}),
             // Cuenta cuántas hay no leídas en total, para mostrar en el ícono de notificación
             this.model.countDocuments(queryUnread)
         ]);
@@ -39,6 +46,7 @@ export class NotificacionRepository {
             page: page,
             perPage: limit,
             total: totalFiltered,
+            totalUnfiltered: totalUnfiltered,
             totalPages: totalPages,
             totalUnreadCount: totalUnread,
             data: notificaciones
@@ -67,7 +75,7 @@ export class NotificacionRepository {
 
     async marcarComoLeida(usuarioId, notificacionId) {
         const notificacionActualizada = await this.model.findOneAndUpdate(
-            { _id: notificacionId, usuarioId: usuarioId },
+            { _id: notificacionId, usuarioDestino: usuarioId },
             { 
                 $set: { 
                     leida: true, 

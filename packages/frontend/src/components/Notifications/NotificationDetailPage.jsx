@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useNotifications } from '../../contexts/NotificationContext';
+import * as notificationService from '../../service/notificationService';
 import './NotificationDetailPage.css';
 
 const NotificationDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { notifications, markAsRead } = useNotifications();
+  const { decrementUnreadCount } = useNotifications();
+  
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Buscar la notificación por ID
-    const foundNotification = notifications.find(n => n.id === parseInt(id));
-    
-    if (foundNotification) {
-      setNotification(foundNotification);
-      // Marcar como leída automáticamente al ver el detalle
-      if (!foundNotification.read) {
-        markAsRead(foundNotification.id);
+    const fetchOne = async () => {
+      try {
+        const data = await notificationService.fetchNotificationById(id);
+        setNotification(data);
+        
+
+        if (!data.leida) {
+            await notificationService.markNotificationAsRead(id);
+            setNotification(prev => ({ ...prev, leida: true }));
+            decrementUnreadCount();
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     }
-    
-    setLoading(false);
-  }, [id, notifications, markAsRead]);
+    fetchOne();
+  }, [id]);
 
   const formatFullDate = (timestamp) => {
     return new Date(timestamp).toLocaleString('es-ES', {
@@ -97,13 +106,13 @@ const NotificationDetailPage = () => {
             {notification.title}
           </h1>
 
-          <div className="notification-detail-message">
-            {notification.message}
+          <div className="notification-detail-message" style={{ whiteSpace: 'pre-wrap' }}>
+            {notification.mensaje}
           </div>
           
           <div className="notification-detail-meta">
             <span className="notification-date">
-              {formatFullDate(notification.timestamp)}
+              {formatFullDate(notification.fechaAlta)}
             </span>
             {notification.type && (
               <span className={`notification-type-badge ${notification.type}`}>
@@ -117,7 +126,7 @@ const NotificationDetailPage = () => {
         {/* Footer con acciones opcionales */}
         <div className="notification-detail-footer">
           <span className="notification-status">
-            {notification.read ? 'Leída' : 'Nueva'}
+            {notification.leida ? 'Leída' : 'Nueva'}
           </span>
         </div>
       </div>

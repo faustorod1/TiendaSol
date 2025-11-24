@@ -27,6 +27,21 @@ export class UsuarioController {
         res.status(200).json(paginated);
     }
 
+    async obtenerNotificacion(req, res) {
+        const reqSinValidar = {
+            id: req.params.id,
+            usuarioId: req.user.id
+        }
+        const reqResult = obtenerNotificacionSchema.safeParse(reqSinValidar);
+        if (!reqResult.success) {
+            return res.status(400).json(reqResult.error.issues);
+        }
+        const { usuarioId, id } = reqResult.data;
+        const notificacion = await this.usuarioService.obtenerNotificacion(usuarioId, id);
+
+        res.status(200).json(notificacion);
+    }
+
 
     async marcarNotificacionComoLeida(req, res) {
         const reqSinValidar = {
@@ -114,10 +129,12 @@ const obtenerNotificacionesSchema = z.object({
     leida: booleanSchema.optional()
 });
 
-const marcarNotificacionComoLeidaSchema = z.object({
+const obtenerNotificacionSchema = z.object({
     id: objectIdSchema,
     usuarioId: objectIdSchema
 });
+
+const marcarNotificacionComoLeidaSchema = obtenerNotificacionSchema;
 
 const loginUsuarioSchema = z.object({
     email: z.email('Formato de correo electrónico inválido'),

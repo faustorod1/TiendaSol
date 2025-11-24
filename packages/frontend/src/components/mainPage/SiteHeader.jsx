@@ -19,7 +19,7 @@ const SiteHeader = (props) => {
     };
 
     const { isFilterOpen, setIsFilterOpen } = useFilters();
-    const { notifications, unreadCount, markAsRead } = useNotifications();
+    const { recentNotifications, unreadCount, markAsRead } = useNotifications();
     const {
         productos,
         aumentarCantidadProducto,
@@ -99,7 +99,7 @@ const SiteHeader = (props) => {
                         <Notifications 
                             isOpen={isNotificationsOpen}
                             onClose={() => setIsNotificationsOpen(false)}
-                            notifications={notifications}
+                            notifications={recentNotifications}
                             onMarkAsRead={markAsRead}
                         />
                     </div>

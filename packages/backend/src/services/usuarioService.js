@@ -23,7 +23,17 @@ export class UsuarioService {
         const nroLimit = Number(limit);
 
         return await this.notificacionRepository.findByPage(nroPage, nroLimit, filtro);
+  }
+
+  async obtenerNotificacion(usuarioId, notificacionId) {
+    const notificacion = await this.notificacionRepository.findById(notificacionId);
+
+    if (!notificacion || notificacion.usuarioDestino != usuarioId) {
+      throw new NotificacionDoesNotExistError(usuarioId, notificacionId);
     }
+
+    return notificacion;
+  }
 
   async marcarNotificacionComoLeida(usuarioId, id) {
     const notificacionActualizada = await this.notificacionRepository.marcarComoLeida(usuarioId, id);
