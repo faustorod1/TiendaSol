@@ -81,6 +81,17 @@ export class UsuarioController {
             usuario: usuarioNuevo
         });
     }
+
+    async buscarPorId(req, res) {
+        const result = objectIdSchema.safeParse(req.params.id);
+        if (!result.success) {
+            return res.status(400).json(result.error.issues);
+        }
+        const userId = result.data;
+
+        const usuario = await this.usuarioService.buscarPorId(userId);
+        res.status(200).json(usuario);
+    }
 }
 
 

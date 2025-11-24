@@ -50,6 +50,14 @@ export default function usuarioRoutes(getController) {
             next(error);
         }
     });
+
+    router.get(`${pathUsuario}/:id`, async (req, res, next) => {
+        try {
+            await controller.buscarPorId(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
     
     return router;
 }

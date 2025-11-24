@@ -2,6 +2,7 @@ import { Usuario } from '../models/entities/usuario.js';
 import { Notificacion } from '../models/entities/notificacion.js';
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { NotificacionDoesNotExistError } from '../errors/NotificacionDoesNotExistError.js';
+import { UsuarioDoesNotExistError } from '../errors/UsuarioDoesNotExistError.js';
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 import { EmailUnavailableError } from '../errors/EmailUnavailableError.js';
@@ -90,5 +91,13 @@ export class UsuarioService {
     const usuarioGuardado = await this.usuarioRepository.save(usuario, passwordHasheada);
 
     return usuarioGuardado;
+  }
+
+  async buscarPorId(id) {
+    const usuario = await this.usuarioRepository.findById(id);
+    if (usuario === null) {
+        throw new UsuarioDoesNotExistError(id);
+    }
+    return usuario;
   }
 }

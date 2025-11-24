@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchProductById } from '../../service/productoService.js';
+import { getUserProfile } from '../../service/usuarioService.js';
 import "./ProductDetailPage.css"
 import { useCartContext } from '../../contexts/CartContext.jsx';
 
@@ -8,6 +9,7 @@ const ProductDetailPage = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
+  const [vendedor, setVendedor] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { aumentarCantidadProducto, productos } = useCartContext();
@@ -22,7 +24,9 @@ const ProductDetailPage = (props) => {
       setError(null);
       try {
         const data = await fetchProductById(id);
+        const vendedorData = await getUserProfile(data.vendedor);
         setProduct(data);
+        setVendedor(vendedorData.data);
       } catch (err) {
         console.error("Error al cargar producto:", err);
         setError(err.message);
@@ -52,7 +56,7 @@ const ProductDetailPage = (props) => {
     );
   }
 
-  if (!product) {
+  if (!product||!vendedor) {
     return (
       <div className="product-detail-container">
         <div className="product-header">
@@ -98,10 +102,10 @@ const ProductDetailPage = (props) => {
 
             <div className="product-vendedor-section">
             <div className="product-vendedor">
-                Vendido por: {product.vendedor.nombre}
+                Vendido por: {vendedor.nombre}
             </div>
             <div className="product-email">
-                Contacto: {product.vendedor.email}
+                Contacto: {vendedor.email}
             </div>
             </div>
         </div>
