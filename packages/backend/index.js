@@ -13,6 +13,7 @@ import { PedidoRepository } from './src/models/repositories/pedidoRepository.js'
 import { ProductoRepository } from './src/models/repositories/productoRepository.js';
 import { UsuarioRepository } from './src/models/repositories/usuarioRepository.js';
 import { CategoriaRepository } from "./src/models/repositories/categoriaRepository.js";
+import { NotificacionRepository } from "./src/models/repositories/notificacionRepository.js";
 
 import { PedidoService } from './src/services/pedidoService.js';
 import { ProductoService } from './src/services/productoService.js';
@@ -44,12 +45,13 @@ app.get("/health", (_req, res) => {
 const port = process.env.SERVER_PORT || 3000;
 const server = new Server(app, port);
 
-const usuarioRepository = new UsuarioRepository();
+const notificacionRepository = new NotificacionRepository();
+const usuarioRepository = new UsuarioRepository(notificacionRepository);
 const productoRepository = new ProductoRepository();
 const pedidoRepository = new PedidoRepository();
 const categoriaRepository = new CategoriaRepository();
 
-const usuarioService = new UsuarioService(usuarioRepository);
+const usuarioService = new UsuarioService(usuarioRepository, notificacionRepository);
 const productoService = new ProductoService(productoRepository);
 const pedidoService = new PedidoService(pedidoRepository, productoRepository, usuarioRepository);
 const categoriaService = new CategoriaService(categoriaRepository);

@@ -1,10 +1,12 @@
 import { UsuarioModel } from "../../schemas/usuarioSchema.js";
+import { Usuario } from "../entities/usuario.js";
 import mongoose from "mongoose";
 
 export class UsuarioRepository {
 
-    constructor() {
+    constructor(notificacionRepository) {
         this.model = UsuarioModel;
+        this.notificacionRepository = notificacionRepository;
     }
 
     async findAll() {
@@ -13,7 +15,11 @@ export class UsuarioRepository {
 
     async findById(usuarioId) {
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(usuarioId);
-        return await this.model.findById(objUsuario);
+        const datos = await this.model.findById(objUsuario).lean();
+
+        if (!datos) return null;
+
+        return new Usuario(datos);
     }
 
     async findByEmail(email) {
@@ -92,6 +98,16 @@ export class UsuarioRepository {
 
     async delete(id) {
         return await this.model.findByIdAndDelete(id);
+    }
+
+
+    async dispatchNotifications(usuario) {
+        const pendientes = usuario.notificaciones;
+
+        if (pendientes && pendientes.length > 0) {
+            await this.notificacionRepository.insertMany(pendientes);
+            usuario.limpiarNotificaciones(); // Las limpia por consistencia
+        }
     }
 
 

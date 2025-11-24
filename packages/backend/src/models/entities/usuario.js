@@ -47,4 +47,12 @@ export class Usuario {
     agregarNotificacion(notificacion) {
         this.notificaciones.push(notificacion);
     }
+
+    limpiarNotificaciones() {
+        this.notificaciones = [];
+    }
+
+    get id() {
+        return this._id.toString();
+    }
 }

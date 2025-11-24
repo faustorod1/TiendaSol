@@ -1,30 +1,92 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { useNavigate } from 'react-router-dom';
+import * as notificationService from '../../service/notificationService.js';
 import './AllNotifications.css';
 
 const AllNotifications = () => {
-  const { 
-    notifications, 
-    loading, 
-    error, 
-    markAsRead, 
-    markAllAsRead, 
-    deleteNotification 
-  } = useNotifications();
-
+  const { decrementUnreadCount, markAllAsRead: contextMarkAll } = useNotifications();
   const navigate = useNavigate();
 
-  const [filter, setFilter] = useState('all'); // 'all', 'unread', 'read'
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('unread'); // 'all', 'unread', 'read'
+  const [totalUnfiltered, setTotalUnfiltered] = useState(0);
+  const [totalUnread, setTotalUnread] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredNotifications = notifications.filter(notification => {
-    if (filter === 'unread') return !notification.read;
-    if (filter === 'read') return notification.read;
-    return true;
-  });
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      let filterParam = 'all';
+      if (filter === 'unread') filterParam = 'false';
+      if (filter === 'read') filterParam = 'true';
 
-  if (loading) return <div className="loading">Cargando notificaciones...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
+      const response = await notificationService.fetchNotifications(page, 10, filterParam);
+
+      if (page === 1) {
+        setNotifications(response.data);
+      } else {
+        setNotifications(prev => [...prev, ...response.data]);
+      }
+      setTotalPages(response.totalPages);
+      setTotalUnfiltered(response.totalUnfilteredCount);
+      setTotalUnread(response.totalUnreadCount);
+    } catch (err) {
+      console.error('Error al cargar notificaciones: ', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [filter, page]);
+
+  useEffect(() => {
+    setPage(1);
+    loadData();
+  }, [filter]);
+
+  useEffect(() => {
+    if (page > 1) loadData();
+  }, [page]);
+
+  
+  const handleMarkRead = async (e, id) => {
+    e.stopPropagation();
+    try {
+      await notificationService.markNotificationAsRead(id);
+      
+      // Contexto local
+      const notif = notifications.find(n => n._id === id);
+      setNotifications(prev => prev.map(n => n._id === id ? {...n, leida: true} : n));
+      setTotalUnread(prev => prev - 1);
+      
+      // Contexto Global (NotificationContext)
+      if (notif && !notif.leida) decrementUnreadCount();
+      
+    } catch (err) { console.error(err); }
+  };
+
+  const handleDelete = async (e, id) => {
+    e.stopPropagation();
+    if(!window.confirm("¿Eliminar?")) return;
+    try {
+      await notificationService.deleteNotificationById(id);
+      
+      const notif = notifications.find(n => n._id === id);
+      setNotifications(prev => prev.filter(n => n._id !== id));
+      setTotalUnfiltered(prev => prev - 1);
+      setTotalUnread(prev => prev - 1);
+      
+      if (notif && !notif.leida) decrementUnreadCount();
+    } catch (err) { console.error(err); }
+  };
+
+  const handleMarkAll = async () => {
+      await contextMarkAll();
+      setNotifications(prev => prev.map(n => ({...n, leida: true})));
+      setTotalUnread(0);
+  };
+
 
   return (
     <div className="all-notifications">
@@ -32,7 +94,7 @@ const AllNotifications = () => {
         <h1>Todas las notificaciones</h1>
         
         <div className="notifications-actions">
-          <button onClick={markAllAsRead} className="mark-all-read">
+          <button onClick={handleMarkAll} className="mark-all-read">
             Marcar todas como leídas
           </button>
         </div>
@@ -43,33 +105,33 @@ const AllNotifications = () => {
           className={filter === 'all' ? 'active' : ''} 
           onClick={() => setFilter('all')}
         >
-          Todas ({notifications.length})
+          Todas ({totalUnfiltered})
         </button>
         <button 
           className={filter === 'unread' ? 'active' : ''} 
           onClick={() => setFilter('unread')}
         >
-          No leídas ({notifications.filter(n => !n.read).length})
+          No leídas ({totalUnread})
         </button>
         <button 
           className={filter === 'read' ? 'active' : ''} 
           onClick={() => setFilter('read')}
         >
-          Leídas ({notifications.filter(n => n.read).length})
+          Leídas ({totalUnfiltered - totalUnread})
         </button>
       </div>
 
       <div className="notifications-list">
-        {filteredNotifications.length === 0 ? (
+        {notifications.length === 0 ? (
           <div className="no-notifications">
             No hay notificaciones para mostrar
           </div>
         ) : (
-          filteredNotifications.map(notification => (
+          notifications.map(notification => (
             <div 
               key={notification._id} 
               className={`notification-item ${notification.leida ? 'read' : 'unread'}`}
-              onClick={() => navigate(`/notification/${notification._id}`)}
+              onClick={() => navigate(`/notifications/${notification._id}`)}
               style={{ cursor: 'pointer' }}
             >
               <div className="notification-content">
@@ -83,14 +145,14 @@ const AllNotifications = () => {
               <div className="notification-actions">
                 {!notification.leida && (
                   <button 
-                    onClick={() => markAsRead(notification._id)}
+                    onClick={(e) => handleMarkRead(e, notification._id)}
                     className="mark-read-btn"
                   >
                     Marcar como leída
                   </button>
                 )}
                 <button 
-                  onClick={() => deleteNotification(notification._id)}
+                  onClick={(e) => handleDelete(e, notification._id)}
                   className="delete-btn"
                 >
                   Eliminar

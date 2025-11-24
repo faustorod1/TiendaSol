@@ -135,6 +135,8 @@
   color: var(--muted);
   line-height: 1.5;
   font-size: 0.95rem;
+  text-align: justify;
+  white-space: pre-wrap;
 }
 
 .notification-time {

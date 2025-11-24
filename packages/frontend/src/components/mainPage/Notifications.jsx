@@ -12,11 +12,11 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
 
   const navigate = useNavigate();
   
-  const displayNotifications = notifications.slice(0, 5);
+  const displayNotifications = notifications;
   const hasMoreNotifications = notifications.length > 5;
 
   const handleNotificationClick = (notificationId) => {
-    navigate(`/notification/${notificationId}`);
+    navigate(`/notifications/${notificationId}`);
     onClose();
   };
 
@@ -72,7 +72,7 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
                     >
                       <div className="notif-item-content">
                         {/* <div className="notif-title">{notification.title}</div> */}
-                        <div className="notif-message">{notification.mensaje}</div>
+                        <div className="notif-message" style={{ whiteSpace: 'pre-wrap' }}>{notification.mensaje}</div>
                         <div className="notif-time">
                           {formatTimeAgo(notification.fechaAlta)}
                         </div>

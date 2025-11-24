@@ -114,7 +114,7 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-                <Route path="/notification/:id" element={<NotificationDetailPage />} />
+                <Route path="/notifications/:id" element={<NotificationDetailPage />} />
 
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/terms" element={<Terms />} />
