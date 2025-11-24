@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 import { Notificacion } from '../../models/entities/notificacion.js';
 
 export const notificacionSchema = new mongoose.Schema({
+    usuarioDestino: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
+        required: true,
+        index: true,
+    },
     mensaje: {
         type: String,
         required: true,
@@ -24,7 +30,7 @@ export const notificacionSchema = new mongoose.Schema({
 }, {
 });
 
-
+notificacionSchema.index({ usuarioDestino: 1 });
 notificacionSchema.loadClass(Notificacion);
 
 export const NotificacionModel = mongoose.model('Notificacion', notificacionSchema);

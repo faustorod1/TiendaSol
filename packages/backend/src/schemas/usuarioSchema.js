@@ -34,11 +34,7 @@ const usuarioSchema = new mongoose.Schema({
         type: Date,
         required: true,
         trim: true,
-    },
-    notificaciones:{    // !pensamos en que notificacion podria tener al usuario y a la hora de hidratar el programa cuando se lee la coleccion de notificaciones se instancia al usario con todas sus notificaciones.
-        type: [notificacionSchema],
-        required: false,
-    },
+    }
 },{
     
     timestamps: true,

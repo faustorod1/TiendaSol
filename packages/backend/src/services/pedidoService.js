@@ -43,9 +43,10 @@ export class PedidoService {
             direccionEntrega
         );
 
-        await this.usuarioRepository.update(vendedor);
+        const result = await this.pedidoRepository.save(nuevoPedido);
         await this.productoRepository.updateStockYVentas(productos);
-        return await this.pedidoRepository.save(nuevoPedido);
+        await this.usuarioRepository.dispatchNotifications(vendedor);
+        return result;
     }
 
     async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){
@@ -66,8 +67,8 @@ export class PedidoService {
                 const productosModificados = pedido.items.map(item => item.producto);
 
                 await this.pedidoRepository.update(pedido);
-                await this.usuarioRepository.update(pedido.vendedor);
                 await this.productoRepository.updateStockYVentas(productosModificados);
+                await this.usuarioRepository.dispatchNotifications(pedido.vendedor);
                 
                 break;
             case EstadoPedido.ENVIADO:
@@ -86,8 +87,8 @@ export class PedidoService {
         pedido.actualizarEstado(nuevoEstado, usuario, motivoNuevo);
         await this.pedidoRepository.update(pedido);
         // Los guarda porque tienen nuevas notificaciones
-        await this.usuarioRepository.update(pedido.comprador);
-        await this.usuarioRepository.update(pedido.vendedor);
+        await this.usuarioRepository.dispatchNotifications(pedido.comprador);
+        await this.usuarioRepository.dispatchNotifications(pedido.vendedor);
     }
 
     // Esto modifica al pedido recibido

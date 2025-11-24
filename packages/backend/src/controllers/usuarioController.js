@@ -111,7 +111,7 @@ const obtenerNotificacionesSchema = z.object({
         .transform(v => Number(v))
         .pipe(z.number().int().min(1).max(100))
         .default("10"),
-    leida: booleanSchema
+    leida: booleanSchema.optional()
 });
 
 const marcarNotificacionComoLeidaSchema = z.object({

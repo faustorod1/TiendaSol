@@ -1,6 +1,4 @@
 import { Usuario } from '../models/entities/usuario.js';
-import { Notificacion } from '../models/entities/notificacion.js';
-import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
 import { NotificacionDoesNotExistError } from '../errors/NotificacionDoesNotExistError.js';
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
@@ -11,8 +9,9 @@ const TOKEN_DURATION = '24h';
 
 
 export class UsuarioService {
-  constructor(usuarioRepository) {
+  constructor(usuarioRepository, notificacionRepository) {
     this.usuarioRepository = usuarioRepository;
+    this.notificacionRepository = notificacionRepository;
   }
 
   async obtenerNotificaciones(usuarioId, leida, { page, limit }) {
@@ -23,23 +22,11 @@ export class UsuarioService {
         const nroPage = Number(page);
         const nroLimit = Number(limit);
 
-        const offset = (nroPage - 1) * nroLimit;
-
-        const { rows, count } = await this.usuarioRepository.findNotificationsByPage(filtro, nroLimit, offset);
-
-        const totalPaginas = Math.ceil(count / nroLimit);
-
-        return {
-            page: page,
-            perPage: limit,
-            total: count,
-            totalPages: totalPaginas,
-            data: rows
-        };
+        return await this.notificacionRepository.findByPage(nroPage, nroLimit, filtro);
     }
 
   async marcarNotificacionComoLeida(usuarioId, id) {
-    const notificacionActualizada = await this.usuarioRepository.marcarNotificacionComoLeida(usuarioId, id);
+    const notificacionActualizada = await this.notificacionRepository.marcarComoLeida(usuarioId, id);
     if (notificacionActualizada === null) {
       throw new NotificacionDoesNotExistError(usuarioId, id);
     }
