@@ -6,7 +6,6 @@ export async function createOrder(orderData) {
   try {
     console.log('📤 pedidoService: Enviando petición a:', `${API_URL}`);
     
-    // AGREGAR: Obtener el ID del usuario desde localStorage
     const userString = localStorage.getItem('user');
     let userId = null;
     
@@ -26,10 +25,9 @@ export async function createOrder(orderData) {
       };
     }
     
-    // AGREGAR: Incluir el comprador en los datos
     const orderDataWithBuyer = {
       ...orderData,
-      comprador: userId // ← Este campo faltaba!
+      comprador: userId
     };
     
     const token = localStorage.getItem('authToken');

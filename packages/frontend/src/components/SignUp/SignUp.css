@@ -75,6 +75,19 @@
   font-weight: 600;
 }
 
+.user-type-select {
+  padding: 0.75rem;
+  width: 20rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select {

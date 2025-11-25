@@ -26,7 +26,6 @@ export const CartProvider = ({children}) => {
 
 
     const eliminarProducto = (productoId) => {
-        // Tiene lo justo y necesario para que updateMapEntry lo pueda usar
         const productoMinimalista = { _id: productoId };
         setProductosMap(prevMap => updateMapEntry(prevMap, productoMinimalista, 0));
     };
@@ -66,7 +65,6 @@ export const CartProvider = ({children}) => {
 
 
 
-// Función auxiliar
 const updateMapEntry = (prevMap, producto, cantidad) => {
     if (cantidad < 1) {
         const newMap = new Map(prevMap);
@@ -78,7 +76,7 @@ const updateMapEntry = (prevMap, producto, cantidad) => {
     const entry = newMap.get(producto._id);
 
     const newEntry = {
-        ...(entry || producto), // Si entry == undefined usa producto
+        ...(entry || producto),
         cantidad: cantidad
     };
 

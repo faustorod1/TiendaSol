@@ -44,16 +44,14 @@ const Breadcrumbs = () => {
         return;
       }
 
-      // Verificar si ya tenemos los títulos para evitar llamadas duplicadas
       const missingIds = productIds.filter(id => !productTitles[id]);
       if (missingIds.length === 0) {
         return;
       }
 
       setLoadingTitles(true);
-      const newProductTitles = { ...productTitles }; // Mantener títulos existentes
+      const newProductTitles = { ...productTitles };
 
-      // Cargar títulos solo para IDs faltantes
       try {
         await Promise.all(
           missingIds.map(async (productId) => {

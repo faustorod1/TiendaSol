@@ -101,7 +101,6 @@ const Checkout = () => {
         Total: $${total.toFixed(2)}
         Moneda: ${currency}`);
         
-        // Limpiar carrito si tienes esa función
         // clearCart();
         
         navigate('/', { 

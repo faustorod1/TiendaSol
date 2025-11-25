@@ -10,7 +10,8 @@ const SignUp = ({ user }) => {
     email: user?.email || '',
     direccion: user?.direccion || '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    tipoUsuario: 'COMPRADOR'
   });
 
   // Inicializar con 3 métodos de pago fijos (opcionales)
@@ -124,10 +125,12 @@ const SignUp = ({ user }) => {
     try {
       const userData = {
         nombre: formData.nombre,
+        apellido: formData.apellido || undefined, // opcional
         email: formData.email,
+        direccion: formData.direccion || undefined, // opcional
         password: formData.password,
         telefono: formData.telefono || undefined, // opcional
-        tipo: 'COMPRADOR' // o permitir que el usuario elija
+        tipo: formData.tipoUsuario,
       };
 
       const result = await registerUser(userData);
@@ -151,6 +154,23 @@ const SignUp = ({ user }) => {
       <h2>Crear cuenta</h2>
       
       <form onSubmit={handleSubmit} className="signup-form">
+
+        <section className="form-section">
+          <div className="section-header">
+            <h3>Seleccione el tipo de usuario</h3>
+            <select
+              className="user-type-select"
+              name="tipoUsuario"
+              value={formData.tipoUsuario}
+              onChange={handleInputChange}
+            >
+              <option value="COMPRADOR">Comprador</option>
+              <option value="VENDEDOR">Vendedor</option>
+              <option value="ADMIN">Administrador</option>
+            </select>
+          </div>
+        </section>
+
         {/* Información personal */}
         <section className="form-section">
           <h3>Ingrese sus datos personales</h3>

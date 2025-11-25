@@ -12,7 +12,6 @@ const Contacto = () => {
     e.preventDefault();
     setError('');
 
-    // validación simple: al menos email o teléfono
     if (!email.trim() && !telefono.trim()) {
       setError('Proporciona al menos un email o teléfono.');
       return;
