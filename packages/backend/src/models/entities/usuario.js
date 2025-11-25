@@ -28,9 +28,10 @@ export class Usuario {
     /**
      * @param {UsuarioProps} props - Objeto de propiedades del usuario
      */
-    constructor({ _id, nombre, email, telefono, tipo, fechaAlta, notificaciones }) {
+    constructor({ _id, nombre, apellido, email, telefono, tipo, fechaAlta, notificaciones }) {
         this._id = _id;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
         this.telefono = telefono;
         this.tipo = tipo;

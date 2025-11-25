@@ -7,7 +7,13 @@ const usuarioSchema = new mongoose.Schema({
     nombre:{
         type: String,
         required: true,
-        trim:true
+        trim: true
+    },
+    apellido:{
+        type: String,
+        required: false,
+        trim: true,
+        default: null
     },
     email:{
         type: String,
@@ -23,6 +29,7 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: false,
         trim: true,
+        default: null
     },
     tipo: {
         type: String,

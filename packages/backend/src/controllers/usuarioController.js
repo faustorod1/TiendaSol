@@ -86,8 +86,8 @@ export class UsuarioController {
             });
         }
 
-        const { email, password, nombre, telefono, tipo } = reqResult.data;
-        const userData = { nombre, telefono, tipo };
+        const { email, password, nombre, apellido, telefono, tipo } = reqResult.data;
+        const userData = { nombre, apellido: apellido || null, telefono: telefono || null, tipo };
 
         const usuarioNuevo = await this.usuarioService.registrar(email, password, userData);
 
@@ -161,10 +161,11 @@ const passwordSchema = z.string()
 
 const registrarUsuarioSchema = z.object({
     nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+    apellido: z.string().min(3, 'El apellido debe tener al menos 3 caracteres').optional(),
     email: z.email('Formato de correo electrónico inválido'),
     password: passwordSchema,
     telefono: z.string().optional(),
-    tipo: z.enum(['COMPRADOR', 'VENDEDOR'], {
+    tipo: z.enum(['COMPRADOR', 'VENDEDOR', 'ADMIN'], {
         required_error: "El tipo de usuario es requerido"
     })
 });
