@@ -29,7 +29,7 @@ export class UsuarioRepository {
     async findByEmailWithPassword(email) {
         return await this.model
             .findOne({email: email})
-            .select('+password _id email nombre tipo')
+            .select('+password _id email nombre apellido telefono tipo fechaAlta')
             .lean();
     }
 

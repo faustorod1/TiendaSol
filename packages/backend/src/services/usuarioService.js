@@ -59,6 +59,15 @@ export class UsuarioService {
       throw new UnauthorizedError(ERR_MSG);
     }
 
+    console.log('✅ Usuario encontrado para login:', {
+      _id: usuario._id,
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      email: usuario.email,
+      telefono: usuario.telefono,
+      tipo: usuario.tipo
+    });
+
     const payload = {
       id: usuario._id.toString(),
       email: usuario.email,
