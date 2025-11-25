@@ -35,9 +35,25 @@ export default function usuarioRoutes(getController) {
         }
     });
 
+    router.patch(`${pathNotificacion}/mark-all-read`, authMiddleware, async (req, res, next) => {
+        try {
+            await controller.marcarTodasLasNotificacionesComoLeida(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
     router.patch(`${pathNotificacion}/:id`, authMiddleware, async (req, res, next) => {
         try {
             await controller.marcarNotificacionComoLeida(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    router.delete(`${pathNotificacion}/:id`, authMiddleware, async (req, res, next) => {
+        try {
+            await controller.eliminarNotificacion(req, res);
         } catch (error) {
             next(error);
         }

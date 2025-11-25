@@ -101,6 +101,7 @@ const SiteHeader = (props) => {
                             onClose={() => setIsNotificationsOpen(false)}
                             notifications={recentNotifications}
                             onMarkAsRead={markAsRead}
+                            unreadCount={unreadCount}
                         />
                     </div>
 
