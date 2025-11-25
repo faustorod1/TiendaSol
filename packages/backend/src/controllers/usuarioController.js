@@ -62,6 +62,37 @@ export class UsuarioController {
         });
     }
 
+    async marcarTodasLasNotificacionesComoLeida(req, res) {
+        const reqResult = objectIdSchema.safeParse(req.user.id);
+        if (!reqResult.success) {
+            return res.status(400).json(reqResult.error.issues);
+        }
+        const usuarioId = reqResult.data;
+
+        const { modifiedCount } = await this.usuarioService.marcarTodasLasNotificacionesComoLeida(usuarioId);
+
+        res.status(200).json({
+            mensaje: 'Notificaciones marcadas como leídas',
+            modifiedCount
+        });
+    }
+
+    async eliminarNotificacion(req, res) {
+        const reqSinValidar = {
+            id: req.params.id,
+            usuarioId: req.user.id
+        }
+        const reqResult = eliminarNotificacionSchema.safeParse(reqSinValidar);
+        if (!reqResult.success) {
+            return res.status(400).json(reqResult.error.issues);
+        }
+        const { usuarioId, id } = reqResult.data;
+
+        await this.usuarioService.eliminarNotificacion(usuarioId, id);
+
+        res.status(204);
+    }
+
     async login(req, res) {
         const reqResult = loginUsuarioSchema.safeParse(req.body);
         if (!reqResult.success) {
@@ -146,6 +177,7 @@ const obtenerNotificacionSchema = z.object({
 });
 
 const marcarNotificacionComoLeidaSchema = obtenerNotificacionSchema;
+const eliminarNotificacionSchema = obtenerNotificacionSchema;
 
 const loginUsuarioSchema = z.object({
     email: z.email('Formato de correo electrónico inválido'),

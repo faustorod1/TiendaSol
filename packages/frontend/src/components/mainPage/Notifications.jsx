@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Notifications.css';
 
-const Notifications = ({ isOpen, onClose, notifications = [] }) => {
+const Notifications = ({ isOpen, onClose, notifications = [], unreadCount = 0 }) => {
   
   const isAuthenticated = () => {
     const token = localStorage.getItem('authToken');
@@ -13,7 +13,7 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
   const navigate = useNavigate();
   
   const displayNotifications = notifications;
-  const hasMoreNotifications = notifications.length > 5;
+  //const hasMoreNotifications = notifications.length > 5;
 
   const handleNotificationClick = (notificationId) => {
     navigate(`/notifications/${notificationId}`);
@@ -81,14 +81,14 @@ const Notifications = ({ isOpen, onClose, notifications = [] }) => {
                   ))}
                 </div>
 
-                {hasMoreNotifications && (
+                {notifications.length > 0 && (
                   <div className="notif-footer">
                     <Link 
                       to="/notifications" 
                       className="notif-view-all"
                       onClick={onClose}
                     >
-                      Ver todas ({notifications.length})
+                      Ver todas ({unreadCount > 99 ? '+99' : unreadCount})
                     </Link>
                   </div>
                 )}

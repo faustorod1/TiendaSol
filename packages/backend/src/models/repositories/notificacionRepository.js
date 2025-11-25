@@ -86,4 +86,22 @@ export class NotificacionRepository {
         );
         return notificacionActualizada;
     }
+
+    async marcarTodasComoLeida(usuarioId) {
+        return await this.model.updateMany(
+            { usuarioDestino: usuarioId, leida: false },
+            {
+                $set: { 
+                    leida: true, 
+                    fechaLeida: new Date() 
+                }
+            }
+        );
+    }
+
+    async delete(usuarioId, notificacionId) {
+        return await this.model.deleteOne(
+            { _id: notificacionId, usuarioDestino: usuarioId }
+        );
+    }
 }

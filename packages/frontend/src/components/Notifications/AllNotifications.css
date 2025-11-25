@@ -355,3 +355,43 @@
 .notifications-list::-webkit-scrollbar-thumb:hover {
   background: #999;
 }
+/* Contenedor para centrar el botón */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0; /* Un poco más de aire */
+  margin-top: 1rem;
+}
+
+/* Estilo del botón "Cargar más" actualizado */
+.load-more-btn {
+  background: var(--dark-purple); /* Usamos tu variable principal */
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem; /* Un poco más ancho para que destaque */
+  border-radius: 6px; /* Coincide con el border-radius de .mark-all-read */
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(39, 7, 34, 0.2); /* Sombra suave con tu tono */
+}
+
+.load-more-btn:hover {
+  background: #4a1f66; /* Mismo color hover que .mark-all-read */
+  transform: translateY(-1px); /* Efecto sutil de elevación */
+  box-shadow: 0 4px 8px rgba(39, 7, 34, 0.3);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.load-more-btn:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}

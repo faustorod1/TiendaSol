@@ -45,6 +45,21 @@ export class UsuarioService {
     return notificacionActualizada;
   }
 
+  async marcarTodasLasNotificacionesComoLeida(usuarioId) {
+    const resultado = await this.notificacionRepository.marcarTodasComoLeida(usuarioId);
+
+    return resultado;
+  }
+
+  async eliminarNotificacion(usuarioId, notificacionId) {
+    const resultado = await this.notificacionRepository.delete(usuarioId, notificacionId);
+    if (resultado.deletedCount < 1) {
+      throw new NotificacionDoesNotExistError(usuarioId, id);
+    }
+
+    return resultado;
+  }
+
   async login(email, password) {
     // Así se asegura de devolver lo mismo en ambos casos.
     const ERR_MSG = 'Credenciales inválidas.';

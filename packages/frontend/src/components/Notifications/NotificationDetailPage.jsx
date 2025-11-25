@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useNotifications } from '../../contexts/NotificationContext';
 import * as notificationService from '../../service/notificationService';
@@ -13,17 +13,25 @@ const NotificationDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Para saber si ya procesó el marcar como leída la notificación
+  const processedRef = useRef(false);
+
+  useEffect(() => {
+    processedRef.current = false;
+  }, [id]);
+
   useEffect(() => {
     const fetchOne = async () => {
       try {
         const data = await notificationService.fetchNotificationById(id);
         setNotification(data);
-        
 
-        if (!data.leida) {
-            await notificationService.markNotificationAsRead(id);
-            setNotification(prev => ({ ...prev, leida: true }));
-            decrementUnreadCount();
+        if (!data.leida && !processedRef.current) {
+          processedRef.current = true;
+          decrementUnreadCount();
+
+          await notificationService.markNotificationAsRead(id);
+          setNotification(prev => ({ ...prev, leida: true }));
         }
       } catch (err) {
         setError(err.message);
