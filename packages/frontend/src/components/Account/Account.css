@@ -61,6 +61,13 @@
   gap: 1rem;
 }
 
+.user-type-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .info-item {
   display: flex;
   flex-direction: column;

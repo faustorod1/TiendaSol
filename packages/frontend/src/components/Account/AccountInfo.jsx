@@ -228,86 +228,9 @@ const AccountInfo = ({ user }) => {
           </div>
         </section>
 
-        <section className="form-section">
-          <div className="section-header">
-            <h3>Métodos de pago ({metodosPago.length}/3)</h3>
-            <button 
-              type="button" 
-              onClick={agregarMetodoPago}
-              className="add-payment-button"
-              disabled={metodosPago.length >= 3}
-            >
-              + Agregar método
-            </button>
-          </div>
-
-          {metodosPago.map((metodo) => (
-            <div key={metodo.id} className="payment-method">
-              <div className="payment-header">
-                <select
-                  value={metodo.tipo}
-                  onChange={(e) => actualizarMetodoPago(metodo.id, 'tipo', e.target.value)}
-                  className="payment-type"
-                >
-                  <option value="tarjeta">Tarjeta de crédito/débito</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="efectivo">Efectivo</option>
-                </select>
-                
-                <button
-                  type="button"
-                  onClick={() => eliminarMetodoPago(metodo.id)}
-                  className="remove-payment"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {metodo.tipo === 'tarjeta' && (
-                <div className="payment-details">
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Número de tarjeta</label>
-                      <input
-                        type="text"
-                        value={metodo.numeroTarjeta}
-                        onChange={(e) => actualizarMetodoPago(metodo.id, 'numeroTarjeta', e.target.value)}
-                        placeholder="1234 5678 9012 3456"
-                        maxLength="19"
-                      />
-                    </div>
-                    
-                    <div className="form-group">
-                      <label>Vencimiento</label>
-                      <input
-                        type="text"
-                        value={metodo.vencimiento}
-                        onChange={(e) => actualizarMetodoPago(metodo.id, 'vencimiento', e.target.value)}
-                        placeholder="MM/AA"
-                        maxLength="5"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Nombre del titular</label>
-                    <input
-                      type="text"
-                      value={metodo.nombreTitular}
-                      onChange={(e) => actualizarMetodoPago(metodo.id, 'nombreTitular', e.target.value)}
-                      placeholder="Como aparece en la tarjeta"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </section>
-
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-        
-        {/* ✅ ACTUALIZAR botón de guardar */}
+  
         <button 
           type="submit" 
           className="save-button"

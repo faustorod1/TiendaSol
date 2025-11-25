@@ -6,6 +6,16 @@ const Account = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const mapTipoUsuario = (tipo) => {
+    const tiposMap = {
+      'COMPRADOR': 'Comprador',
+      'VENDEDOR': 'Vendedor', 
+      'ADMIN': 'Administrador'
+    };
+    
+    return tiposMap[tipo] || tipo;
+  };
+
   useEffect(() => {
     const loadUserData = () => {
       try {
@@ -22,7 +32,7 @@ const Account = () => {
             email: 'email@ejemplo.com',
             telefono: '',
             direccion: '',
-            metodosPago: []
+            tipo: 'COMPRADOR'
           });
         }
       } catch (error) {
@@ -33,7 +43,7 @@ const Account = () => {
           email: 'email@ejemplo.com',
           telefono: '',
           direccion: '',
-          metodosPago: []
+          tipo: 'COMPRADOR'
         });
       } finally {
         setLoading(false);
@@ -82,24 +92,13 @@ const Account = () => {
               <span className="info-value">{userData.direccion || 'No especificada'}</span>
             </div>
           </div>
-        </section>
-
-        <section className="account-section">
-          <h2>Métodos de Pago</h2>
-          <div className="payment-summary">
-            {userData.metodosPago && userData.metodosPago.length > 0 ? (
-              userData.metodosPago.map((metodo, index) => (
-                <div key={index} className="payment-item">
-                  <span className="payment-type">
-                    {metodo.tipo === 'tarjeta' ? '💳' : metodo.tipo === 'paypal' ? '🅿️' : '💵'}
-                    {metodo.tipo === 'tarjeta' ? ` **** ${metodo.ultimosDigitos}` : 
-                     metodo.tipo === 'paypal' ? ` ${metodo.email}` : ' Efectivo'}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="no-payment">No hay métodos de pago configurados</p>
-            )}
+          <div className="user-type-grid">
+            <div className="info-item">
+              <span className="info-label">Tipo de usuario:</span>
+              <span className="info-value">
+                {mapTipoUsuario(userData.tipo)}
+              </span>
+            </div>
           </div>
         </section>
 

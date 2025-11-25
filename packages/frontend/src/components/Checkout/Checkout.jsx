@@ -186,20 +186,6 @@ const Checkout = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="payment">Forma de pago</label>
-                  <select
-                    id="payment"
-                    value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    disabled={isSubmitting}
-                  >
-                    <option value="card">Tarjeta (crédito/débito)</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="cash">Efectivo</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
                   <label htmlFor="currency">Moneda</label>
                   <select
                     id="currency"
