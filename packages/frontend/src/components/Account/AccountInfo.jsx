@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { updateUser } from '../../service/usuarioService';
 import './AccountInfo.css';
 
 const AccountInfo = ({ user }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -14,6 +16,7 @@ const AccountInfo = ({ user }) => {
   const [metodosPago, setMetodosPago] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -82,33 +85,69 @@ const AccountInfo = ({ user }) => {
     ));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
+    setLoading(true);
     
-    if (!formData.nombre.trim() || !formData.email.trim()) {
-      setError('Nombre y email son obligatorios');
+    // Validaciones básicas
+    if (!formData.nombre.trim()) {
+      setError('El nombre es obligatorio');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setError('El email es obligatorio');
+      setLoading(false);
       return;
     }
 
     try {
-      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-      const updatedUser = {
-        ...currentUser,
-        ...formData,
-        metodosPago: metodosPago
-      };
       
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      const result = await updateUser({
+        nombre: formData.nombre.trim(),
+        apellido: formData.apellido.trim() || null,
+        email: formData.email.trim(),
+        telefono: formData.telefono.trim() || null,
+        // direccion y metodosPago podrían necesitar endpoints separados
+      });
       
-      console.log('Datos guardados:', { ...formData, metodosPago });
-      setSuccess('Información actualizada correctamente');
-      
-      setTimeout(() => setSuccess(''), 3000);
+      if (result.success) {
+        console.log('Datos actualizados exitosamente:', result.data);
+        
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const updatedUser = {
+          ...currentUser,
+          ...result.data,
+          metodosPago: metodosPago,
+          direccion: formData.direccion
+        };
+        
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        
+        setSuccess('Información actualizada correctamente');
+        
+        setTimeout(() => setSuccess(''), 3000);
+        
+      } else {
+        console.error('Error al actualizar:', result.error);
+        setError(result.error || 'Error al actualizar los datos');
+        
+        // Manejar sesión expirada
+        if (result.shouldRedirectToLogin) {
+          setTimeout(() => {
+            navigate('/signin');
+          }, 2000);
+        }
+      }
       
     } catch (error) {
-      console.error('Error al guardar datos:', error);
-      setError('Error al guardar los cambios');
+      console.error('Error inesperado:', error);
+      setError('Error inesperado al guardar los cambios. Por favor, intenta nuevamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,6 +169,7 @@ const AccountInfo = ({ user }) => {
                 value={formData.nombre}
                 onChange={handleInputChange}
                 required
+                disabled={loading}
               />
             </div>
             
@@ -141,6 +181,7 @@ const AccountInfo = ({ user }) => {
                 type="text"
                 value={formData.apellido}
                 onChange={handleInputChange}
+                disabled={loading}
               />
             </div>
           </div>
@@ -155,6 +196,7 @@ const AccountInfo = ({ user }) => {
                 value={formData.telefono}
                 onChange={handleInputChange}
                 placeholder="+54 9 11 1234 5678"
+                disabled={loading}
               />
             </div>
             
@@ -167,6 +209,7 @@ const AccountInfo = ({ user }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
+                disabled={loading}
               />
             </div>
           </div>
@@ -180,6 +223,7 @@ const AccountInfo = ({ user }) => {
               value={formData.direccion}
               onChange={handleInputChange}
               placeholder="Calle, número, ciudad, código postal"
+              disabled={loading}
             />
           </div>
         </section>
@@ -262,9 +306,14 @@ const AccountInfo = ({ user }) => {
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-
-        <button type="submit" className="save-button">
-          Guardar cambios
+        
+        {/* ✅ ACTUALIZAR botón de guardar */}
+        <button 
+          type="submit" 
+          className="save-button"
+          disabled={loading}
+        >
+          {loading ? 'Guardando...' : 'Guardar cambios'}
         </button>
       </form>
     </div>

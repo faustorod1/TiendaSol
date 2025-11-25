@@ -88,7 +88,26 @@ export class UsuarioRepository {
     }
 
     async updateById(id, usuario) {
-        return await this.model.findByIdAndUpdate(id, usuario, { new: true });
+        const objId = typeof id === 'string' ? 
+            mongoose.Types.ObjectId.createFromHexString(id) : 
+            id;
+        
+        const usuarioActualizado = await this.model.findByIdAndUpdate(
+            objId,
+            { $set: usuario },
+            { 
+                new: true,
+                runValidators: true,
+                lean: true
+            }
+        );
+
+        if (!usuarioActualizado) {
+            console.log('Usuario no encontrado para actualizar:', id);
+            return null;
+        }
+        
+        return usuarioActualizado;
     }
 
     // Solo sirve si usuario es un documento de mongo

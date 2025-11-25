@@ -75,6 +75,14 @@ export default function usuarioRoutes(getController) {
         }
     });
 
+    router.patch(`${pathUsuario}/update`, authMiddleware, async (req, res, next) => {
+        try {
+            await controller.modificarDatos(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
     router.get(`${pathUsuario}/:id`, async (req, res, next) => {
         try {
             await controller.buscarPorId(req, res);

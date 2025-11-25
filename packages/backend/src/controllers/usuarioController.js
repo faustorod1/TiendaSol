@@ -128,6 +128,37 @@ export class UsuarioController {
         });
     }
 
+    async modificarDatos(req, res) {
+        const userIdResult = objectIdSchema.safeParse(req.user.id);
+        if (!userIdResult.success) {
+            return res.status(400).json({
+                success: false,
+                message: 'Id de usuario inválido',
+                errors: userIdResult.error.issues
+            });
+        }
+
+        const userId = userIdResult.data;
+
+        const reqResult = modificarDatosUsuarioSchema.safeParse(req.body);
+        if (!reqResult.success) {
+            return res.status(400).json({
+                success: false,
+                message: 'Datos de modificación inválidos',
+                errors: reqResult.error.issues
+            });
+        }
+
+        const datosActualizados = reqResult.data;
+        const usuarioActualizado = await this.usuarioService.modificarDatos(userId, datosActualizados);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Datos actualizados exitosamente',
+            data: usuarioActualizado
+        });
+    }
+
     async buscarPorId(req, res) {
         const result = objectIdSchema.safeParse(req.params.id);
         if (!result.success) {
@@ -201,3 +232,19 @@ const registrarUsuarioSchema = z.object({
         required_error: "El tipo de usuario es requerido"
     })
 });
+
+const modificarDatosUsuarioSchema = z.object({
+    nombre: z.string().min(1, 'El nombre no puede estar vacío').optional(),
+    apellido: z.string().optional().nullable()
+        .transform(val => val === '' ? null : val),
+    email: z.string().email('Formato de correo electrónico inválido').optional(),
+    telefono: z.string().optional().nullable()
+        .transform(val => val === '' ? null : val),
+        
+}).refine(
+    (data) => Object.keys(data).length > 0,
+    {
+        message: "Debe proporcionar al menos un campo para actualizar",
+        path: ["body"]
+    }
+);

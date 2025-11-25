@@ -114,6 +114,55 @@ export class UsuarioService {
     return usuarioGuardado;
   }
 
+  async modificarDatos(usuarioId, datosActualizados) {
+    const usuarioExistente = await this.usuarioRepository.findById(usuarioId);
+    if (!usuarioExistente) {
+      throw new UsuarioDoesNotExistError(usuarioId);
+    }
+
+    if (datosActualizados.email && datosActualizados.email !== usuarioExistente.email) {
+      const emailEnUso = await this.usuarioRepository.findByEmail(datosActualizados.email);
+      if (emailEnUso) {
+        throw new Error('El email ya está en uso por otro usuario');
+      }
+    }
+
+    const datosLimpios = {};
+        
+    if (datosActualizados.nombre !== undefined) {
+      datosLimpios.nombre = datosActualizados.nombre;
+    }
+        
+    if (datosActualizados.apellido !== undefined) {
+      datosLimpios.apellido = datosActualizados.apellido || null;
+    }
+        
+    if (datosActualizados.email !== undefined) {
+        datosLimpios.email = datosActualizados.email;
+    }
+        
+    if (datosActualizados.telefono !== undefined) {
+      datosLimpios.telefono = datosActualizados.telefono || null;
+    }
+
+    const usuarioActualizado = await this.usuarioRepository.updateById(usuarioId, datosLimpios);
+    if (usuarioActualizado === null) {
+      throw new UsuarioDoesNotExistError(usuarioId);
+    }
+
+    const usuarioSeguro = {
+      _id: usuarioActualizado._id,
+      nombre: usuarioActualizado.nombre,
+      apellido: usuarioActualizado.apellido,
+      email: usuarioActualizado.email,
+      telefono: usuarioActualizado.telefono,
+      tipo: usuarioActualizado.tipo,
+      fechaAlta: usuarioActualizado.fechaAlta
+    };
+    
+    return usuarioSeguro;
+  }
+
   async buscarPorId(id) {
     const usuario = await this.usuarioRepository.findById(id);
     if (usuario === null) {
