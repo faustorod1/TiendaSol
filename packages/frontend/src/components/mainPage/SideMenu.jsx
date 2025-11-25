@@ -6,6 +6,12 @@ import './SideMenu.css';
 const SideMenu = ({ isOpen, onClose }) => {
     const containerClasses = `side-menu-container ${isOpen ? 'open' : ''}`;
 
+    const isAuthenticated = () => {
+        const token = localStorage.getItem('authToken');
+        const user = localStorage.getItem('user');
+        return token && user;
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
@@ -30,14 +36,20 @@ const SideMenu = ({ isOpen, onClose }) => {
                     <ul className="side-menu-links">
                     <li><Link to="/" onClick={onClose}>Inicio</Link></li>
                     <li><Link to="/productos" onClick={onClose}>Todos los Productos</Link></li>
-                    <li><Link to="/ofertas" onClick={onClose}>Ofertas</Link></li>
+                    <li><Link to="/account/pedidos" onClick={onClose}>Mis pedidos</Link></li>
                     <li><Link to="/contacto" onClick={onClose}>Contacto</Link></li>
                     </ul>
                 </div>
                 <div className="side-menu-footer">
                     <ul className="side-menu-links">
-                    <li><Link to="/account" onClick={onClose}>Mi Cuenta</Link></li>
-                    <li><Link to="/" onClick={() => { handleLogout(); onClose(); }}>Cerrar Sesion</Link></li>
+                        { isAuthenticated() ? (
+                            <>
+                                <li><Link to="/account" onClick={onClose}>Mi Cuenta</Link></li>
+                                <li><Link to="/" onClick={() => { handleLogout(); onClose(); }}>Cerrar Sesión</Link></li>
+                            </>
+                        ) : (
+                            <li><Link to="/signin" onClick={onClose}>Iniciar sesión</Link></li>
+                        )}
                     </ul>
                     <p>© 2025 Tienda Sol. Todos los derechos reservados.</p>
                 </div>

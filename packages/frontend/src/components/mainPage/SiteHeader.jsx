@@ -122,8 +122,8 @@ const SiteHeader = (props) => {
                     </button>
                 )}
 
-                <a href="/categoria/ofertas" className="category-link">Ofertas</a>
                 <a href="/productos?orderBy=fecha_creacion_desc" className="category-link">Nuevos</a>
+                <a href="/productos?orderBy=ventas_desc" className="category-link">Más vendidos</a>
                 <a href="/productos?categorias=654c6c9a29a67a001a1d1d27" className="category-link">Electrónica</a>
                 <a href="/productos?categorias=654c6c9a29a67a001a1d1d20" className="category-link">Ropa</a>
             </nav>

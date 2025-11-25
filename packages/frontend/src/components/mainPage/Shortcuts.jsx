@@ -4,10 +4,10 @@ import './Shortcuts.css';
 
 const Shortcuts = () => {
   const shortcutItems = [
-    { id: 1, label: 'Mas Vendidos', path: '/productos?orderBy=ventas_desc' },
-    { id: 2, label: 'Iniciar Sesion', path: '/signin' },
-    { id: 3, label: 'Metodos de pago', path: '/account/manage' },
-    { id: 4, label: 'Ingresar Direccion', path: '/account/manage' },
+    { id: 1, label: 'Iniciar Sesión', path: '/signin' },
+    { id: 2, label: 'Registrarse', path: '/signup' },
+    { id: 3, label: 'Productos', path: '/products' },
+    //{ id: 4, label: 'Ingresar Direccion', path: '/account/manage' },
   ];
 
   return (
