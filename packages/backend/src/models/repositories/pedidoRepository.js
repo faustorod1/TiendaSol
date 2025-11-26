@@ -52,6 +52,10 @@ export class PedidoRepository {
         const objUsuario = mongoose.Types.ObjectId.createFromHexString(id_usuario);
         return await this.model.find({ "comprador": objUsuario });
     }
+    async consultarHistorialPedidosVendidos(id_usuario) {
+        const objUsuario = mongoose.Types.ObjectId.createFromHexString(id_usuario);
+        return await this.model.find({ "vendedor": objUsuario });
+    }
 
     async update(pedido) {
         return await pedido.save();

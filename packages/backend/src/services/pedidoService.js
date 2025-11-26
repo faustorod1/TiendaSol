@@ -1,6 +1,7 @@
 import { Pedido } from "../models/entities/pedido.js";
 import { ItemPedido } from "../models/entities/itemPedido.js";
 import { EstadoPedido } from "../models/entities/estadoPedido.js";
+import { TipoUsuario } from "../models/entities/tipoUsuario.js";
 import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
 import { ForbiddenError } from "../errors/ForbiddenError.js";
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js";
@@ -106,7 +107,11 @@ export class PedidoService {
         });
     }
 
-    async consultarHistorialPedidos(idUsuario){
-        return await this.pedidoRepository.consultarHistorialPedidos(idUsuario);
+    async consultarHistorialPedidos(idUsuario, tipoUsuario){
+        if (tipoUsuario === TipoUsuario.VENDEDOR) {
+            return await this.pedidoRepository.consultarHistorialPedidosVendidos(idUsuario);
+        } else {
+            return await this.pedidoRepository.consultarHistorialPedidos(idUsuario);
+        }
     }
 }

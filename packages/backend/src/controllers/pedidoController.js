@@ -56,7 +56,7 @@ export class PedidoController {
         }
         const usuarioId = userIdResult.data;
 
-        const historial = await this.pedidoService.consultarHistorialPedidos(usuarioId);
+        const historial = await this.pedidoService.consultarHistorialPedidos(usuarioId, req.user.tipo);
         res.status(200).json(historial);
     };
 }

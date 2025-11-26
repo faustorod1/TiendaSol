@@ -86,7 +86,7 @@ export class UsuarioService {
     const payload = {
       id: usuario._id.toString(),
       email: usuario.email,
-      rol: usuario.rol
+      tipo: usuario.tipo
     }
     
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
