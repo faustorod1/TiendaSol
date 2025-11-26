@@ -21,6 +21,14 @@ export default function pedidoRoutes(getController) {
     });
 
 
+    router.get(`${pathPedido}/:id`, authMiddleware, async (req, res, next) => {
+        try {
+            await controller.obtenerPedidoPorId(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
     router.patch(`${pathPedido}/:id`, authMiddleware, async (req, res, next) => {
         try {
             await controller.cambiarEstado(req, res);

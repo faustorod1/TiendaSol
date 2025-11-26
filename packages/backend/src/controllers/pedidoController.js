@@ -25,6 +25,22 @@ export class PedidoController {
 
 
 
+    async obtenerPedidoPorId(req, res){
+        const pedidoIdResult = objectIdSchema.safeParse(req.params.id);
+        if (!pedidoIdResult.success) {
+            return res.status(400).json(pedidoIdResult.error.issues);
+        }
+        const pedidoId = pedidoIdResult.data;
+
+        const pedido = await this.pedidoService.obtenerPedidoPorId(pedidoId);
+        if (!pedido) {
+            return res.status(404).json({ message: "Pedido no encontrado" });
+        }
+        res.status(200).json(pedido);
+    }
+
+
+
     async cambiarEstado(req, res){
         const params = {
             pedidoId: req.params.id,

@@ -50,6 +50,15 @@ export class PedidoService {
         return result;
     }
 
+    async obtenerPedidoPorId(pedidoId){
+        const pedido = await this.pedidoRepository.findById(pedidoId, false);
+        if(pedido === null) {
+            throw new PedidoDoesNotExistError(pedidoId);
+        }
+        
+        return pedido;
+    }
+
     async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){
         const pedido = await this.pedidoRepository.findById(pedidoId, true);
 

@@ -1,38 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pedidos } from '../mockData/Pedidos.js';
+import { getOrdersHistory } from '../../service/pedidoService';
 import './AllOrders.css';
 
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [ordersPerPage] = useState(5); //Cantidad de pedidos por pagina
+  const [ordersPerPage] = useState(5);
   const navigate = useNavigate();
 
-  // Por ahora usamos un usuario mock - después esto vendría del contexto de autenticación
-  const currentUserId = "654c6c9a29a67a001a1d1d01";
-
   useEffect(() => {
-    const loadOrders = () => {
+    const loadOrders = async () => {
       setLoading(true);
+      setError('');
+      
       try {
-        // Filtrar pedidos del usuario actual (como comprador)
-        const userOrders = pedidos.filter(pedido => pedido.comprador._id === currentUserId);
-        // Ordenar por fecha de creación (más recientes primero)
-        userOrders.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
-        setOrders(userOrders);
+        const result = await getOrdersHistory();
+        
+        if (result.success && result.data) {
+          const sortedOrders = result.data.sort((a, b) => 
+            new Date(b.fechaCreacion || b.createdAt) - new Date(a.fechaCreacion || a.createdAt)
+          );
+          
+          setOrders(sortedOrders);
+        } else {
+          console.error('Error al obtener pedidos:', result.error);
+          setError(result.error || 'Error al cargar los pedidos');
+          setOrders([]);
+        }
+        
       } catch (error) {
-        console.error("Error al cargar pedidos:", error);
+        console.error('Error inesperado al cargar pedidos:', error);
+        setError('Error inesperado al cargar los pedidos');
+        setOrders([]);
       } finally {
         setLoading(false);
       }
     };
 
     loadOrders();
-  }, [currentUserId]);
+  }, []);
 
-  // Cálculos de paginación
   const totalPages = Math.ceil(orders.length / ordersPerPage);
   const startIndex = (currentPage - 1) * ordersPerPage;
   const endIndex = startIndex + ordersPerPage;
@@ -40,7 +50,6 @@ const AllOrders = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    // Scroll hacia arriba al cambiar de página
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -55,18 +64,25 @@ const AllOrders = () => {
   };
 
   const getStatusColor = (estado) => {
-    switch (estado.toLowerCase()) {
+    const estadoLower = estado?.toLowerCase();
+    switch (estadoLower) {
       case 'pendiente':
+      case 'pending':
         return 'status-pending';
       case 'confirmado':
+      case 'confirmed':
         return 'status-confirmed';
       case 'en_preparacion':
+      case 'preparing':
         return 'status-preparing';
       case 'enviado':
+      case 'shipped':
         return 'status-shipped';
       case 'entregado':
+      case 'delivered':
         return 'status-delivered';
       case 'cancelado':
+      case 'cancelled':
         return 'status-cancelled';
       default:
         return 'status-default';
@@ -74,22 +90,41 @@ const AllOrders = () => {
   };
 
   const getStatusText = (estado) => {
-    switch (estado.toLowerCase()) {
+    const estadoLower = estado?.toLowerCase();
+    switch (estadoLower) {
       case 'pendiente':
+      case 'pending':
         return 'Pendiente';
       case 'confirmado':
+      case 'confirmed':
         return 'Confirmado';
       case 'en_preparacion':
+      case 'preparing':
         return 'En Preparación';
       case 'enviado':
+      case 'shipped':
         return 'Enviado';
       case 'entregado':
+      case 'delivered':
         return 'Entregado';
       case 'cancelado':
+      case 'cancelled':
         return 'Cancelado';
       default:
-        return estado;
+        return estado || 'Desconocido';
     }
+  };
+
+  const calculateTotal = (order) => {
+    if (!order?.items || !Array.isArray(order.items)) return 0;
+    
+    return order.items.reduce((total, item) => {
+      const precio = item.precio || item.precioUnitario || 0;
+      const cantidad = item.cantidad || 0;
+      const subtotal = item.subtotal || (precio * cantidad);
+      
+      return total + subtotal;
+    }, 0);
   };
 
   const handleViewDetails = (orderId) => {
@@ -102,6 +137,23 @@ const AllOrders = () => {
         <h1>Mis Pedidos</h1>
         <div className="loading-message">
           <p>Cargando pedidos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="all-orders-container">
+        <h1>Mis Pedidos</h1>
+        <div className="error-message">
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-button"
+          >
+            Intentar nuevamente
+          </button>
         </div>
       </div>
     );
@@ -129,11 +181,13 @@ const AllOrders = () => {
 
       <div className="orders-list">
         {currentOrders.map(order => (
-          <div key={order.id} className="order-card">
+          <div key={order._id || order.id} className="order-card">
             <div className="order-header">
               <div className="order-id">
                 <span className="order-label">Pedido:</span>
-                <span className="order-number">#{order.id.slice(-8)}</span>
+                <span className="order-number">
+                  #{(order._id || order.id)?.toString().slice(-8)}
+                </span>
               </div>
               <div className={`order-status ${getStatusColor(order.estado)}`}>
                 {getStatusText(order.estado)}
@@ -143,28 +197,32 @@ const AllOrders = () => {
             <div className="order-body">
               <div className="order-date">
                 <span className="date-label">Fecha de pedido:</span>
-                <span className="date-value">{formatDate(order.fechaCreacion)}</span>
+                <span className="date-value">
+                  {formatDate(order.fechaCreacion || order.createdAt)}
+                </span>
               </div>
               
               <div className="order-items-summary">
                 <span className="items-count">
-                  {order.items.length} {order.items.length === 1 ? 'producto' : 'productos'}
+                  {order.items?.length || 0} {(order.items?.length === 1) ? 'producto' : 'productos'}
                 </span>
                 <span className="order-total">
-                  Total: {order.moneda} ${order.items.reduce((total, item) => total + item.subtotal(), 0).toLocaleString()}
+                  Total: {order.moneda || '$'} ${calculateTotal(order).toLocaleString() || '0'}
                 </span>
               </div>
               
-              <div className="order-vendor">
+              {/*<div className="order-vendor">
                 <span className="vendor-label">Vendedor:</span>
-                <span className="vendor-name">{order.vendedor.nombre}</span>
-              </div>
+                <span className="vendor-name">
+                  {order.vendedor?.nombre || 'No especificado'}
+                </span>
+              </div>*/}
             </div>
             
             <div className="order-actions">
               <button 
                 className="view-details-btn"
-                onClick={() => handleViewDetails(order.id)}
+                onClick={() => handleViewDetails(order._id || order.id)}
               >
                 Ver detalles
               </button>

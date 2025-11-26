@@ -151,7 +151,78 @@ export function formatOrderData(checkoutData) {
   };
 }
 
-export async function getOrderHistory() {
+export async function getOrderById(id) {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        error: 'Usuario no autenticado'
+      };
+    }
+    
+    const response = await axios.get(`${API_URL}/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      timeout: 10000
+    });
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: response.data,
+        message: 'Pedido obtenido exitosamente'
+      };
+    }
+
+    throw new Error(`Status inesperado: ${response.status}`);
+
+  } catch (error) {
+    if (error.response) {
+      console.error('Error response status:', error.response.status);
+      console.error('Error response data:', error.response.data);
+      
+      let errorMessage = 'Error del servidor';
+      
+      if (error.response.status === 404) {
+        errorMessage = 'Pedido no encontrado';
+      } else if (error.response.status === 401) {
+        errorMessage = 'Usuario no autenticado. Inicia sesión nuevamente.';
+      } else if (error.response.status === 403) {
+        errorMessage = 'No tienes permisos para ver este pedido';
+      } else if (error.response.status === 500) {
+        errorMessage = 'Error interno del servidor. Inténtalo de nuevo más tarde.';
+      } else {
+        errorMessage = error.response.data?.message || 
+                      error.response.data?.error || 
+                      'Error del servidor';
+      }
+
+      return {
+        success: false,
+        error: errorMessage,
+        status: error.response.status,
+        details: error.response.data
+      };
+    } else if (error.request) {
+      console.error('No se recibió respuesta del servidor');
+      return {
+        success: false,
+        error: 'No se pudo conectar con el servidor'
+      };
+    } else {
+      console.error('Error en configuración de petición:', error.message);
+      return {
+        success: false,
+        error: error.message || 'Error inesperado'
+      };
+    }
+  }
+}
+
+export async function getOrdersHistory() {
   try {
     const token = localStorage.getItem('authToken');
     
@@ -162,7 +233,7 @@ export async function getOrderHistory() {
       };
     }
 
-    const response = await axios.get(`${API_URL}/historial`, {
+    const response = await axios.get(`${API_URL}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       },
