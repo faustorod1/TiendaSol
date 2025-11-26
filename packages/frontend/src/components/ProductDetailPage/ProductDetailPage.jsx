@@ -102,7 +102,7 @@ const ProductDetailPage = (props) => {
 
             <div className="product-vendedor-section">
             <div className="product-vendedor">
-                Vendido por: {vendedor.nombre}
+                Vendido por: {vendedor?.nombre ? `${vendedor.nombre}${vendedor.apellido ? ` ${vendedor.apellido}` : ''}` : vendedor.email}
             </div>
             <div className="product-email">
                 Contacto: {vendedor.email}

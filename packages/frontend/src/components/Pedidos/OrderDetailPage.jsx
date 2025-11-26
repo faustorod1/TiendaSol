@@ -350,6 +350,16 @@ const OrderDetailPage = () => {
     navigate(`/account/pedidos/${orderId}/cancelar`);
   };
 
+  const getDisplayName = (usuario) => {
+    if (usuario?.nombre) {
+      return usuario.apellido 
+        ? `${usuario.nombre} ${usuario.apellido}`
+        : usuario.nombre;
+    }
+    
+    return usuario?.email || usuario || 'No especificado';
+  };
+
   if (loading) {
     return (
       <div className="order-detail-container">
@@ -406,7 +416,7 @@ const OrderDetailPage = () => {
             <div className="info-item">
               <span className="info-label">Comprador:</span>
               <span className="info-value">
-                {comprador?.nombre || comprador?.email || comprador || 'No especificado'}
+                {getDisplayName(comprador)}
               </span>
             </div>
 
@@ -420,7 +430,7 @@ const OrderDetailPage = () => {
             <div className="info-item">
               <span className="info-label">Vendedor:</span>
               <span className="info-value">
-                {vendedor?.nombre || vendedor?.email || vendedor || 'No especificado'}
+                {getDisplayName(vendedor)}
               </span>
             </div>
 
