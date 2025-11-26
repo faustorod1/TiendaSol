@@ -5,6 +5,7 @@ import ProductCard from './ProductCard';
 import ProductFilters from './ProductFilters';
 import { useFilters } from '../../contexts/FilterContext';
 import './AllProducts.css';
+import { useCartContext } from '../../contexts/CartContext';
 
 const AllProducts = () => {
   const [productos, setProductos] = useState([]);
@@ -17,6 +18,7 @@ const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { isFilterOpen } = useFilters();
+  const { vendedorCarrito } = useCartContext();
 
   useEffect(() => {
 
@@ -94,7 +96,7 @@ const AllProducts = () => {
     return (
       <div className="products-grid">
         {productos.map(p => (
-          <ProductCard key={p._id} product={p} /> 
+          <ProductCard key={p._id} product={p} disabled={vendedorCarrito && vendedorCarrito !== p.vendedor} /> 
         ))}
       </div>
     );

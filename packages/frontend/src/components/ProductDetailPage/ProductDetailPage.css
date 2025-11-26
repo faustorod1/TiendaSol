@@ -157,6 +157,16 @@ body {
   box-shadow: 0 4px 12px rgba(39, 7, 34, 0.3);
 }
 
+.agregar-carrito:disabled {
+  background-color: #aaa;
+  border-color: #aaa;
+  cursor: not-allowed;
+}
+.agregar-carrito:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 /* Botón Comprar Ahora - estilo primario */
 .comprar-ahora {
   flex: 1;
