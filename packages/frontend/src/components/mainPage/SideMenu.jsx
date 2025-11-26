@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './SideMenu.css';
 
-const SideMenu = ({ isOpen, onClose }) => {
+const SideMenu = ({ isOpen, onClose, tipoUsuario }) => {
     const containerClasses = `side-menu-container ${isOpen ? 'open' : ''}`;
 
     const isAuthenticated = () => {
@@ -36,7 +36,11 @@ const SideMenu = ({ isOpen, onClose }) => {
                     <ul className="side-menu-links">
                     <li><Link to="/" onClick={onClose}>Inicio</Link></li>
                     <li><Link to="/productos" onClick={onClose}>Todos los Productos</Link></li>
-                    <li><Link to="/account/pedidos" onClick={onClose}>Mis pedidos</Link></li>
+                    <li>
+                      <Link to="/account/pedidos" onClick={onClose}>
+                        {isAuthenticated() ? (tipoUsuario === 'COMPRADOR' ? 'Mis Pedidos' : 'Pedidos Asignados') : 'Pedidos'}
+                      </Link>
+                    </li>
                     <li><Link to="/contacto" onClick={onClose}>Contacto</Link></li>
                     </ul>
                 </div>

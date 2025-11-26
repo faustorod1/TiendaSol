@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart, faFilter, faComment, faBell } from '@fortawesome/free-solid-svg-icons';
 import './SiteHeader.css';
@@ -12,11 +12,54 @@ import { useCartContext } from '../../contexts/CartContext';
 
 
 const SiteHeader = (props) => {
+    const [tipoUsuario, setTipoUsuario] = useState(null);
+    const [authenticated, setAuthenticated] = useState(false);
+
     const isAuthenticated = () => {
         const token = localStorage.getItem('authToken');
         const user = localStorage.getItem('user');
         return token && user;
     };
+
+    useEffect(() => {
+        const updateAuthState = () => {
+            const checkAuthenticated = isAuthenticated();
+            const userType = localStorage.getItem('userType');
+            
+            {/*console.log('SiteHeader - Estado de autenticación:', {
+                checkAuthenticated,
+                userType,
+                localStorage: {
+                    authToken: !!localStorage.getItem('authToken'),
+                    user: !!localStorage.getItem('user'),
+                    userType: localStorage.getItem('userType')
+                }
+            });*/}
+
+            setAuthenticated(checkAuthenticated);
+            setTipoUsuario(userType);
+        };
+
+        updateAuthState();
+
+        const handleStorageChange = (e) => {
+            if (e.key === 'authToken' || e.key === 'user' || e.key === 'userType' || e.key === null) {
+                updateAuthState();
+            }
+        };
+
+        const handleAuthChange = () => {
+            updateAuthState();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('authChange', handleAuthChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('authChange', handleAuthChange);
+        };
+    }, []);
 
     const { isFilterOpen, setIsFilterOpen } = useFilters();
     const { recentNotifications, unreadCount, markAsRead } = useNotifications();
@@ -39,6 +82,10 @@ const SiteHeader = (props) => {
 
     const handleToggleCart = () => {
         setIsCartOpen(!isCartOpen);
+    };
+
+    const cartIsVisible = () => {
+        return tipoUsuario === 'COMPRADOR' || !authenticated;
     };
 
     const handleSearchSubmit = (e) => {
@@ -105,13 +152,14 @@ const SiteHeader = (props) => {
                         />
                     </div>
 
-                    {}
-                    <button onClick={handleToggleCart} className="cart-button" aria-label={`Ver carrito con ${cartItemCount} artículos`}>
-                        <FontAwesomeIcon icon={faShoppingCart} />
-                        {cartItemCount > 0 && (
-                            <span className="cart-count">{cartItemCount}</span>
-                        )}
-                    </button>
+                    {cartIsVisible() && (
+                        <button onClick={handleToggleCart} className="cart-button" aria-label={`Ver carrito con ${cartItemCount} artículos`}>
+                            <FontAwesomeIcon icon={faShoppingCart} />
+                            {cartItemCount > 0 && (
+                                <span className="cart-count">{cartItemCount}</span>
+                            )}
+                        </button>
+                    )}
                 </div>
             </header>
 
@@ -131,6 +179,8 @@ const SiteHeader = (props) => {
             <SideMenu 
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}
+                tipoUsuario={tipoUsuario}
+                isAuthenticated={authenticated}
             />
 
             <MiniCart 

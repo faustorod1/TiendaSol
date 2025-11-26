@@ -64,7 +64,7 @@ const OrderDetailPage = () => {
         return;
       }
 
-      order.items.forEach((item, index) => {
+      {/*order.items.forEach((item, index) => {
         console.log(`Item ${index}:`, {
           item_completo: item,
           _id: item._id,
@@ -75,7 +75,7 @@ const OrderDetailPage = () => {
           cantidad: item.cantidad,
           keys: Object.keys(item)
         });
-      });
+      });*/}
 
       setLoadingProducts(true);
       const productosData = {};
@@ -178,7 +178,6 @@ const OrderDetailPage = () => {
             
             if (data) {
               productosData[id] = data;
-              console.log(`Producto ${id} agregado correctamente`);
             } else {
               console.warn(`No se pudo cargar producto ${id}:`, error);
               productosData[id] = {

@@ -67,6 +67,8 @@ const SignIn = () => {
           localStorage.setItem('userType', userData.tipo || 'COMPRADOR');
         }
 
+        window.dispatchEvent(new CustomEvent('authChange'));
+
         refreshNotifications();
         navigate('/', { replace: true });
         
