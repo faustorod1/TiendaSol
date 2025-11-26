@@ -4,6 +4,19 @@ import { CambioEstadoPedido } from "./cambioEstadoPedido.js";
 import { CambioEstadoInvalidoError } from "./errors/cambioEstadoInvalidoError.js";
 import { StockInsuficienteError } from "./errors/stockInsuficienteError.js";
 
+/**
+ * @typedef {Object} PedidoProps
+ * @property {mongoose.Types.ObjectId} _id
+ * @property {Usuario} comprador
+ * @property {Usuario} vendedor
+ * @property {ItemPedido[]} items
+ * @property {Moneda} moneda
+ * @property {DireccionEntrega} direccionEntrega
+ * @property {EstadoPedido} [estado] - Opcional (viene de DB)
+ * @property {Date} [fechaCreacion] - Opcional (viene de DB)
+ * @property {CambioEstadoPedido[]} [historialEstados] - Opcional (viene de DB)
+ */
+
 export class Pedido{
     
     /** @type mongoose.Types.ObjectId */
@@ -27,35 +40,56 @@ export class Pedido{
     
 
     /**
-     * @param {mongoose.Types.ObjectId} _id
-     * @param {Usuario} comprador
-     * @param {Usuario} vendedor
-     * @param {ItemPedido[]} items 
-     * @param {Moneda} moneda
-     * @param {DireccionEntrega} direccionEntrega
-     * @param {Date} fechaCreacion
-     * @param {CambioEstadoPedido[]} historialEstados
+     * Constructor único que recibe un objeto de propiedades.
+     * @param {PedidoProps} props 
      */
-    constructor(_id, comprador, vendedor, items, moneda, direccionEntrega){
+    constructor({ 
+        _id, 
+        comprador, 
+        vendedor, 
+        items, 
+        moneda, 
+        direccionEntrega, 
+        estado, 
+        fechaCreacion, 
+        historialEstados 
+    }) {
         this._id = _id;
         this.comprador = comprador;
         this.vendedor = vendedor;
         this.items = items;
         this.moneda = moneda;
-        this.estado = EstadoPedido.PENDIENTE;
         this.direccionEntrega = direccionEntrega;
-        this.fechaCreacion = new Date();
-        this.historialEstados = [];
 
-        this.validarStock();
+        this.estado = estado || EstadoPedido.PENDIENTE;
+        this.fechaCreacion = fechaCreacion || new Date();
+        this.historialEstados = historialEstados || [];
+    }
 
-        FactoryNotification.crearSegunPedido(this);
+    /**
+     * Factory method para nuevos pedidos.
+     * También recibe un objeto para mantener consistencia.
+     */
+    static crearNuevo({ _id, comprador, vendedor, items, moneda, direccionEntrega }) {
+        const pedido = new Pedido({
+            _id, 
+            comprador, 
+            vendedor, 
+            items, 
+            moneda, 
+            direccionEntrega
+        });
+
+        pedido.validarStock();
+        FactoryNotification.crearSegunPedido(pedido);
         
-        this.items.forEach(item => {
+        pedido.items.forEach(item => {
             item.producto.vender(item.cantidad);
         });
-        //notificacion.notificar();//ver si lo hacemos asi o no
+
+        return pedido;
     }
+
 
     //------- methods -------//
 

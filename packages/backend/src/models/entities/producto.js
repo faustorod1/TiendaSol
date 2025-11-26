@@ -23,28 +23,33 @@ export class Producto {
     cantidadVendida;
 
     /**
-     * @param {string} id
-     * @param {Usuario} vendedor
-     * @param {string} titulo
-     * @param {string} descripcion
-     * @param {Categoria[]} categorias
-     * @param {number} precio
-     * @param {Moneda} moneda
-     * @param {number} stock
-     * @param {string[]} fotos
-     * @param {boolean} activo
+     * @param {Object} props - Objeto con las propiedades del producto
      */
-    constructor(id, vendedor, titulo, descripcion, categorias, precio, moneda, stock, fotos, activo) {
-        this._id = id;
+    constructor({ 
+        _id, 
+        vendedor, 
+        titulo, 
+        descripcion, 
+        categorias, 
+        precio, 
+        moneda, 
+        stock, 
+        fotos, 
+        activo, 
+        cantidadVendida 
+    }) {
+        this._id = _id;
         this.vendedor = vendedor;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.categorias = categorias;
+        this.categorias = categorias || [];
         this.precio = precio;
         this.moneda = moneda;
-        this.stock = stock;
-        this.fotos = fotos;
+        this.fotos = fotos || [];
         this.activo = activo;
+
+        this.stock = (stock !== undefined && stock !== null) ? Number(stock) : 0;
+        this.cantidadVendida = (cantidadVendida !== undefined && cantidadVendida !== null) ? Number(cantidadVendida) : 0;
     }
 
     /**

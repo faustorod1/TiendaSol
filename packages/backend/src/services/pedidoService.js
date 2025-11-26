@@ -35,14 +35,14 @@ export class PedidoService {
         // Puedo generar un id antes de persistirlo, por cómo lo crea no se va a pisar con otro
         const idGenerado = this.pedidoRepository.generarId();
 
-        const nuevoPedido = new Pedido(
-            idGenerado,
-            comprador,
-            vendedor,
-            items,
-            pedidoJSON.moneda,
-            direccionEntrega
-        );
+        const nuevoPedido = Pedido.crearNuevo({
+            _id: idGenerado,
+            comprador: comprador,
+            vendedor: vendedor,
+            items: items,
+            moneda: pedidoJSON.moneda,
+            direccionEntrega: direccionEntrega
+        });
 
         const result = await this.pedidoRepository.save(nuevoPedido);
         await this.productoRepository.updateStockYVentas(productos);
@@ -51,7 +51,7 @@ export class PedidoService {
     }
 
     async obtenerPedidoPorId(pedidoId){
-        const pedido = await this.pedidoRepository.findById(pedidoId, false);
+        const pedido = await this.pedidoRepository.findById(pedidoId);
         if(pedido === null) {
             throw new PedidoDoesNotExistError(pedidoId);
         }
@@ -60,7 +60,11 @@ export class PedidoService {
     }
 
     async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){
-        const pedido = await this.pedidoRepository.findById(pedidoId, true);
+        const pedido = await this.pedidoRepository.findById(pedidoId, {
+            populateUsuarios: true,
+            populateProductos: true
+        });
+        if (!pedido) throw new PedidoDoesNotExistError(pedidoId);
 
         nuevoEstado = nuevoEstado.toUpperCase();
 
@@ -68,10 +72,7 @@ export class PedidoService {
             case EstadoPedido.CANCELADO:
                 if (pedido.comprador.id !== usuarioId) {
                     throw new ForbiddenError("Solo el comprador puede marcar el pedido como cancelado");
-                }
-
-                // Cargo los productos al pedido para que se les actualice el stock
-                await this.popularProductosDePedido(pedido);
+                }                
                 
                 pedido.cancelar(pedido.comprador, motivoNuevo);
 
@@ -104,19 +105,19 @@ export class PedidoService {
     }
 
     // Esto modifica al pedido recibido
-    async popularProductosDePedido(pedido) {
-        const ids = pedido.items.map(item => item.producto._id);
-        const productos = await this.productoRepository.findManyById(ids);
-        const productosMap = new Map(productos.map(p => [p._id.toString(), p]));
+    // async popularProductosDePedido(pedido) {
+    //     const ids = pedido.items.map(item => item.producto._id);
+    //     const productos = await this.productoRepository.findManyById(ids);
+    //     const productosMap = new Map(productos.map(p => [p._id.toString(), p]));
 
-        pedido.items.forEach(item => {
-            const prod = productosMap.get(item.producto.toString());
-            if (!prod) {
-                throw new ProductoDoesNotExistError(item.producto);
-            }
-            item.producto = prod;
-        });
-    }
+    //     pedido.items.forEach(item => {
+    //         const prod = productosMap.get(item.producto.toString());
+    //         if (!prod) {
+    //             throw new ProductoDoesNotExistError(item.producto);
+    //         }
+    //         item.producto = prod;
+    //     });
+    // }
 
     async consultarHistorialPedidos(idUsuario, tipoUsuario){
         if (tipoUsuario === TipoUsuario.VENDEDOR) {
