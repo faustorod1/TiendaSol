@@ -4,10 +4,12 @@ import { useFilters } from '../../contexts/FilterContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import './ProductFilters.css';
+import { useCartContext } from '../../contexts/CartContext';
 
 const ProductFilters = ({ currentFilters, onFilterChange }) => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const { isFilterOpen, setIsFilterOpen } = useFilters();
+  const { vendedorCarrito } = useCartContext();
 
   useEffect(() => {
     const loadCategorias = async () => {
@@ -23,7 +25,27 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
     loadCategorias();
   }, []);
 
+  useEffect(() => {
+    handleChange({target: {name: 'vendedor', value: ''}});
+  }, [vendedorCarrito]);
+
+  const handleVendedorChange = (e) => {
+    let value = ''
+    if (e.target.checked === true) {
+      value = vendedorCarrito;
+    }
+    const params = {
+      target: {
+        name: 'vendedor',
+        value: value
+      }
+    };
+    handleChange(params);
+  }
+
   const handleChange = (e) => {
+    console.log(e);
+    
     onFilterChange({ [e.target.name]: e.target.value });
   };
 
@@ -65,7 +87,12 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
             </button>
             <h3>Filtros</h3>
             <form onSubmit={(e) => e.preventDefault()}>
-              
+              { vendedorCarrito && (
+                <div className="filter-group" style={{display: 'flex', textAlign: 'left', gap: '5px'}}>
+                  <input type="checkbox" name="vendedorCarrito" id="vendedorCarrito" onChange={handleVendedorChange} />
+                  <label htmlFor="vendedorCarrito">Ocultar productos de otros vendedores</label>
+                </div>
+              )}
               <div className="filter-group">
                 <label htmlFor="precioMin">Precio Mín.</label>
                 <input

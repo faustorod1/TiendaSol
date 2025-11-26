@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, disabled }) => {
   return (
-    <article className="product-card">
+    <article className={`product-card ${ disabled ? 'disabled' : '' }`} title={ disabled ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.' : '' }>
       <Link to={`/productos/${product._id}`} className="product-link">
         <img 
           src={product.fotos?.[0]} 
@@ -31,6 +31,7 @@ const ProductCard = ({ product }) => {
 
 ProductCard.propTypes = {
   product: PropTypes.object.isRequired,
+  disabled: PropTypes.bool
 };
 
 export default ProductCard;

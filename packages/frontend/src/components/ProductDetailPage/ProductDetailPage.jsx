@@ -12,7 +12,7 @@ const ProductDetailPage = (props) => {
   const [vendedor, setVendedor] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { aumentarCantidadProducto, productos } = useCartContext();
+  const { aumentarCantidadProducto, productos, vendedorCarrito } = useCartContext();
 
   // Obtener la cantidad del producto actual en el carrito
   const productInCart = productos.find(p => p._id === id);
@@ -37,6 +37,8 @@ const ProductDetailPage = (props) => {
     };
     loadProduct();
   }, [id]);
+
+  const disabled = vendedorCarrito && vendedorCarrito !== product.vendedor;
 
   // Función para comprar directamente
   const handleComprarAhora = () => {
@@ -113,14 +115,17 @@ const ProductDetailPage = (props) => {
 
         <div className="comprar-container">
           <div className="feedback-carrito">
-            {cantidadEnCarrito > 0 
-              ? `Tienes ${cantidadEnCarrito} ejemplar${cantidadEnCarrito > 1 ? 'es' : ''} de este producto en tu carrito`
-              : 'Este producto no está en tu carrito'
+            { disabled
+                ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.'
+                : cantidadEnCarrito > 0 
+                  ? `Tienes ${cantidadEnCarrito} ejemplar${cantidadEnCarrito > 1 ? 'es' : ''} de este producto en tu carrito`
+                  : 'Este producto no está en tu carrito'
             }
           </div>
           <button 
             className="agregar-carrito" 
             onClick={() => aumentarCantidadProducto(product)}
+            disabled={ disabled }
           >
             Agregar a Carrito
           </button>

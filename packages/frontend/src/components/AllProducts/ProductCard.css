@@ -1,5 +1,6 @@
 /* Carta compacta para listado de productos */
 .product-card {
+  position: relative;
   background: var(--surface, #ffffff);
   border: 1px solid var(--border, #e6e6e6);
   border-radius: 8px;
@@ -9,6 +10,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+.product-card.disabled::after {
+  content: '';
+  position: absolute;
+  background-color: #88888850;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 .product-card:hover {

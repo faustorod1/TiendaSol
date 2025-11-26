@@ -11,6 +11,11 @@ export const CartProvider = ({children}) => {
         return Array.from(productosMap.values());
     }, [productosMap]);
 
+    const vendedorCarrito = useMemo(() => {
+        if (productos.length === 0) return null;
+        return productos[0].vendedor;
+    }, [productos]);
+
 
     const limpiarCarrito = () => setProductosMap(new Map());
 
@@ -48,6 +53,7 @@ export const CartProvider = ({children}) => {
 
     const value = {
         productos,
+        vendedorCarrito,
         agregarProducto,
         aumentarCantidadProducto,
         reducirCantidadProducto,
