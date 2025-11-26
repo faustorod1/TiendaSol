@@ -8,6 +8,7 @@ import { useCartContext } from '../../contexts/CartContext.jsx';
 const ProductDetailPage = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [tipoUsuario, setTipoUsuario] = useState(null);
   const [product, setProduct] = useState({});
   const [vendedor, setVendedor] = useState({});
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,17 @@ const ProductDetailPage = (props) => {
     loadProduct();
   }, [id]);
 
+  useEffect(() => {
+    const userType = localStorage.getItem('userType');
+    setTipoUsuario(userType);
+  }, []);
+
+  const isAuthenticated = () => {
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('user');
+    return token && user;
+  };
+
   const disabled = vendedorCarrito && vendedorCarrito !== product.vendedor;
 
   // Función para comprar directamente
@@ -46,6 +58,10 @@ const ProductDetailPage = (props) => {
     aumentarCantidadProducto(product);
     // Redirigir al checkout
     //navigate('/checkout');
+  };
+
+  const canAddToCart = () => {
+    return tipoUsuario === 'COMPRADOR' || tipoUsuario === 'ADMIN' || !isAuthenticated();
   };
 
   if (loading) {
@@ -113,7 +129,8 @@ const ProductDetailPage = (props) => {
         </div>
         </div>
 
-        <div className="comprar-container">
+        {canAddToCart() && (
+          <div className="comprar-container">
           <div className="feedback-carrito">
             { disabled
                 ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.'
@@ -129,7 +146,7 @@ const ProductDetailPage = (props) => {
           >
             Agregar a Carrito
           </button>
-        </div>
+        </div>)}
     </div>
     );
 }

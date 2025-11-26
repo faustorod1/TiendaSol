@@ -85,7 +85,7 @@ const SiteHeader = (props) => {
     };
 
     const cartIsVisible = () => {
-        return tipoUsuario === 'COMPRADOR' || !authenticated;
+        return tipoUsuario === 'COMPRADOR' || tipoUsuario === 'ADMIN' || !authenticated;
     };
 
     const handleSearchSubmit = (e) => {
