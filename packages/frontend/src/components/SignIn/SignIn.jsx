@@ -64,6 +64,7 @@ const SignIn = () => {
           const userData = result.data.usuario || result.data.user;
           localStorage.setItem('user', JSON.stringify(userData));
           localStorage.setItem('userId', userData._id || userData.id);
+          localStorage.setItem('userType', userData.tipo || 'COMPRADOR');
         }
 
         refreshNotifications();

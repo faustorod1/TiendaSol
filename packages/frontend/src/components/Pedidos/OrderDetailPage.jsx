@@ -9,6 +9,7 @@ const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
+  const [tipoUsuario, setTipoUsuario] = useState(null);
   const [vendedor, setVendedor] = useState({});
   const [comprador, setComprador] = useState({});
   const [productos, setProductos] = useState({});
@@ -236,6 +237,11 @@ const OrderDetailPage = () => {
   }, [order]);
 
   useEffect(() => {
+    const userType = localStorage.getItem('userType');
+    setTipoUsuario(userType);
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -334,7 +340,7 @@ const OrderDetailPage = () => {
   };
 
   const canCancelOrder = () => {
-    if (!order?.estado) return false;
+    if (!order?.estado || tipoUsuario !== 'COMPRADOR') return false;
     const cancellableStates = ['pendiente', 'confirmado', 'en_preparacion', 'pending', 'confirmed', 'preparing'];
     return cancellableStates.includes(order.estado.toLowerCase());
   };
