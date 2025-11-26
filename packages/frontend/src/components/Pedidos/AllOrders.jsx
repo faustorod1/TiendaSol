@@ -5,6 +5,7 @@ import './AllOrders.css';
 
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [tipoUsuario, setTipoUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,6 +42,11 @@ const AllOrders = () => {
     };
 
     loadOrders();
+  }, []);
+
+  useEffect(() => {
+    const userType = localStorage.getItem('userType');
+    setTipoUsuario(userType);
   }, []);
 
   const totalPages = Math.ceil(orders.length / ordersPerPage);
@@ -145,7 +151,7 @@ const AllOrders = () => {
   if (error) {
     return (
       <div className="all-orders-container">
-        <h1>Mis Pedidos</h1>
+        <h1>{tipoUsuario === 'COMPRADOR' ? 'Mis Pedidos' : 'Pedidos Asignados'}</h1>
         <div className="error-message">
           <p>{error}</p>
           <button 
@@ -162,7 +168,7 @@ const AllOrders = () => {
   if (orders.length === 0) {
     return (
       <div className="all-orders-container">
-        <h1>Mis Pedidos</h1>
+        <h1>{tipoUsuario === 'COMPRADOR' ? 'Mis Pedidos' : 'Pedidos Asignados'}</h1>
         <div className="no-orders-message">
           <p>No tienes pedidos realizados aún.</p>
           <a href="/productos" className="browse-products-link">
@@ -176,7 +182,7 @@ const AllOrders = () => {
   return (
     <div className="all-orders-container">
       <div className="orders-header">
-        <h1>Mis Pedidos</h1>
+        <h1>{tipoUsuario === 'COMPRADOR' ? 'Mis Pedidos' : 'Pedidos Asignados'}</h1>
       </div>
 
       <div className="orders-list">
