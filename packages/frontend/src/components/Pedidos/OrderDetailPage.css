@@ -307,7 +307,81 @@
   font-style: italic;
 }
 
-/* Responsive Design */
+.status-tracker-container {
+  margin: 20px 0;
+  padding: 20px 0;
+}
+
+.status-points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding-left: 4.5rem;
+}
+
+.status-point-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.status-point {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.status-point.current {
+  background-color: var(--dark-purple);
+  box-shadow: 0 0 0 4px rgba(74, 20, 140, 0.2);
+}
+
+.status-point.completed {
+  background-color: var(--dark-purple-hover);
+}
+
+.status-point.pending {
+  background-color: #bdbdbd;
+}
+
+.status-line {
+  flex: 1;
+  height: 2px;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.status-line.completed {
+  background-color: var(--dark-purple-hover);
+}
+
+.status-line.pending {
+  background-color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .status-points {
+    max-width: 300px;
+    padding-left: 2.8rem;
+  }
+  
+  .status-point {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .status-line {
+    height: 1.5px;
+    margin: 0 2px;
+  }
+}
+
 @media (max-width: 768px) {
   .order-detail-container {
     padding: 1rem;

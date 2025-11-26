@@ -360,6 +360,56 @@ const OrderDetailPage = () => {
     return usuario?.email || usuario || 'No especificado';
   };
 
+  const OrderStatusTracker = ({ currentStatus }) => {
+    const estados = ['PENDIENTE', 'CONFIRMADO', 'EN_PREPARACION', 'ENVIADO', 'ENTREGADO'];
+    
+    const normalizeStatus = (status) => {
+      if (!status) return 'PENDIENTE';
+      const statusUpper = status.toUpperCase();
+      
+      const statusMap = {
+        'PENDING': 'PENDIENTE',
+        'CONFIRMED': 'CONFIRMADO', 
+        'PREPARING': 'EN_PREPARACION',
+        'SHIPPED': 'ENVIADO',
+        'DELIVERED': 'ENTREGADO',
+        'CANCELLED': 'CANCELADO'
+      };
+      
+      return statusMap[statusUpper] || statusUpper;
+    };
+    
+    const currentStatusNormalized = normalizeStatus(currentStatus);
+    const currentIndex = estados.findIndex(estado => estado === currentStatusNormalized);
+    
+    const effectiveIndex = currentIndex === -1 ? 0 : currentIndex;
+    
+    const getPointClass = (index) => {
+      if (index < effectiveIndex) {
+        return 'status-point completed';
+      } else if (index === effectiveIndex) {
+        return 'status-point current';
+      } else {
+        return 'status-point pending';
+      }
+    };
+    
+    return (
+      <div className="status-tracker-container">
+        <div className="status-points">
+          {estados.map((estado, index) => (
+            <div key={estado} className="status-point-wrapper">
+              <div className={getPointClass(index)}></div>
+              {index < estados.length - 1 && (
+                <div className={`status-line ${index < effectiveIndex ? 'completed' : 'pending'}`}></div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="order-detail-container">
@@ -403,6 +453,10 @@ const OrderDetailPage = () => {
             <div className={`order-status ${getStatusColor(order.estado)}`}>
               {getStatusText(order.estado)}
             </div>
+          </div>
+
+          <div className="order-status-tracker">
+            <OrderStatusTracker currentStatus={order.estado} />
           </div>
 
           <div className="order-info-grid">
