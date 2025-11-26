@@ -62,6 +62,8 @@ export class PedidoService {
     async cambiarEstado(pedidoId, nuevoEstado, usuarioId, motivoNuevo){
         const pedido = await this.pedidoRepository.findById(pedidoId, true);
 
+        nuevoEstado = nuevoEstado.toUpperCase();
+
         switch (nuevoEstado) {
             case EstadoPedido.CANCELADO:
                 if (pedido.comprador.id !== usuarioId) {

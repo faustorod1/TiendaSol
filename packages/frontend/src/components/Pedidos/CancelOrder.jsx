@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPedidoById } from '../mockData/Pedidos.js';
+//import { getPedidoById } from '../mockData/Pedidos.js';
+import { getOrderById, changeOrderStatus } from '../../service/pedidoService';
 import './CancelOrder.css';
 
 const CancelOrder = () => {
@@ -13,17 +14,19 @@ const CancelOrder = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const loadOrder = () => {
+    const loadOrder = async () => {
       setLoading(true);
       setError(null);
       
       try {
-        const foundOrder = getPedidoById(id);
+
+        const foundOrder = await getOrderById(id);
+
         if (foundOrder) {
           // Verificar si el pedido se puede cancelar
           const cancellableStates = ['pendiente', 'confirmado', 'en_preparacion'];
-          if (cancellableStates.includes(foundOrder.estado.toLowerCase())) {
-            setOrder(foundOrder);
+          if (cancellableStates.includes(foundOrder.data.estado.toLowerCase())) {
+            setOrder(foundOrder.data);
           } else {
             setError('Este pedido no se puede cancelar en su estado actual');
           }
@@ -43,44 +46,47 @@ const CancelOrder = () => {
     }
   }, [id]);
 
+  const handleConfirmCancellation = async (e) => {
+    e.preventDefault();
+    if (!cancelReason.trim()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // llamo al back
+      const result = await changeOrderStatus(id, 'CANCELADO', cancelReason);
+      
+      if (result.success) {
+        navigate(`/account/pedidos/${id}`, { 
+          state: { message: 'Pedido cancelado exitosamente' }
+        });
+      } else {
+        throw new Error(result.error);
+      }
+      
+    } catch (err) {
+      console.error('Error al cancelar:', err.message);
+      alert(`No se pudo cancelar: ${err.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const calculateTotal = () => {
+    if (order.total) return order.total;
+    return order?.items?.reduce((acc, item) => {
+      const precio = item.precio || item.precioUnitario || 0;
+      return acc + (precio * item.cantidad);
+    }, 0) || 0;
+  };
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     }, []);
 
   const handleReasonChange = (e) => {
     setCancelReason(e.target.value);
-  };
-
-  const handleConfirmCancellation = async (e) => {
-    e.preventDefault();
-    
-    if (!cancelReason.trim()) {
-      alert('Por favor, ingresa un motivo para la cancelación');
-      return;
-    }
-
-    setIsSubmitting(true);
-    
-    try {
-      // Aquí iría la lógica para cancelar el pedido
-      // Por ahora solo simulamos la operación
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Cancelando pedido:', {
-        orderId: id,
-        reason: cancelReason
-      });
-      
-      navigate(`/account/pedidos/${id}`, { 
-        state: { message: 'Pedido cancelado exitosamente' }
-      });
-      
-    } catch (error) {
-      console.error('Error al cancelar pedido:', error);
-      alert('Error al cancelar el pedido. Por favor, inténtalo de nuevo.');
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const handleGoBack = () => {
@@ -111,13 +117,18 @@ const CancelOrder = () => {
     );
   }
 
+  const getOrderId = () => {
+    if (!order) return id;
+    return (order._id || order.id || id).toString();
+  };
+
   return (
     <div className="cancel-order-container">
       <div className="cancel-order-header">
         <button onClick={handleGoBack} className="back-button">
           ← Volver al pedido
         </button>
-        <h1>Cancelar pedido #{order.id.slice(-8)}</h1>
+        <h1>Cancelar pedido #{getOrderId().slice(-8)}</h1>
       </div>
 
       <div className="cancel-order-card">
@@ -127,7 +138,7 @@ const CancelOrder = () => {
             <p><strong>Fecha:</strong> {new Date(order.fechaCreacion).toLocaleDateString('es-AR')}</p>
             <p><strong>Estado actual:</strong> {order.estado}</p>
             <p><strong>Vendedor:</strong> {order.vendedor.nombre}</p>
-            <p><strong>Total:</strong> {order.moneda} ${order.items.reduce((total, item) => total + item.subtotal(), 0).toLocaleString()}</p>
+            <p><strong>Total:</strong> {order.moneda} ${calculateTotal().toLocaleString()}</p>
           </div>
         </div>
 

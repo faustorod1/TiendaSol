@@ -278,7 +278,7 @@ export async function changeOrderStatus(orderId, newStatus, reason = '') {
       };
     }
 
-    const response = await axios.put(`${API_URL}/${orderId}/estado`, {
+    const response = await axios.patch(`${API_URL}/${orderId}`, {
       estado: newStatus,
       motivo: reason
     }, {
@@ -308,6 +308,8 @@ export async function changeOrderStatus(orderId, newStatus, reason = '') {
         error: error.response.data?.message || 'Error del servidor',
         status: error.response.status
       };
+
+      
     } else {
       return {
         success: false,

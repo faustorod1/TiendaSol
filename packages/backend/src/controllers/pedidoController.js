@@ -59,6 +59,8 @@ export class PedidoController {
         }
         const usuarioId = userIdResult.data;
 
+        console.log("Cambio estado pedido:", pedidoId, "a", estadoNuevo, "por usuario", usuarioId, "motivo:", req.body.motivo);
+
         await this.pedidoService.cambiarEstado(pedidoId, estadoNuevo, usuarioId, req.body.motivo);
         res.status(200).json({ message: "Estado del pedido actualizado con éxito" });
     };

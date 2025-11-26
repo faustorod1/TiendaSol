@@ -5,6 +5,7 @@ import { CambioEstadoInvalidoError } from "./errors/cambioEstadoInvalidoError.js
 import { StockInsuficienteError } from "./errors/stockInsuficienteError.js";
 
 export class Pedido{
+    
     /** @type mongoose.Types.ObjectId */
     _id;
     /** @type Usuario */
@@ -23,6 +24,7 @@ export class Pedido{
     fechaCreacion;
     /** @type CambioEstadoPedido[] */
     historialEstados;
+    
 
     /**
      * @param {mongoose.Types.ObjectId} _id
