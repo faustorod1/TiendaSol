@@ -197,13 +197,11 @@
   font-size: 0.85rem;
 }
 
-/* Wrapper para tarjeta + info de ventas */
 .product-card-wrapper {
     display: flex;
     flex-direction: column;
 }
 
-/* Información de ventas debajo de cada tarjeta */
 .product-sales-info {
     margin-top: 8px;
     padding: 8px 12px;
@@ -226,7 +224,6 @@
     font-size: 0.9rem;
 }
 
-/* Hover effect */
 .product-card-wrapper:hover {
     background: #e9ecef;
 }
