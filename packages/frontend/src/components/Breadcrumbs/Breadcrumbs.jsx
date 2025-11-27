@@ -23,6 +23,7 @@ const Breadcrumbs = () => {
     'signup': 'Registrarse',
     'notifications': 'Notificaciones',
     'pedidos': 'Pedidos',
+    'misProductos': 'Mis Productos',
     'cancelar': 'Cancelar Pedido'
   };
 

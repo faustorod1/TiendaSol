@@ -12,6 +12,7 @@ import Account from './components/Account/Account';
 import AccountInfo from './components/Account/AccountInfo';
 import AllNotifications from './components/Notifications/AllNotifications';
 import AllOrders from './components/Pedidos/AllOrders';
+import MyProducts from './components/MyProducts/MyProducts';
 import OrderDetailPage from './components/Pedidos/OrderDetailPage';
 import CancelOrder from './components/Pedidos/CancelOrder';
 import SignIn from './components/SignIn/SignIn';
@@ -100,6 +101,8 @@ function App() {
                 />
                 <Route path="/account/pedidos/:id" element={<OrderDetailPage />} />
                 <Route path="/account/pedidos/:id/cancelar" element={<CancelOrder />} />
+
+                <Route path="/misProductos" element={<MyProducts />} />
 
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signin/manage" element={<AccountInfo />} />

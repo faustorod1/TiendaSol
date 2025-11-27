@@ -41,6 +41,15 @@ const SideMenu = ({ isOpen, onClose, tipoUsuario }) => {
                         {isAuthenticated() ? (tipoUsuario === 'COMPRADOR' ? 'Mis Pedidos' : 'Pedidos Asignados') : 'Pedidos'}
                       </Link>
                     </li>
+
+                    {isAuthenticated() && (tipoUsuario === 'VENDEDOR') && (
+                        <li>
+                            <Link to="/misProductos" onClick={onClose}>
+                                Mis Productos
+                            </Link>
+                        </li>
+                    )}
+
                     <li><Link to="/contacto" onClick={onClose}>Contacto</Link></li>
                     </ul>
                 </div>
