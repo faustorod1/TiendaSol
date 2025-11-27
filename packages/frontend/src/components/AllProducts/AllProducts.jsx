@@ -96,7 +96,12 @@ const AllProducts = () => {
     return (
       <div className="products-grid">
         {productos.map(p => (
-          <ProductCard key={p._id} product={p} disabled={vendedorCarrito && vendedorCarrito !== p.vendedor} /> 
+          <ProductCard
+            key={p._id}
+            product={p}
+            disabled={vendedorCarrito && vendedorCarrito !== p.vendedor}
+            parentComponent="productos"
+          /> 
         ))}
       </div>
     );

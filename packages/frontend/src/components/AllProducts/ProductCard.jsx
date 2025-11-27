@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
-const ProductCard = ({ product, disabled }) => {
+const ProductCard = ({ product, disabled, parentComponent }) => {
   return (
     <article className={`product-card ${ disabled ? 'disabled' : '' }`} title={ disabled ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.' : '' }>
-      <Link to={`/productos/${product._id}`} className="product-link">
+      <Link to={`/${parentComponent}/${product._id}`} className="product-link">
         <img 
           src={product.fotos?.[0]} 
           alt={product.titulo}
