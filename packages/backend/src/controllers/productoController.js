@@ -36,6 +36,27 @@ export class ProductoController {
         const producto = await this.productoService.buscarPorId(productId);
         res.status(200).json(producto);
     }
+
+    async crearProducto(req, res) {
+        const productData = {
+            ...req.body,
+            vendedor: req.user.id
+        }
+
+        const productDataResult = createProductoSchema.safeParse(productData);
+        if (!productDataResult.success) {
+            return res.status(400).json(productDataResult.error.issues);
+        }
+
+        const validProductData = {
+            ...productDataResult.data,
+            vendedor: req.user.id //para que zod no me saque el vendedor
+        };
+
+        const nuevoProducto = await this.productoService.crearProducto(validProductData);
+        res.status(201).json({message : "producto creado exitosamente", producto: nuevoProducto});
+    }
+
 }
 
 const paginationSchema = z.object({
@@ -56,6 +77,40 @@ const objectIdArraySchema = z.union([
     objectIdSchema,
     z.array(objectIdSchema)
 ]).transform(val => (Array.isArray(val) ? val : [val]));
+
+const monedaSchema = z.enum(["PESO_ARG", "DOLAR_USA", "REAL"]);
+
+const categoriaInputSchema = z.object({
+    _id: objectIdSchema,
+    nombre: z.string().min(1, "El nombre de la categoría es obligatorio")
+});
+
+export const createProductoSchema = z.object({
+    titulo: z.string().min(3, "El título debe tener al menos 3 caracteres").max(100, "El título es muy largo"),
+    descripcion: z.string().min(10, "La descripción debe ser más detallada"),
+    categorias: z.array(categoriaInputSchema).min(1, "Debes asignar al menos una categoría"),
+    precio: z.number().positive("El precio debe ser mayor a 0"),
+    moneda: monedaSchema,
+    stock: z.number()
+        .int("El stock debe ser un número entero")
+        .min(0, "El stock no puede ser negativo"),
+    fotos: z.array(z.string().url("Debe ser una URL válida")).optional().default([]),    
+    activo: z.boolean().optional().default(true),
+});
+
+export const productoEntitySchema = z.object({
+    _id: objectIdSchema,
+    vendedor: objectIdSchema,
+    titulo: z.string(),
+    descripcion: z.string(),
+    categorias: z.array(categoriaInputSchema),
+    precio: z.number(),
+    moneda: monedaSchema,
+    stock: z.number(),
+    fotos: z.array(z.string()),
+    activo: z.boolean(),
+    cantidadVendida: z.number().default(0)
+});
 
 const filterSchema = z.object({
     vendedor: objectIdSchema.optional(),

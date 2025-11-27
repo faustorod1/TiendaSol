@@ -6,6 +6,28 @@ export class ProductoRepository {
         this.model = ProductoModel;
     }
 
+    async save(producto) {
+        const productoParaGuardar = {
+            vendedor: producto.vendedor,
+            titulo: producto.titulo,
+            descripcion: producto.descripcion,
+            categorias: producto.categorias,
+            precio: producto.precio,
+            moneda: producto.moneda,
+            stock: producto.stock,
+            fotos: producto.fotos,
+            activo: producto.activo,
+            cantidadVendida: producto.cantidadVendida || 0
+        };
+
+        const nuevoProductoModel = new this.model(productoParaGuardar);
+        const productoGuardado = await nuevoProductoModel.save();
+
+        producto._id = productoGuardado._id;
+        
+        return producto;
+    }
+
     async findByPage(nroPagina, elemsXPagina, filtros) {
         const filtrosValidos = this._buildFilters(filtros);
         const sort = this._buildSort(filtros);

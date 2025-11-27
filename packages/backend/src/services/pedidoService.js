@@ -5,7 +5,6 @@ import { TipoUsuario } from "../models/entities/tipoUsuario.js";
 import { PedidoDoesNotExistError } from "../errors/PedidoDoesNotExistError.js";
 import { ForbiddenError } from "../errors/ForbiddenError.js";
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js";
-import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 
 export class PedidoService {
     constructor(pedidoRepository, productoRepository, usuarioRepository) {
