@@ -37,8 +37,9 @@ const Breadcrumbs = () => {
       // Encontrar todos los IDs de productos en la ruta
       currentPathnames.forEach((pathname, index) => {
         const prevPathname = currentPathnames[index - 1];
-        if (prevPathname === 'productos' || prevPathname === 'misProductos') {
-          productIds.push(pathname);
+        if (prevPathname === 'productos' || 
+            (prevPathname === 'misProductos' && pathname !== 'crear-producto')) {
+            productIds.push(pathname);
         }
       });
 
@@ -85,12 +86,13 @@ const Breadcrumbs = () => {
   const getDisplayName = (pathname, index) => {
     const prevPathname = pathnames[index - 1];
     
-    if (prevPathname === 'productos' || prevPathname === 'misProductos') {
-      if (loadingTitles && !productTitles[pathname]) {
-        return 'Cargando...';
-      }
-      const title = productTitles[pathname] || pathname;
-      return title;
+    if (prevPathname === 'productos' || 
+        (prevPathname === 'misProductos' && pathname !== 'crear-producto')) {
+        if (loadingTitles && !productTitles[pathname]) {
+            return 'Cargando...';
+        }
+        const title = productTitles[pathname] || pathname;
+        return title;
     }
     
     return routeNames[pathname] || pathname;

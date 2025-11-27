@@ -173,7 +173,7 @@ export function validateProductData(productData) {
   }
   
   // Validar moneda (obligatorio)
-  const monedasValidas = ['PESO_ARG', 'USD', 'EUR'];
+  const monedasValidas = ['PESO_ARG', 'DOLAR_USA', 'REAL'];
   if (!productData.moneda || !monedasValidas.includes(productData.moneda)) {
     errors.push('La moneda debe ser una de: ' + monedasValidas.join(', '));
   }
@@ -196,7 +196,7 @@ export function validateProductData(productData) {
     }
   }
   
-  // Validar categorías (obligatorio)
+  // Validar categorías (obligatorio, pero sin límite de cantidad)
   if (!productData.categorias || !Array.isArray(productData.categorias) || productData.categorias.length === 0) {
     errors.push('Debe seleccionar al menos una categoría');
   } else {

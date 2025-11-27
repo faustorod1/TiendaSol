@@ -13,6 +13,7 @@ import AccountInfo from './components/Account/AccountInfo';
 import AllNotifications from './components/Notifications/AllNotifications';
 import AllOrders from './components/Pedidos/AllOrders';
 import MyProducts from './components/MyProducts/MyProducts';
+import CreateProduct from './components/CreateProduct/CreateProduct'
 import OrderDetailPage from './components/Pedidos/OrderDetailPage';
 import CancelOrder from './components/Pedidos/CancelOrder';
 import SignIn from './components/SignIn/SignIn';
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/" element={<Landing />} />
 
                 <Route path="/productos/:id" element={<ProductDetailPage />} />
+                <Route path="/misProductos/crear-producto" element={<CreateProduct />} />
                 <Route path="/misProductos/:id" element={<ProductDetailPage />} />
 
                 <Route 
