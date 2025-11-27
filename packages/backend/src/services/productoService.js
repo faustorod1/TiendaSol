@@ -1,10 +1,10 @@
 import { ProductoDoesNotExistError } from "../errors/ProductoDoesNotExistError.js";
 import { Producto } from "../models/entities/producto.js";
-import { ProductoRepository } from "../models/repositories/productoRepository.js";
 
 export class ProductoService {
-    constructor(productoRepository) {
+    constructor(productoRepository, usuarioRepository) {
         this.productoRepository = productoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     async buscarTodos(page, limit, filtros) {
@@ -20,5 +20,15 @@ export class ProductoService {
             throw new ProductoDoesNotExistError(id);
         }
         return producto;
+    }
+
+    async crearProducto(datosProducto) {
+        const vendedor = await this.usuarioRepository.findById(datosProducto.vendedor);
+        if (!vendedor) {
+            throw new Error("Vendedor no encontrado");
+        }
+
+        const nuevoProducto = new Producto(datosProducto);
+        return await this.productoRepository.save(nuevoProducto);
     }
 }

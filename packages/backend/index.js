@@ -54,7 +54,7 @@ const pedidoRepository = new PedidoRepository();
 const categoriaRepository = new CategoriaRepository();
 
 const usuarioService = new UsuarioService(usuarioRepository, notificacionRepository);
-const productoService = new ProductoService(productoRepository);
+const productoService = new ProductoService(productoRepository, usuarioRepository);
 const pedidoService = new PedidoService(pedidoRepository, productoRepository, usuarioRepository);
 const categoriaService = new CategoriaService(categoriaRepository);
 
