@@ -4,8 +4,6 @@ const API_URL = 'http://localhost:8000/pedidos';
 
 export async function createOrder(orderData) {
   try {
-    console.log('📤 pedidoService: Enviando petición a:', `${API_URL}`);
-    
     const userString = localStorage.getItem('user');
     let userId = null;
     
