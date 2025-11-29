@@ -623,7 +623,6 @@ const OrderDetailPage = () => {
                 onClick={() => handleChangeStatus('CONFIRMADO')}
                 disabled={!canChangeToStatus('CONFIRMADO')}
               >
-                <span className="status-icon">✓</span>
                 <span className="status-text">Confirmado</span>
               </button>
               
@@ -637,7 +636,6 @@ const OrderDetailPage = () => {
                 onClick={() => handleChangeStatus('EN_PREPARACION')}
                 disabled={!canChangeToStatus('EN_PREPARACION')}
               >
-                <span className="status-icon">📦</span>
                 <span className="status-text">En Preparación</span>
               </button>
               
@@ -651,7 +649,6 @@ const OrderDetailPage = () => {
                 onClick={() => handleChangeStatus('ENVIADO')}
                 disabled={!canChangeToStatus('ENVIADO')}
               >
-                <span className="status-icon">🚚</span>
                 <span className="status-text">Enviado</span>
               </button>
               
@@ -665,7 +662,6 @@ const OrderDetailPage = () => {
                 onClick={() => handleChangeStatus('ENTREGADO')}
                 disabled={!canChangeToStatus('ENTREGADO')}
               >
-                <span className="status-icon">🏠</span>
                 <span className="status-text">Entregado</span>
               </button>
             </div>
