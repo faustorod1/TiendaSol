@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getOrderById } from '../../service/pedidoService';
+import { changeOrderStatus } from '../../service/pedidoService.js';
 import { fetchProductById } from '../../service/productoService.js';
 import { getUserProfile } from '../../service/usuarioService.js';
 import './OrderDetailPage.css';
@@ -234,6 +235,95 @@ const OrderDetailPage = () => {
 
     loadProducts();
   }, [order]);
+
+  const getStatusOrder = () => {
+    return ['PENDIENTE', 'CONFIRMADO', 'EN_PREPARACION', 'ENVIADO', 'ENTREGADO'];
+  };
+
+  const normalizeStatus = (status) => {
+    if (!status) return 'PENDIENTE';
+    const statusUpper = status.toUpperCase();
+    
+    const statusMap = {
+      'PENDING': 'PENDIENTE',
+      'CONFIRMED': 'CONFIRMADO', 
+      'PREPARING': 'EN_PREPARACION',
+      'SHIPPED': 'ENVIADO',
+      'DELIVERED': 'ENTREGADO',
+      'CANCELLED': 'CANCELADO'
+    };
+    
+    return statusMap[statusUpper] || statusUpper;
+  };
+
+  const getCurrentStatusIndex = () => {
+    const currentStatus = normalizeStatus(order.estado);
+    const statusOrder = getStatusOrder();
+    const index = statusOrder.findIndex(status => status === currentStatus);
+    return index === -1 ? 0 : index;
+  };
+
+  const canChangeToStatus = (targetStatus) => {
+    const statusOrder = getStatusOrder();
+    const currentIndex = getCurrentStatusIndex();
+    const targetIndex = statusOrder.findIndex(status => status === targetStatus);
+    
+    return targetIndex === currentIndex + 1;
+  };
+
+  const isStatusCompleted = (targetStatus) => {
+    const statusOrder = getStatusOrder();
+    const currentIndex = getCurrentStatusIndex();
+    const targetIndex = statusOrder.findIndex(status => status === targetStatus);
+    
+    return targetIndex <= currentIndex;
+  };
+
+  const handleChangeStatus = async (newStatus) => {
+    if (!canChangeToStatus(newStatus)) {
+      console.warn('No se puede cambiar a este estado:', newStatus);
+      return;
+    }
+
+    const confirmMessage = `¿Estás seguro de que quieres cambiar el estado a "${getStatusText(newStatus)}"? Esta acción no se puede deshacer.`;
+    
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      const orderId = order._id || order.id;
+
+      if (!orderId) {
+        console.error('No se encontró ID del pedido');
+        alert('Error: No se pudo identificar el pedido');
+        return;
+      }
+
+      const result = await changeOrderStatus(orderId, newStatus);
+
+      if (result && result.success) {
+        setOrder(prevOrder => ({
+          ...prevOrder,
+          estado: newStatus
+        }));
+        
+        alert(`Estado cambiado exitosamente a "${getStatusText(newStatus)}"`);
+        
+      } else {
+        console.error('Error al cambiar estado:', result);
+        alert(`Error al cambiar el estado: ${result?.error || result?.message || 'Error desconocido'}`);
+      }
+    } catch (error) {
+      console.error('Error inesperado al cambiar estado:', error);
+      console.error('Stack trace:', error.stack);
+      alert('Error inesperado al cambiar el estado del pedido');
+    }
+  };
+
+  const canChangeStatus = () => {
+    return tipoUsuario === 'VENDEDOR' && (order.estado !== 'ENTREGADO' && order.estado !== 'CANCELADO');
+  };
 
   useEffect(() => {
     const userType = localStorage.getItem('userType');
@@ -521,7 +611,71 @@ const OrderDetailPage = () => {
           </div>
         )}
 
-        {/* Botón de cancelación */}
+        {canChangeStatus() && (
+          <div className="change-status-section">
+            <h3>Cambiar Estado del Pedido</h3>
+            <div className="status-buttons-container">
+              <button
+                className={`status-button ${
+                  isStatusCompleted('CONFIRMADO') ? 'completed' : 
+                  canChangeToStatus('CONFIRMADO') ? 'available' : 'disabled'
+                }`}
+                onClick={() => handleChangeStatus('CONFIRMADO')}
+                disabled={!canChangeToStatus('CONFIRMADO')}
+              >
+                <span className="status-icon">✓</span>
+                <span className="status-text">Confirmado</span>
+              </button>
+              
+              <div className="status-arrow">→</div>
+              
+              <button
+                className={`status-button ${
+                  isStatusCompleted('EN_PREPARACION') ? 'completed' : 
+                  canChangeToStatus('EN_PREPARACION') ? 'available' : 'disabled'
+                }`}
+                onClick={() => handleChangeStatus('EN_PREPARACION')}
+                disabled={!canChangeToStatus('EN_PREPARACION')}
+              >
+                <span className="status-icon">📦</span>
+                <span className="status-text">En Preparación</span>
+              </button>
+              
+              <div className="status-arrow">→</div>
+              
+              <button
+                className={`status-button ${
+                  isStatusCompleted('ENVIADO') ? 'completed' : 
+                  canChangeToStatus('ENVIADO') ? 'available' : 'disabled'
+                }`}
+                onClick={() => handleChangeStatus('ENVIADO')}
+                disabled={!canChangeToStatus('ENVIADO')}
+              >
+                <span className="status-icon">🚚</span>
+                <span className="status-text">Enviado</span>
+              </button>
+              
+              <div className="status-arrow">→</div>
+              
+              <button
+                className={`status-button ${
+                  isStatusCompleted('ENTREGADO') ? 'completed' : 
+                  canChangeToStatus('ENTREGADO') ? 'available' : 'disabled'
+                }`}
+                onClick={() => handleChangeStatus('ENTREGADO')}
+                disabled={!canChangeToStatus('ENTREGADO')}
+              >
+                <span className="status-icon">🏠</span>
+                <span className="status-text">Entregado</span>
+              </button>
+            </div>
+            
+            <p className="status-help-text">
+              Solo puedes avanzar al siguiente estado. Una vez cambiado, no podrás retroceder.
+            </p>
+          </div>
+        )}
+
         {canCancelOrder() && (
           <div className="cancel-order-section">
             <button onClick={handleCancelOrder} className="cancel-order-button">
@@ -533,7 +687,6 @@ const OrderDetailPage = () => {
           </div>
         )}
 
-        {/* Lista de items */}
         <div className="order-items-section">
           <h3>Productos del Pedido</h3>
           

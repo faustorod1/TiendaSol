@@ -443,3 +443,176 @@
     padding: 1rem;
   }
 }
+
+/* Sección de cambio de estado */
+.change-status-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  border: 1px solid #e9ecef;
+}
+
+.change-status-section h3 {
+  margin: 0 0 20px 0;
+  color: #2d3748;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Container de botones de estado */
+.status-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* Botones de estado */
+.status-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  font-family: inherit;
+  flex: 1;
+  max-width: 150px;
+}
+
+/* Estados de los botones */
+.status-button.available {
+  border-color: #4285f4;
+  color: #4285f4;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+}
+
+.status-button.available:hover {
+  background: #f0f7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(66, 133, 244, 0.3);
+}
+
+.status-button.completed {
+  border-color: #34a853;
+  background: #34a853;
+  color: white;
+  cursor: default;
+}
+
+.status-button.disabled {
+  border-color: #e0e0e0;
+  background: #f5f5f5;
+  color: #9e9e9e;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.status-button:disabled {
+  cursor: not-allowed;
+}
+
+.status-button.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Iconos y texto de los botones */
+.status-icon {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.status-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Flechas entre botones */
+.status-arrow {
+  font-size: 1.2rem;
+  color: #9e9e9e;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Texto de ayuda */
+.status-help-text {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .status-buttons-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .status-button {
+    max-width: none;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+  
+  .status-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    margin-right: 8px;
+  }
+  
+  .status-arrow {
+    transform: rotate(90deg);
+    font-size: 1rem;
+  }
+  
+  .change-status-section {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-buttons-container {
+    gap: 8px;
+  }
+  
+  .status-button {
+    padding: 10px 12px;
+    min-width: auto;
+  }
+  
+  .status-text {
+    font-size: 0.8rem;
+  }
+  
+  .status-icon {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes statusChanged {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.status-button.completed {
+  animation: statusChanged 0.6s ease-out;
+}

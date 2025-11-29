@@ -83,7 +83,10 @@ export class PedidoService {
                 await this.usuarioRepository.dispatchNotifications(pedido.vendedor);
                 
                 break;
+            case EstadoPedido.CONFIRMADO:
+            case EstadoPedido.EN_PREPARACION:
             case EstadoPedido.ENVIADO:
+            case EstadoPedido.ENTREGADO:
                 if (pedido.vendedor.id !== usuarioId) {
                     throw new ForbiddenError("Solo el vendedor puede marcar el pedido como enviado");
                 }
