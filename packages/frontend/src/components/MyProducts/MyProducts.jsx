@@ -20,6 +20,7 @@ const MyProducts = () => {
     
     const [searchParams, setSearchParams] = useSearchParams();
     const [editingStock, setEditingStock] = useState({});
+    const [tempStock, setTempStock] = useState({});
 
     const PRODUCTS_PER_PAGE = 12;
 
@@ -101,12 +102,26 @@ const MyProducts = () => {
     };
 
     const handleEditStock = (productId, currentStock) => {
-        const newStock = prompt(
-            `Ingresa el nuevo stock para este producto:\n(Stock actual: ${currentStock})`,
-            currentStock
-        );
+        setEditingStock(prev => ({ ...prev, [productId]: true }));
+        setTempStock(prev => ({ ...prev, [productId]: currentStock }));
+    };
+
+    const handleCancelEdit = (productId) => {
+        setEditingStock(prev => ({ ...prev, [productId]: false }));
+        setTempStock(prev => {
+            const newState = { ...prev };
+            delete newState[productId];
+            return newState;
+        });
+    };
+
+    const handleSaveStock = async (productId) => {
+        const newStock = tempStock[productId];
         
-        if (newStock === null) return; // Usuario canceló
+        if (newStock === undefined || newStock === null) {
+            alert('Por favor ingresa un valor válido');
+            return;
+        }
         
         const parsedStock = parseInt(newStock);
         
@@ -115,17 +130,25 @@ const MyProducts = () => {
             return;
         }
         
-        updateProductStock(productId, parsedStock);
+        await updateProductStock(productId, parsedStock);
+        
+        setEditingStock(prev => ({ ...prev, [productId]: false }));
+        setTempStock(prev => {
+            const newState = { ...prev };
+            delete newState[productId];
+            return newState;
+        });
+    };
+
+    const handleStockInputChange = (productId, value) => {
+        setTempStock(prev => ({ ...prev, [productId]: value }));
     };
 
     const updateProductStock = async (productId, newStock) => {
         try {
-            setEditingStock(prev => ({ ...prev, [productId]: true }));
-            
             const result = await updateStock(productId, newStock);
             
             if (result.success) {
-                // ✅ Actualizar el producto en la lista local
                 setProductos(prevProductos => 
                     prevProductos.map(producto => 
                         (producto._id || producto.id) === productId 
@@ -134,15 +157,13 @@ const MyProducts = () => {
                     )
                 );
                 
-                alert('Stock actualizado correctamente');
+                console.log('✅ Stock actualizado correctamente');
             } else {
                 alert(`Error al actualizar stock: ${result.error}`);
             }
         } catch (error) {
             console.error('Error inesperado:', error);
             alert('Error inesperado al actualizar el stock');
-        } finally {
-            setEditingStock(prev => ({ ...prev, [productId]: false }));
         }
     };
 
@@ -212,17 +233,63 @@ const MyProducts = () => {
                                         Unidades vendidas: {producto.cantidadVendida || 0}
                                     </span>
                                     
-                                    {/* ✅ NUEVO: Sección para editar stock */}
                                     <div className="stock-management">
-                                        <span className="current-stock">
-                                            Stock actual: {producto.stock}
-                                        </span>
-                                        <button 
-                                            className="edit-stock-button"
-                                            onClick={() => handleEditStock(producto._id || producto.id, producto.stock)}
-                                        >
-                                            ✏️ Editar
-                                        </button>
+                                        {editingStock[producto._id || producto.id] ? (
+                                            <div className="stock-edit-inline">
+                                                <label className="stock-edit-label">Nuevo stock:</label>
+                                                <div className="stock-edit-controls">
+                                                    <input
+                                                        type="number"
+                                                        className="stock-edit-input"
+                                                        value={tempStock[producto._id || producto.id] || ''}
+                                                        onChange={(e) => handleStockInputChange(producto._id || producto.id, e.target.value)}
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                handleSaveStock(producto._id || producto.id);
+                                                            } else if (e.key === 'Escape') {
+                                                                handleCancelEdit(producto._id || producto.id);
+                                                            }
+                                                        }}
+                                                        min="0"
+                                                        step="1"
+                                                        autoFocus
+                                                        placeholder="0"
+                                                    />
+                                                    <div className="stock-edit-buttons">
+                                                        <button 
+                                                            className="stock-save-button"
+                                                            onClick={() => handleSaveStock(producto._id || producto.id)}
+                                                            title="Guardar (Enter)"
+                                                        >
+                                                            ✓
+                                                        </button>
+                                                        <button 
+                                                            className="stock-cancel-button"
+                                                            onClick={() => handleCancelEdit(producto._id || producto.id)}
+                                                            title="Cancelar (Escape)"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <span className={`current-stock ${
+                                                    producto.stock === 0 ? 'out-of-stock' : 
+                                                    producto.stock < 5 ? 'low-stock' : ''
+                                                }`}>
+                                                    Stock: {producto.stock === 0 ? 'Agotado' : producto.stock}
+                                                </span>
+                                                <button 
+                                                    className="edit-stock-button"
+                                                    onClick={() => handleEditStock(producto._id || producto.id, producto.stock)}
+                                                    title="Editar stock"
+                                                >
+                                                    Editar
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>

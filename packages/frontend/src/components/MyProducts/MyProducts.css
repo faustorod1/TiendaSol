@@ -228,7 +228,6 @@
     background: #e9ecef;
 }
 
-/* ✅ NUEVO: Estilos para gestión de stock */
 .stock-management {
     display: flex;
     justify-content: space-between;
@@ -237,6 +236,7 @@
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid #e9ecef;
+    min-height: 40px;
 }
 
 .current-stock {
@@ -248,16 +248,21 @@
     gap: 4px;
 }
 
-.current-stock::before {
-    content: "📦";
-    font-size: 0.8rem;
+.current-stock.low-stock {
+    color: #fd7e14;
+    font-weight: 600;
+}
+
+.current-stock.out-of-stock {
+    color: #dc3545;
+    font-weight: 600;
 }
 
 .edit-stock-button {
-    background: #007bff;
+    background: var(--dark-purple);
     color: white;
     border: none;
-    padding: 4px 8px;
+    padding: 6px 10px;
     border-radius: 4px;
     font-size: 0.8rem;
     cursor: pointer;
@@ -265,27 +270,113 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    white-space: nowrap;
 }
 
 .edit-stock-button:hover {
-    background: #0056b3;
+    background: var(--dark-purple-hover);
     transform: translateY(-1px);
 }
 
-.edit-stock-button:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-    transform: none;
+.stock-edit-inline {
+    width: 100%;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
 }
 
-/* Stock con colores condicionales */
-.current-stock.low-stock {
-    color: #dc3545;
-}
-
-.current-stock.out-of-stock {
-    color: #dc3545;
+.stock-edit-label {
+    font-size: 0.8rem;
+    color: #495057;
     font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.stock-edit-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.stock-edit-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.stock-edit-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.stock-edit-input:invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+.stock-edit-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.stock-save-button,
+.stock-cancel-button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.stock-save-button {
+    background: var(--pistacho);
+    color: white;
+}
+
+.stock-save-button:hover {
+    background: var(--pistacho-hover);
+}
+
+.stock-cancel-button {
+    background: #dc3545;
+    color: white;
+}
+
+.stock-cancel-button:hover {
+    background: #c82333;
+}
+
+.stock-edit-help {
+    font-size: 0.7rem;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 4px;
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */
@@ -353,6 +444,30 @@
         font-size: 0.75rem;
         padding: 3px 6px;
     }
+
+    .stock-edit-controls {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .stock-edit-input {
+        text-align: left;
+    }
+    
+    .stock-edit-buttons {
+        align-self: flex-end;
+    }
+    
+    .stock-management {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        min-height: auto;
+    }
+    
+    .stock-edit-inline {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -373,6 +488,18 @@
     font-size: 0.85rem;
     min-width: 100px;
   }
+  
+  .stock-save-button,
+  .stock-cancel-button {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+    
+    .stock-edit-input {
+        font-size: 0.85rem;
+        padding: 4px 6px;
+    }
 }
 
 @keyframes fadeInUp {
