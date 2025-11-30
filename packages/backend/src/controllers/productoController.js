@@ -57,6 +57,37 @@ export class ProductoController {
         res.status(201).json({message : "producto creado exitosamente", producto: nuevoProducto});
     }
 
+    async actualizarStock(req, res) {
+        const idResult = objectIdSchema.safeParse(req.params.id);
+        if (!idResult.success) {
+            return res.status(400).json({
+                error: "ID de producto inválido",
+                details: idResult.error.issues
+            });
+        }
+        const productoId = idResult.data;
+
+        const stockResult = updateStockSchema.safeParse(req.body);
+        if (!stockResult.success) {
+            return res.status(400).json({
+                error: "Datos de stock inválidos",
+                details: stockResult.error.issues
+            });
+        }
+        const { stock } = stockResult.data;
+
+        const productoActualizado = await this.productoService.actualizarStock(
+            productoId, 
+            stock, 
+            req.user.id
+        );
+
+        res.status(200).json({
+            message: "Stock actualizado exitosamente",
+            producto: productoActualizado
+        });
+    }
+
 }
 
 const paginationSchema = z.object({
@@ -140,3 +171,10 @@ const filterSchema = z.object({
         path: ["precioMax"]
     }
 );
+
+const updateStockSchema = z.object({
+    stock: z.number()
+        .int("El stock debe ser un número entero")
+        .min(0, "El stock no puede ser negativo")
+        .describe("Nuevo stock del producto")
+});

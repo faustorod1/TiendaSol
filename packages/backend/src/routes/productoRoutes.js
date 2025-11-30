@@ -37,6 +37,14 @@ export default function productoRoutes(getController) {
         }
     });
 
+    router.patch(`${pathProducto}/:id/stock`, authMiddleware ,vendedorErrorHandler,  async (req, res, next) => {
+        try {
+            await controller.actualizarStock(req, res);
+        } catch (error) {
+            next(error);
+        }
+    });
+
     router.use(productoErrorHandler);
 
     return router;

@@ -145,6 +145,51 @@ export async function createProduct(productData) {
   }
 }
 
+export async function updateStock(productId, nuevoStock) {
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return {
+        success: false,
+        error: 'Usuario no autenticado'
+      };
+    }
+
+    const response = await axios.patch(
+      `${API_URL}/${productId}/stock`,
+      { stock: parseInt(nuevoStock) },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    return {
+      success: true,
+      data: response.data.producto,
+      message: response.data.message
+    };
+
+  } catch (error) {
+    console.error('Error al actualizar stock:', error);
+    
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken');
+      return {
+        success: false,
+        error: 'Token expirado. Por favor, inicia sesión nuevamente.'
+      };
+    }
+    
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Error al actualizar el stock'
+    };
+  }
+}
+
 /**
  * Función para validar los datos del producto según la estructura esperada
  * @param {Object} productData Los datos del producto a validar

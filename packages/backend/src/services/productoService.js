@@ -31,4 +31,26 @@ export class ProductoService {
         const nuevoProducto = new Producto(datosProducto);
         return await this.productoRepository.save(nuevoProducto);
     }
+
+    async actualizarStock(productoId, nuevoStock, vendedorId) {
+        const producto = await this.productoRepository.findById(productoId);
+        if (!producto) {
+            const error = new Error(`Producto con ID ${productoId} no encontrado`);
+            error.name = 'ProductoNotFoundError';
+            throw error;
+        }
+
+        if (producto.vendedor.toString() !== vendedorId.toString()) {
+            const error = new Error('No tienes permisos para actualizar este producto');
+            error.name = 'UnauthorizedError';
+            throw error;
+        }
+
+        const productoActualizado = await this.productoRepository.actualizarStock(
+            productoId, 
+            nuevoStock
+        );
+
+        return productoActualizado;
+    }
 }

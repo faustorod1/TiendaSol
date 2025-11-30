@@ -228,6 +228,66 @@
     background: #e9ecef;
 }
 
+/* ✅ NUEVO: Estilos para gestión de stock */
+.stock-management {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e9ecef;
+}
+
+.current-stock {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.current-stock::before {
+    content: "📦";
+    font-size: 0.8rem;
+}
+
+.edit-stock-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.edit-stock-button:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.edit-stock-button:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Stock con colores condicionales */
+.current-stock.low-stock {
+    color: #dc3545;
+}
+
+.current-stock.out-of-stock {
+    color: #dc3545;
+    font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .my-products-container {
@@ -280,6 +340,18 @@
     
     .sales-count {
         font-size: 0.85rem;
+    }
+
+    .stock-management {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .edit-stock-button {
+        align-self: flex-end;
+        font-size: 0.75rem;
+        padding: 3px 6px;
     }
 }
 

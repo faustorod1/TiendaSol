@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { fetchProducts } from '../../service/productoService';
+import { updateStock } from '../../service/productoService';
 import ProductCard from '../AllProducts/ProductCard';
 import './MyProducts.css';
 
@@ -18,6 +19,7 @@ const MyProducts = () => {
     const [currentPage, setCurrentPage] = useState(1);
     
     const [searchParams, setSearchParams] = useSearchParams();
+    const [editingStock, setEditingStock] = useState({});
 
     const PRODUCTS_PER_PAGE = 12;
 
@@ -98,6 +100,52 @@ const MyProducts = () => {
         setSearchParams(newSearchParams);
     };
 
+    const handleEditStock = (productId, currentStock) => {
+        const newStock = prompt(
+            `Ingresa el nuevo stock para este producto:\n(Stock actual: ${currentStock})`,
+            currentStock
+        );
+        
+        if (newStock === null) return; // Usuario canceló
+        
+        const parsedStock = parseInt(newStock);
+        
+        if (isNaN(parsedStock) || parsedStock < 0) {
+            alert('Por favor ingresa un número válido mayor o igual a 0');
+            return;
+        }
+        
+        updateProductStock(productId, parsedStock);
+    };
+
+    const updateProductStock = async (productId, newStock) => {
+        try {
+            setEditingStock(prev => ({ ...prev, [productId]: true }));
+            
+            const result = await updateStock(productId, newStock);
+            
+            if (result.success) {
+                // ✅ Actualizar el producto en la lista local
+                setProductos(prevProductos => 
+                    prevProductos.map(producto => 
+                        (producto._id || producto.id) === productId 
+                            ? { ...producto, stock: newStock }
+                            : producto
+                    )
+                );
+                
+                alert('Stock actualizado correctamente');
+            } else {
+                alert(`Error al actualizar stock: ${result.error}`);
+            }
+        } catch (error) {
+            console.error('Error inesperado:', error);
+            alert('Error inesperado al actualizar el stock');
+        } finally {
+            setEditingStock(prev => ({ ...prev, [productId]: false }));
+        }
+    };
+
     if (loading) {
         return (
             <div className="my-products-container">
@@ -163,6 +211,19 @@ const MyProducts = () => {
                                     <span className="sales-count">
                                         Unidades vendidas: {producto.cantidadVendida || 0}
                                     </span>
+                                    
+                                    {/* ✅ NUEVO: Sección para editar stock */}
+                                    <div className="stock-management">
+                                        <span className="current-stock">
+                                            Stock actual: {producto.stock}
+                                        </span>
+                                        <button 
+                                            className="edit-stock-button"
+                                            onClick={() => handleEditStock(producto._id || producto.id, producto.stock)}
+                                        >
+                                            ✏️ Editar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

@@ -107,6 +107,26 @@ export class ProductoRepository {
         return await this.model.bulkWrite(operaciones);
     }
 
+    async actualizarStock(productoId, nuevoStock) {
+        const resultado = await this.model.findOneAndUpdate(
+            { _id: productoId },
+            { 
+                $set: { 
+                    stock: nuevoStock
+                }
+            },
+            { 
+                returnDocument: 'after'
+            }
+        );
+
+        if (!resultado) {
+            throw new Error(`No se pudo actualizar el producto con ID ${productoId}`);
+        }
+
+        return resultado.value;
+    }
+
 
 
     // Métodos privados
