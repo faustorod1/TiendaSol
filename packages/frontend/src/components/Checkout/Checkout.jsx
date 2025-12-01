@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createOrder } from '../../service/pedidoService';
 import Cart from '../mainPage/Cart';
+import { useCartContext } from '../../contexts/CartContext';
 import './Checkout.css';
 
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { limpiarCarrito } = useCartContext();
   const items = location.state?.items ?? [];
 
   useEffect(() => {
@@ -93,22 +95,14 @@ const Checkout = () => {
       console.log('Datos del pedido formateados:', orderData);
 
       const result = await createOrder(orderData);
+      const pedidoId = result.pedidoId || result.data?._id;
 
       if (result.success) {
-        console.log('Pedido creado exitosamente:', result.data);
-        alert(`¡Pedido creado con éxito! 
-        ID del pedido: ${result.pedidoId || result.data?._id}
-        Total: $${total.toFixed(2)}
-        Moneda: ${currency}`);
+        limpiarCarrito();
         
-        // clearCart();
-        
-        navigate('/', { 
+        navigate(`/account/pedidos/${pedidoId}`, { 
           replace: true,
-          state: { 
-            message: 'Pedido creado exitosamente',
-            pedidoId: result.pedidoId || result.data?._id 
-          }
+          state: { pedidoCreado: true }
         });
       } else {
         console.error('Error al crear pedido:', result.error);

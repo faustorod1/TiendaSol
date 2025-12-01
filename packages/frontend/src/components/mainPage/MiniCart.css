@@ -26,9 +26,8 @@
     overflow: auto;
 }
 
-/* asegurar que el mini cart mantenga tamaño compacto a la derecha */
 .mini-cart-content {
-    width: 320px;
+    width: 370px;
     max-width: 50%;
     position: absolute;
     top: 5rem;
