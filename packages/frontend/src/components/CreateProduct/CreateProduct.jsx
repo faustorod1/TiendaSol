@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createProduct, formatProductData } from '../../service/productoService';
+import { createProduct } from '../../service/productoService';
 import { fetchCategorias } from '../../service/categoriaService';
 import './CreateProduct.css';
 
@@ -14,7 +14,7 @@ const CreateProduct = () => {
         moneda: 'PESO_ARG',
         stock: '',
         activo: true,
-        fotos: ['', '', ''], // Máximo 3 fotos
+        fotos: [null, null, null], // Máximo 3 fotos
         categorias: [] // Sin límite de categorías
     });
     
@@ -77,6 +77,15 @@ const CreateProduct = () => {
         });
     };
 
+    const handleFileChange = (index, e) => {
+        const file = e.target.files[0];
+        setFormData(prev => {
+            const newFotos = [...prev.fotos];
+            newFotos[index] = file || null;
+            return { ...prev, fotos: newFotos };
+        });
+    };
+
     const validateForm = () => {
         if (!formData.titulo.trim()) {
             setError('El título es obligatorio');
@@ -113,24 +122,34 @@ const CreateProduct = () => {
         setLoading(true);
 
         try {
-            const productData = formatProductData({
-                ...formData,
-                fotos: formData.fotos.filter(foto => foto.trim() !== '')
+
+            const data = new FormData();
+
+            data.append('titulo', formData.titulo.trim());
+            data.append('descripcion', formData.descripcion.trim());
+            data.append('precio', formData.precio);
+            data.append('moneda', formData.moneda);
+            data.append('stock', formData.stock);
+            data.append('activo', formData.activo);
+            data.append('categorias', JSON.stringify(formData.categorias));
+
+            formData.fotos.forEach((file) => {
+                if (file) {
+                    data.append('fotos', file); 
+                }
             });
 
-            const result = await createProduct(productData);
+            const result = await createProduct(data);
 
             if (result.success) {
                 setSuccess('¡Producto creado exitosamente!');
-                setTimeout(() => {
-                    navigate('/misProductos');
-                }, 2000);
+                setTimeout(() => { navigate('/misProductos'); }, 2000);
             } else {
                 setError(result.error || 'Error al crear el producto');
             }
-        } catch (err) {
-            console.error('Error inesperado:', err);
-            setError('Error inesperado al crear el producto');
+        } catch (error) {
+            console.error(error);
+            setError('Error inesperado');
         } finally {
             setLoading(false);
         }
@@ -289,12 +308,16 @@ const CreateProduct = () => {
                         <div key={index} className="foto-input-group">
                             <label htmlFor={`foto-${index}`}>Foto {index + 1}</label>
                             <input
-                                type="url"
-                                id={`foto-${index}`}
-                                value={foto}
-                                onChange={(e) => handleFotoChange(index, e.target.value)}
-                                placeholder="https://ejemplo.com/imagen.jpg"
+                                type="file"
+                                    id={`foto-${index}`}
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(index, e)}
                             />
+                            {foto && (
+                                    <small className="file-name">
+                                        Seleccionado: {foto.name}
+                                    </small>
+                            )}
                         </div>
                     ))}
                 </div>

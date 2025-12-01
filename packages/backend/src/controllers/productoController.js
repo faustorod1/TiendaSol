@@ -38,23 +38,45 @@ export class ProductoController {
     }
 
     async crearProducto(req, res) {
-        const productData = {
-            ...req.body,
-            vendedor: req.user.id
+        try{
+                let fotosUrls = [];
+                if (req.files && req.files.length > 0) {
+                    fotosUrls = req.files.map(file => file.path);
+                }
+
+                let categorias = req.body.categorias;
+                if (typeof categorias === 'string') {
+                try {
+                    categorias = JSON.parse(categorias);
+                } catch (e) {
+                    categorias = []; 
+                }
+            }
+            const productData = {
+                ...req.body,
+                precio: Number(req.body.precio), 
+                stock: Number(req.body.stock),
+                activo: req.body.activo === 'true' || req.body.activo === true, 
+                categorias: categorias,
+                fotos: fotosUrls,
+                vendedor: req.user.id
+            }
+
+            const productDataResult = createProductoSchema.safeParse(productData);
+            if (!productDataResult.success) {
+                return res.status(400).json(productDataResult.error.issues);
+            }
+
+            const validProductData = {
+                ...productDataResult.data,
+                vendedor: req.user.id //para que zod no me saque el vendedor
+            };
+
+            const nuevoProducto = await this.productoService.crearProducto(validProductData);
+            res.status(201).json({message : "producto creado exitosamente", producto: nuevoProducto});
+        }catch (error) {
+            res.status(500).json({ message: error.message });
         }
-
-        const productDataResult = createProductoSchema.safeParse(productData);
-        if (!productDataResult.success) {
-            return res.status(400).json(productDataResult.error.issues);
-        }
-
-        const validProductData = {
-            ...productDataResult.data,
-            vendedor: req.user.id //para que zod no me saque el vendedor
-        };
-
-        const nuevoProducto = await this.productoService.crearProducto(validProductData);
-        res.status(201).json({message : "producto creado exitosamente", producto: nuevoProducto});
     }
 
     async actualizarStock(req, res) {

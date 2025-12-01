@@ -4,6 +4,7 @@ import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
 import express from 'express';
 import { productoErrorHandler } from '../middlewares/productoMiddleware.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
+import { upload } from '../middlewares/uploadMiddleware.js';
 
 const pathProducto = "/productos";
 
@@ -29,7 +30,7 @@ export default function productoRoutes(getController) {
         }
     });
 
-    router.post(pathProducto, authMiddleware ,vendedorErrorHandler, async (req, res, next) => {
+    router.post(pathProducto, authMiddleware ,vendedorErrorHandler,upload.array('fotos', 3) , async (req, res, next) => {
         try {
             await controller.crearProducto(req, res);
         } catch (error) {

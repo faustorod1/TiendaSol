@@ -64,20 +64,21 @@ export async function createProduct(productData) {
       };
     }
 
-    const validation = validateProductData(productData);
-    if (!validation.isValid) {
-      return {
-        success: false,
-        error: validation.errors.join(', ')
-      };
+    const isFormData = productData instanceof FormData;
+    if (!isFormData) {
+        const validation = validateProductData(productData);
+        if (!validation.isValid) {
+          return { success: false, error: validation.errors.join(', ') };
+        }
     }
     
-    const response = await axios.post(`${API_URL}`, productData, {
-      headers: {
-        'Content-Type': 'application/json',
+    const headers = {
         'Authorization': `Bearer ${token}`
-      }
-    });
+    };
+    if (!isFormData) {
+        headers['Content-Type'] = 'application/json';
+    }
+    const response = await axios.post(`${API_URL}`, productData, { headers });
 
     if (response.data && response.data.success !== false) {
       return {
