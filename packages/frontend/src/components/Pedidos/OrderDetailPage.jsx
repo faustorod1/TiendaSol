@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getOrderById } from '../../service/pedidoService';
 import { changeOrderStatus } from '../../service/pedidoService.js';
 import { fetchProductById } from '../../service/productoService.js';
@@ -9,6 +9,7 @@ import './OrderDetailPage.css';
 const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [order, setOrder] = useState(null);
   const [tipoUsuario, setTipoUsuario] = useState(null);
   const [vendedor, setVendedor] = useState({});
@@ -17,6 +18,14 @@ const OrderDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [error, setError] = useState(null);
+  const [pedidoCreado, setPedidoCreado] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.pedidoCreado) {
+      setPedidoCreado(true);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   useEffect(() => {
     const loadOrder = async () => {
@@ -525,6 +534,9 @@ const OrderDetailPage = () => {
 
   return (
     <div className="order-detail-container">
+      {pedidoCreado && (
+        <div className='success-message'>Pedido creado con éxito!</div>
+      )}
       <div className="order-detail-header">
         <button onClick={handleGoBack} className="back-button">
           ← Volver

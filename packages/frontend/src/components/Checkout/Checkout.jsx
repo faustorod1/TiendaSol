@@ -95,22 +95,14 @@ const Checkout = () => {
       console.log('Datos del pedido formateados:', orderData);
 
       const result = await createOrder(orderData);
+      const pedidoId = result.pedidoId || result.data?._id;
 
       if (result.success) {
-        console.log('Pedido creado exitosamente:', result.data);
-        alert(`¡Pedido creado con éxito! 
-        ID del pedido: ${result.pedidoId || result.data?._id}
-        Total: $${total.toFixed(2)}
-        Moneda: ${currency}`);
-        
         limpiarCarrito();
         
-        navigate('/', { 
+        navigate(`/account/pedidos/${pedidoId}`, { 
           replace: true,
-          state: { 
-            message: 'Pedido creado exitosamente',
-            pedidoId: result.pedidoId || result.data?._id 
-          }
+          state: { pedidoCreado: true }
         });
       } else {
         console.error('Error al crear pedido:', result.error);
