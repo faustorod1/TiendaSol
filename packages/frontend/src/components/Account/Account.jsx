@@ -31,7 +31,6 @@ const Account = () => {
             apellido: '',
             email: 'email@ejemplo.com',
             telefono: '',
-            direccion: '',
             tipo: 'COMPRADOR'
           });
         }
@@ -42,7 +41,6 @@ const Account = () => {
           apellido: '',
           email: 'email@ejemplo.com',
           telefono: '',
-          direccion: '',
           tipo: 'COMPRADOR'
         });
       } finally {
@@ -83,14 +81,12 @@ const Account = () => {
               <span className="info-label">Email:</span>
               <span className="info-value">{userData.email}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Teléfono:</span>
-              <span className="info-value">{userData.telefono || 'No especificado'}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Dirección:</span>
-              <span className="info-value">{userData.direccion || 'No especificada'}</span>
-            </div>
+          </div>
+          <div className="user-type-grid">
+              <div className="info-item">
+                <span className="info-label">Teléfono:</span>
+                <span className="info-value">{userData.telefono || 'No especificado'}</span>
+              </div>
           </div>
           <div className="user-type-grid">
             <div className="info-item">

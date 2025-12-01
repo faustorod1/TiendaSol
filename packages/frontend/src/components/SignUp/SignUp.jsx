@@ -8,7 +8,6 @@ const SignUp = ({ user }) => {
     apellido: user?.apellido || '',
     telefono: user?.telefono || '',
     email: user?.email || '',
-    direccion: user?.direccion || '',
     password: '',
     confirmPassword: '',
     tipoUsuario: 'COMPRADOR'
@@ -127,7 +126,6 @@ const SignUp = ({ user }) => {
         nombre: formData.nombre,
         apellido: formData.apellido || undefined, // opcional
         email: formData.email,
-        direccion: formData.direccion || undefined, // opcional
         password: formData.password,
         telefono: formData.telefono || undefined, // opcional
         tipo: formData.tipoUsuario,
@@ -224,18 +222,6 @@ const SignUp = ({ user }) => {
                 required
               />
             </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>
-            <textarea
-              id="direccion"
-              name="direccion"
-              rows="3"
-              value={formData.direccion}
-              onChange={handleInputChange}
-              placeholder="Calle, número, ciudad, código postal"
-            />
           </div>
         </section>
 

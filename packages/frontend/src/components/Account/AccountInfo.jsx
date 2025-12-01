@@ -10,7 +10,6 @@ const AccountInfo = ({ user }) => {
     apellido: '',
     telefono: '',
     email: '',
-    direccion: '',
   });
 
   const [metodosPago, setMetodosPago] = useState([]);
@@ -29,7 +28,6 @@ const AccountInfo = ({ user }) => {
           apellido: userData.apellido || '',
           telefono: userData.telefono || '',
           email: userData.email || '',
-          direccion: userData.direccion || '',
         });
 
         setMetodosPago(userData.metodosPago || []);
@@ -42,7 +40,6 @@ const AccountInfo = ({ user }) => {
           apellido: user.apellido || '',
           telefono: user.telefono || '',
           email: user.email || '',
-          direccion: user.direccion || '',
         });
         setMetodosPago(user.metodosPago || []);
       }
@@ -111,7 +108,6 @@ const AccountInfo = ({ user }) => {
         apellido: formData.apellido.trim() || null,
         email: formData.email.trim(),
         telefono: formData.telefono.trim() || null,
-        // direccion y metodosPago podrían necesitar endpoints separados
       });
       
       if (result.success) {
@@ -122,7 +118,6 @@ const AccountInfo = ({ user }) => {
           ...currentUser,
           ...result.data,
           metodosPago: metodosPago,
-          direccion: formData.direccion
         };
         
         localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -212,19 +207,6 @@ const AccountInfo = ({ user }) => {
                 disabled={loading}
               />
             </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>
-            <textarea
-              id="direccion"
-              name="direccion"
-              rows="3"
-              value={formData.direccion}
-              onChange={handleInputChange}
-              placeholder="Calle, número, ciudad, código postal"
-              disabled={loading}
-            />
           </div>
         </section>
 
