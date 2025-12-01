@@ -64,6 +64,32 @@ const ProductDetailPage = (props) => {
     return tipoUsuario === 'COMPRADOR' || tipoUsuario === 'ADMIN' || !isAuthenticated();
   };
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = () => {
+    if (product.fotos && product.fotos.length > 1) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === product.fotos.length - 1 ? 0 : prevIndex + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (product.fotos && product.fotos.length > 1) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === 0 ? product.fotos.length - 1 : prevIndex - 1
+      );
+    }
+  };
+
+  const goToImage = (index) => {
+    setCurrentImageIndex(index);
+  };
+
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [product]);
+
   if (loading) {
     return (
       <div className="product-detail-container">
@@ -97,11 +123,40 @@ const ProductDetailPage = (props) => {
 
         <div className="product-content">
         <div className="product-image-section">
-            <img
-            src={product.fotos[0]}
-            alt={product.titulo}
-            className="product-imagen"
-            />
+          <div className="image-gallery">
+            <div className="main-image-container">
+              {product.fotos && product.fotos.length > 0 && (
+                <>
+                  <img
+                    src={product.fotos[currentImageIndex]}
+                    alt={`${product.titulo} - Imagen ${currentImageIndex + 1}`}
+                    className="product-imagen"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/400x300?text=Imagen+no+disponible';
+                    }}
+                  />    
+                  {product.fotos.length > 1 && (
+                    <>
+                      <button 
+                        className="image-nav-button prev-button"
+                        onClick={prevImage}
+                        aria-label="Imagen anterior"
+                      >
+                        ‹
+                      </button>
+                      <button 
+                        className="image-nav-button next-button"
+                        onClick={nextImage}
+                        aria-label="Siguiente imagen"
+                      >
+                        ›
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="product-info-section">

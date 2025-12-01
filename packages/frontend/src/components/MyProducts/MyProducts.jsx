@@ -156,8 +156,6 @@ const MyProducts = () => {
                             : producto
                     )
                 );
-                
-                console.log('✅ Stock actualizado correctamente');
             } else {
                 alert(`Error al actualizar stock: ${result.error}`);
             }
@@ -286,7 +284,7 @@ const MyProducts = () => {
                                                     onClick={() => handleEditStock(producto._id || producto.id, producto.stock)}
                                                     title="Editar stock"
                                                 >
-                                                    Editar
+                                                    Actualizar
                                                 </button>
                                             </>
                                         )}

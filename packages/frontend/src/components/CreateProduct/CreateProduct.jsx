@@ -68,7 +68,6 @@ const CreateProduct = () => {
                     categorias: prev.categorias.filter(cat => cat._id !== categoria._id)
                 };
             } else {
-                // Agregar categoría (sin límite)
                 return {
                     ...prev,
                     categorias: [...prev.categorias, categoria]
@@ -338,7 +337,7 @@ const CreateProduct = () => {
                     <button
                         type="button"
                         className="cancel-button"
-                        onClick={() => navigate('/mis-productos')}
+                        onClick={() => navigate('/misProductos')}
                         disabled={loading}
                     >
                         Cancelar
