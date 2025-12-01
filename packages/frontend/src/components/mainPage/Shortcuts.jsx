@@ -6,7 +6,7 @@ const Shortcuts = () => {
   const shortcutItems = [
     { id: 1, label: 'Iniciar Sesión', path: '/signin' },
     { id: 2, label: 'Registrarse', path: '/signup' },
-    { id: 3, label: 'Productos', path: '/products' },
+    { id: 3, label: 'Productos', path: '/productos' },
     //{ id: 4, label: 'Ingresar Direccion', path: '/account/manage' },
   ];
 

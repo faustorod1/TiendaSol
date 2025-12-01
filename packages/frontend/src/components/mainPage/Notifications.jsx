@@ -67,7 +67,7 @@ const Notifications = ({ isOpen, onClose, notifications = [], unreadCount = 0 })
                   {displayNotifications.map((notification) => (
                     <div
                       key={notification._id}
-                      className="notif-item"
+                      className={`notif-item ${notification.leida ? 'leida' : ''}`}
                       onClick={() => handleNotificationClick(notification._id)}
                     >
                       <div className="notif-item-content">

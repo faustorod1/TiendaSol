@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createOrder } from '../../service/pedidoService';
 import Cart from '../mainPage/Cart';
+import { useCartContext } from '../../contexts/CartContext';
 import './Checkout.css';
 
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { limpiarCarrito } = useCartContext();
   const items = location.state?.items ?? [];
 
   useEffect(() => {
@@ -101,7 +103,7 @@ const Checkout = () => {
         Total: $${total.toFixed(2)}
         Moneda: ${currency}`);
         
-        // clearCart();
+        limpiarCarrito();
         
         navigate('/', { 
           replace: true,
