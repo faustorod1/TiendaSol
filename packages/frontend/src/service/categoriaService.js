@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8000/categorias';
-
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = `${BASE_URL}/categorias`;
 
 export async function fetchCategorias() {
   try {

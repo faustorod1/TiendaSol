@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8000/pedidos';
+
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = `${BASE_URL}/pedidos`;
 
 export async function createOrder(orderData) {
   try {
