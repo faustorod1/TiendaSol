@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { fetchCategorias } from '../../service/categoriaService';
 import { useFilters } from '../../contexts/FilterContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faSearch } from '@fortawesome/free-solid-svg-icons';
 import './ProductFilters.css';
 import { useCartContext } from '../../contexts/CartContext';
 
 const ProductFilters = ({ currentFilters, onFilterChange }) => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  
   const { isFilterOpen, setIsFilterOpen } = useFilters();
   const { vendedorCarrito } = useCartContext();
 
@@ -15,11 +17,9 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
     const loadCategorias = async () => {
       try {
         const result = await fetchCategorias();
-        console.log(result);
-        
         setCategoriasDisponibles(result.data);
       } catch (error) {
-        
+        console.error(error);
       }
     };
     loadCategorias();
@@ -44,8 +44,6 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
   }
 
   const handleChange = (e) => {
-    console.log(e);
-    
     onFilterChange({ [e.target.name]: e.target.value });
   };
 
@@ -66,15 +64,17 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
     setIsFilterOpen(false);
   };
 
+  const filteredCategories = categoriasDisponibles.filter(category => 
+    category.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
-      {/* Overlay para móvil - solo se muestra en pantallas pequeñas */}
       <div 
           className={`filters-overlay ${isFilterOpen ? 'open' : ''}`}
           onClick={handleOverlayClick}
       />
       
-      {/* Contenedor de filtros */}
       <div className={`filters-container ${isFilterOpen ? 'open' : ''}`}>
 
           <aside className="product-filters">
@@ -95,36 +95,17 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
               )}
               <div className="filter-group">
                 <label htmlFor="precioMin">Precio Mín.</label>
-                <input
-                  type="number"
-                  id="precioMin"
-                  name="precioMin"
-                  value={currentFilters.precioMin || ''}
-                  onChange={handleChange}
-                  placeholder="0"
-                />
+                <input type="number" id="precioMin" name="precioMin" value={currentFilters.precioMin || ''} onChange={handleChange} placeholder="0" />
               </div>
 
               <div className="filter-group">
                 <label htmlFor="precioMax">Precio Máx.</label>
-                <input
-                  type="number"
-                  id="precioMax"
-                  name="precioMax"
-                  value={currentFilters.precioMax || ''}
-                  onChange={handleChange}
-                  placeholder="999999"
-                />
+                <input type="number" id="precioMax" name="precioMax" value={currentFilters.precioMax || ''} onChange={handleChange} placeholder="999999" />
               </div>
               
               <div className="filter-group">
                 <label htmlFor="orderBy">Ordenar por</label>
-                <select 
-                  id="orderBy" 
-                  name="orderBy" 
-                  value={currentFilters.orderBy || ''} 
-                  onChange={handleChange}
-                >
+                <select id="orderBy" name="orderBy" value={currentFilters.orderBy || ''} onChange={handleChange}>
                   <option value="">Relevancia</option>
                   <option value="precio_asc">Precio (menor a mayor)</option>
                   <option value="precio_desc">Precio (mayor a menor)</option>
@@ -134,25 +115,54 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
               </div>
 
               <div className="filter-group category-filter">
-                          <h4>Categorías</h4>
-                          <div className="category-filter-list">
-                            {categoriasDisponibles.length > 0 ? (
-                                categoriasDisponibles.map(category => (
-                                    <div key={category._id} className="checkbox-item">
-                                        <input
-                                            type="checkbox"
-                                            id={`cat-${category._id}`}
-                                            checked={currentFilters.categorias.includes(category._id)}
-                                            onChange={() => handleCategoryToggle(category._id)}
-                                        />
-                                        <label htmlFor={`cat-${category._id}`}>{category.nombre}</label>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>Cargando categorías...</p>
-                            )}
-                          </div>
-                      </div>
+                  <h4>Categorías</h4>
+                  
+                  <div className="category-search-container">
+                    <input 
+                      type="text"
+                      placeholder="Buscar categoría..." 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="category-search-input"
+                    />
+                    
+                    {searchTerm ? (
+                      <FontAwesomeIcon 
+                        icon={faXmark} 
+                        className="search-icon clear-icon"
+                        onClick={() => setSearchTerm('')}
+                      />
+                    ) : (
+                      <FontAwesomeIcon 
+                        icon={faSearch} 
+                        className="search-icon" 
+                      />
+                    )}
+                  </div>
+
+                  <div className="category-filter-list">
+                    {categoriasDisponibles.length > 0 ? (
+                        // Usamos filteredCategories en lugar de categoriasDisponibles
+                        filteredCategories.length > 0 ? (
+                          filteredCategories.map(category => (
+                            <div key={category._id} className="checkbox-item">
+                                <input
+                                    type="checkbox"
+                                    id={`cat-${category._id}`}
+                                    checked={currentFilters.categorias.includes(category._id)}
+                                    onChange={() => handleCategoryToggle(category._id)}
+                                />
+                                <label htmlFor={`cat-${category._id}`}>{category.nombre}</label>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="no-results">No se encontraron categorías</p>
+                        )
+                    ) : (
+                        <p>Cargando categorías...</p>
+                    )}
+                  </div>
+              </div>
 
             </form>
           </aside>

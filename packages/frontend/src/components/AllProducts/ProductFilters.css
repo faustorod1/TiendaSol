@@ -32,6 +32,7 @@
 }
 
 .filter-group input[type="number"],
+.filter-group input[type="text"], 
 .filter-group select {
   width: 100%;
   padding: 10px;
@@ -39,6 +40,32 @@
   border-radius: 6px;
   font-size: 0.95rem;
   box-sizing: border-box;
+}
+
+.category-search-container {
+  position: relative;
+  margin-bottom: 10px;
+}
+.category-search-input {
+  padding-right: 35px !important;
+}
+.search-icon {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  transition: color 0.2s;
+}
+.search-icon.clear-icon {
+  cursor: pointer;
+  pointer-events: auto;
+}
+.search-icon.clear-icon:hover {
+  color: #333;
+}
+.search-icon:not(.clear-icon) {
+  pointer-events: none;
 }
 
 /* Estilos responsivos para ProductFilters dentro de AllProducts */
