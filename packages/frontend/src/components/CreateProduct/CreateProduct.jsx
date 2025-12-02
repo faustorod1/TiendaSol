@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createProduct } from '../../service/productoService';
 import { fetchCategorias } from '../../service/categoriaService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faXmark } from '@fortawesome/free-solid-svg-icons';
 import './CreateProduct.css';
 
 const CreateProduct = () => {
@@ -20,6 +22,8 @@ const CreateProduct = () => {
     
     const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
     const [loadingCategorias, setLoadingCategorias] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState('');
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -154,6 +158,10 @@ const CreateProduct = () => {
         }
     };
 
+    const filteredCategories = categoriasDisponibles.filter(categoria => 
+        categoria.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loadingCategorias) {
         return (
             <div className="create-product-container">
@@ -263,31 +271,57 @@ const CreateProduct = () => {
                 <div className="form-group">
                     <label>Categorías *</label>
                     <div className="category-filter-create">
+                        <div className="search-category-input-container">
+                            <input 
+                                type="text"
+                                placeholder="Buscar categoría..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="category-search-field"
+                            />
+                             {searchTerm ? (
+                                <FontAwesomeIcon 
+                                    icon={faXmark} 
+                                    className="search-input-icon clear-icon" 
+                                    onClick={() => setSearchTerm('')} 
+                                />
+                            ) : (
+                                <FontAwesomeIcon 
+                                    icon={faSearch} 
+                                    className="search-input-icon" 
+                                />
+                            )}
+                        </div>
+
                         <div className="category-filter-list-create">
                             {categoriasDisponibles.length > 0 ? (
-                                categoriasDisponibles.map(categoria => (
-                                    <div
-                                        key={categoria._id}
-                                        className={`checkbox-item-create ${
-                                            formData.categorias.some(cat => cat._id === categoria._id) 
-                                                ? 'selected' : ''
-                                        }`}
-                                        onClick={() => handleCategoriaToggle(categoria)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id={`cat-${categoria._id}`}
-                                            checked={formData.categorias.some(cat => cat._id === categoria._id)}
-                                            onChange={() => handleCategoriaToggle(categoria)}
-                                        />
-                                        <label htmlFor={`cat-${categoria._id}`}>
-                                            {categoria.nombre}
-                                        </label>
-                                        {formData.categorias.some(cat => cat._id === categoria._id) && (
-                                            <span className="check-icon">✓</span>
-                                        )}
-                                    </div>
-                                ))
+                                filteredCategories.length > 0 ? (
+                                    filteredCategories.map(categoria => (
+                                        <div
+                                            key={categoria._id}
+                                            className={`checkbox-item-create ${
+                                                formData.categorias.some(cat => cat._id === categoria._id) 
+                                                    ? 'selected' : ''
+                                            }`}
+                                            onClick={() => handleCategoriaToggle(categoria)}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                id={`cat-${categoria._id}`}
+                                                checked={formData.categorias.some(cat => cat._id === categoria._id)}
+                                                onChange={() => handleCategoriaToggle(categoria)}
+                                            />
+                                            <label htmlFor={`cat-${categoria._id}`}>
+                                                {categoria.nombre}
+                                            </label>
+                                            {formData.categorias.some(cat => cat._id === categoria._id) && (
+                                                <span className="check-icon">✓</span>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="no-results-text">No se encontraron categorías.</div>
+                                )
                             ) : (
                                 <p>Cargando categorías...</p>
                             )}
