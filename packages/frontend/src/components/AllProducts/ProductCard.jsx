@@ -5,7 +5,7 @@ import './ProductCard.css';
 
 const ProductCard = ({ product, disabled, parentComponent }) => {
   return (
-    <article className={`product-card ${ disabled ? 'disabled' : '' }`} title={ disabled ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.' : '' }>
+    <article data-cy="product-item" className={`product-card ${ disabled ? 'disabled' : '' }`} title={ disabled ? 'No puedes agregar al carrito este producto porque ya tienes uno de otro vendedor.' : '' }>
       <Link to={`/${parentComponent}/${product._id}`} className="product-link">
         <img 
           src={product.fotos?.[0]} 
@@ -14,7 +14,7 @@ const ProductCard = ({ product, disabled, parentComponent }) => {
         />
         <div className="product-info">
           <div className="product-title-section">
-            <h3 className="product-title">{product.titulo}</h3>
+            <h3 data-cy="product-title" className="product-title">{product.titulo}</h3>
           </div>
           
           <div className="product-meta-section">

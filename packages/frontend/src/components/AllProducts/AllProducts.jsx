@@ -94,7 +94,7 @@ const AllProducts = () => {
     }
 
     return (
-      <div className="products-grid">
+      <div className="products-grid" data-cy="product-list">
         {productos.map(p => (
           <ProductCard
             key={p._id}
@@ -139,6 +139,7 @@ const AllProducts = () => {
             {!loading && !error && totalPages > 1 && (
               <div className="pagination-controls" style={{ marginTop: '2rem' }}>
                 <button
+                  data-cy="pagination-prev"
                   disabled={currentPage === 1}
                   onClick={() => handlePageChange(currentPage - 1)}
                 >
@@ -146,6 +147,7 @@ const AllProducts = () => {
                 </button>
                 <span> Página {currentPage} de {totalPages} </span>
                 <button
+                  data-cy="pagination-next"
                   disabled={currentPage === totalPages}
                   onClick={() => handlePageChange(currentPage + 1)}
                 >
