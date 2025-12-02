@@ -23,7 +23,18 @@ const Checkout = () => {
   const [currency, setCurrency] = useState('PESO_ARG');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [address, setAddress] = useState('');
+  const [addressData, setAddressData] = useState({
+    calle: '',
+    altura: '',
+    piso: '',
+    departamento: '',
+    codigoPostal: '',
+    ciudad: '',
+    provincia: '',
+    pais: '',
+    lat: '',
+    lon: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -34,7 +45,18 @@ const Checkout = () => {
 
         setFirstName(user.nombre || '');
         setLastName(user.apellido || '');
-        setAddress(user.direccion || '');
+        setAddressData({
+          calle: user.direccion?.calle || '',
+          altura: user.direccion?.altura || '',
+          piso: user.direccion?.piso || '',
+          departamento: user.direccion?.departamento || '',
+          codigoPostal: user.direccion?.codigoPostal || '',
+          ciudad: user.direccion?.ciudad || '',
+          provincia: user.direccion?.provincia || '',
+          pais: user.direccion?.pais || '',
+          lat: '',
+          lon: ''
+        });
       }
     } catch (error) {
       console.error('Error al cargar datos del usuario:', error);
@@ -46,9 +68,25 @@ const Checkout = () => {
     setIsSubmitting(true);
 
     try {
-      // Validación básica
-      if (!firstName.trim() || !lastName.trim() || !address.trim()) {
-        alert('Por favor, completa todos los campos obligatorios');
+      if (!firstName.trim() || !lastName.trim()) {
+        alert('Por favor, completa el nombre y apellido');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const requiredAddressFields = ['calle', 'altura', 'codigoPostal', 'ciudad', 'pais'];
+      const missingFields = requiredAddressFields.filter(field => !addressData[field]?.trim());
+      
+      if (missingFields.length > 0) {
+        const fieldNames = {
+          calle: 'Calle',
+          altura: 'Altura',
+          codigoPostal: 'Código Postal',
+          ciudad: 'Ciudad',
+          pais: 'País'
+        };
+        const missingFieldNames = missingFields.map(field => fieldNames[field]).join(', ');
+        alert(`Por favor, completa los siguientes campos obligatorios: ${missingFieldNames}`);
         setIsSubmitting(false);
         return;
       }
@@ -59,15 +97,11 @@ const Checkout = () => {
         return;
       }
 
-      console.log('Creando pedido con datos:', { firstName, lastName, address, items, currency, total });
+      console.log('Creando pedido con datos:', { firstName, lastName, addressData, items, currency, total });
       
-      // Verificar datos del usuario
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;
-      console.log('Usuario actual:', user);
-      console.log('ID del usuario:', user?.id || user?._id);
 
-      // Formatear datos del pedido con el ID del vendedor real
       const orderData = {
         vendedor: items[0].vendedor,
         items: items.map(item => {
@@ -79,16 +113,16 @@ const Checkout = () => {
         }),
         moneda: currency,
         direccionEntrega: {
-          calle: address.split(',')[0]?.trim() || address,
-          altura: address.split(',')[1]?.trim() || '1',
-          piso: '',
-          departamento: '',
-          codigoPostal: '1000',
-          ciudad: 'Buenos Aires',
-          provincia: 'Buenos Aires',
-          pais: 'Argentina',
-          lat: '',
-          lon: ''
+          calle: addressData.calle.trim(),
+          altura: addressData.altura.trim(),
+          piso: addressData.piso.trim() || '',
+          departamento: addressData.departamento.trim() || '',
+          codigoPostal: addressData.codigoPostal.trim(),
+          ciudad: addressData.ciudad.trim(),
+          provincia: addressData.provincia.trim() || '',
+          pais: addressData.pais.trim(),
+          lat: addressData.lat.trim() || '',
+          lon: addressData.lon.trim() || ''
         }
       };
 
@@ -115,6 +149,13 @@ const Checkout = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAddressChange = (field, value) => {
+    setAddressData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   return (
@@ -166,17 +207,148 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="address">Dirección</label>
-                  <input
-                    id="address"
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Calle, número, ciudad"
-                    disabled={isSubmitting}
-                    required
-                  />
+                <div className="address-section">
+                  <h3>Dirección de entrega</h3>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="calle">Calle</label>
+                      <input
+                        id="calle"
+                        type="text"
+                        value={addressData.calle}
+                        onChange={(e) => handleAddressChange('calle', e.target.value)}
+                        placeholder="Nombre de la calle"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="altura">Altura</label>
+                      <input
+                        id="altura"
+                        type="text"
+                        value={addressData.altura}
+                        onChange={(e) => handleAddressChange('altura', e.target.value)}
+                        placeholder="Número"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="piso">Piso</label>
+                      <input
+                        id="piso"
+                        type="text"
+                        value={addressData.piso}
+                        onChange={(e) => handleAddressChange('piso', e.target.value)}
+                        placeholder="Piso (opcional)"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="departamento">Departamento</label>
+                      <input
+                        id="departamento"
+                        type="text"
+                        value={addressData.departamento}
+                        onChange={(e) => handleAddressChange('departamento', e.target.value)}
+                        placeholder="Depto (opcional)"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="codigoPostal">Código Postal</label>
+                      <input
+                        id="codigoPostal"
+                        type="text"
+                        value={addressData.codigoPostal}
+                        onChange={(e) => handleAddressChange('codigoPostal', e.target.value)}
+                        placeholder="1234"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="ciudad">Ciudad</label>
+                      <input
+                        id="ciudad"
+                        type="text"
+                        value={addressData.ciudad}
+                        onChange={(e) => handleAddressChange('ciudad', e.target.value)}
+                        placeholder="Buenos Aires"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="provincia">Provincia</label>
+                      <input
+                        id="provincia"
+                        type="text"
+                        value={addressData.provincia}
+                        onChange={(e) => handleAddressChange('provincia', e.target.value)}
+                        placeholder="Buenos Aires (opcional)"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="pais">País</label>
+                      <input
+                        id="pais"
+                        type="text"
+                        value={addressData.pais}
+                        onChange={(e) => handleAddressChange('pais', e.target.value)}
+                        placeholder="Argentina"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <details className="coordinates-section">
+                    <summary>Coordenadas (opcional)</summary>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="lat">Latitud</label>
+                        <input
+                          id="lat"
+                          type="number"
+                          step="any"
+                          value={addressData.lat}
+                          onChange={(e) => handleAddressChange('lat', e.target.value)}
+                          placeholder="-34.6037"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="lon">Longitud</label>
+                        <input
+                          id="lon"
+                          type="number"
+                          step="any"
+                          value={addressData.lon}
+                          onChange={(e) => handleAddressChange('lon', e.target.value)}
+                          placeholder="-58.3816"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                    </div>
+                  </details>
                 </div>
 
                 <div className="form-group">
