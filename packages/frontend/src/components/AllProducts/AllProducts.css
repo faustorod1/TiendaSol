@@ -1,0 +1,301 @@
+.all-products-page {
+  margin: 24px 2rem;
+  color: #222;
+  position: relative;
+}
+
+.products-grid-wrapper h1 {
+    margin: 0 0 18px 0;
+    font-size: 2.0rem;
+    text-align: left;
+}
+
+.products-grid-wrapper {
+  flex-grow: 1; 
+  min-width: 0; 
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.product-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.all-products-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.layout-col-left {
+  flex-basis: 250px;
+  flex-shrink: 0;
+}
+
+.layout-col-right {
+  flex-basis: 250px;
+  flex-shrink: 0;
+}
+
+.layout-col-middle.products-grid-wrapper {
+  flex-grow: 1; 
+  min-width: 0;
+  max-width: none;
+}
+
+/* ESTILOS PARA FILTROS - UNIFICADOS */
+@media (min-width: 769px) {
+  /* En desktop, posicionar los filtros en la columna izquierda */
+  .filters-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: auto;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    z-index: 1;
+    /* Asegurar que se muestren */
+    display: block !important;
+  }
+
+  .filters-overlay {
+    display: none;
+  }
+
+  .filters-close-button {
+    display: none;
+  }
+
+  .layout-col-left {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  /* En móvil, ocultar columnas laterales */
+  .layout-col-left {
+    display: none;
+  }
+  
+  .layout-col-right {
+    display: none;
+  }
+  
+  .layout-col-middle {
+    width: 100%;
+  }
+
+  .filters-container {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    max-width: auto;
+    height: 100vh;
+    background-color: transparent;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .filters-container.open {
+    left: 0;
+  }
+
+  .filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+
+  .filters-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .filters-close-button {
+    display: block;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    z-index: 1001;
+  }
+
+  .filters-close-button:hover {
+    color: #333;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .all-products-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .layout-col-middle {
+    padding: 0 0.5rem;
+  }
+}
+
+/* RESPONSIVE BREAKPOINTS ESPECÍFICOS */
+@media (max-width: 520px) {
+  .all-products-page {
+    padding: 12px;
+  }
+  .products-grid {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1201px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .layout-col-left {
+    flex-basis: 250px;
+  }
+  
+  .layout-col-right {
+    flex-basis: 250px;
+  }
+  
+  .filters-container {
+    width: 250px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .products-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+  }
+  
+  .layout-col-left {
+    flex-basis: 280px;
+  }
+  
+  .layout-col-right {
+    flex-basis: 280px;
+  }
+  
+  .filters-container {
+    width: 280px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .layout-col-left {
+    width: 200px;
+    max-width: 13rem;
+  }
+  
+  .filters-container {
+    width: 200px;
+  }
+  
+  .layout-col-middle {
+    padding: 0 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 900px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .layout-col-left {
+    width: 180px;
+  }
+  
+  .filters-container {
+    width: 180px;
+  }
+  
+  .all-products-layout {
+    gap: 0.75rem;
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* RESTO DE BREAKPOINTS... */
+@media (max-width: 600px) {
+  .all-products-layout {
+    gap: 0.5rem;
+  }
+  
+  .products-grid {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .all-products-page {
+    padding: 0.75rem 0.25rem;
+  }
+  
+  .layout-col-middle {
+    padding: 0 0.25rem;
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .all-products-page {
+    padding: 0.5rem 0.1rem;
+  }
+  
+  .products-grid {
+    gap: 0.75rem;
+  }
+  
+  .products-grid-wrapper h1 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Resto de estilos existentes para filtros y paginación... */

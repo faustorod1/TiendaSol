@@ -1,0 +1,720 @@
+openapi: 3.0.2
+info:
+  title: Tienda Sol API
+  version: 1.0.0
+  description: >-
+    Una nueva API para la compra desde cualquier lugar, comparar productos, 
+    acceder a múltiples métodos de pago y recibir los artículos en casa en pocos días.
+tags:
+  - name: Pedidos
+    description: ''
+  - name: Productos
+    description: ''
+  - name: Categorías
+    description: Operaciones para obtener la lista maestra de categorías del sistema.
+  - name: Notificaciones
+    description: ''
+paths:
+  /categorias:
+    get:
+      tags:
+        - Categorías
+      summary: Lista maestra de categorías
+      description: Retorna la lista de todas las categorías disponibles en el sistema. Utilizado por el frontend para construir los filtros de búsqueda.
+      responses:
+        '200':
+          description: Lista de categorías obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+        '204':
+          description: No Content. No hay categorías disponibles.
+        '500':
+          description: Error interno del servidor al consultar la base de datos.
+  /pedidos:
+    summary: Operaciones de pedidos.
+    get:
+      tags:
+        - Pedidos
+      summary: Lista de pedidos del usuario autenticado
+      description: Devuelve una lista de pedidos (historial) hechos por el usuario consultante.
+      responses:
+        '200':
+          description: Retorno de historial exitoso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        '400':
+          description: Error de validación al obtener el ID del usuario del token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+    post:
+      tags:
+        - Pedidos
+      summary: Crea un pedido
+      description: Crea un pedido a partir de la información dentro del JSON body. El 'comprador' se obtiene del token de autenticación.
+      requestBody:
+        description: Datos del pedido a crear.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearPedidoRequest'
+      responses:
+        '201':
+          description: El pedido ha sido creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrearPedidoResponse'
+        '400':
+          description: Error de validación (Zod) en el cuerpo de la solicitud.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+        '404':
+          description: Producto no encontrado. Uno de los 'productoId' en la lista de 'items' no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorProductoNoEncontrado'
+        '409':
+          description: No hay suficiente stock del producto solicitado (StockInsuficienteError).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStockResponse'
+  /pedidos/{id}:
+    patch:
+      tags:
+        - Pedidos
+      summary: Cambiar el estado de un pedido
+      description: >-
+        Permite actualizar el estado de un pedido específico enviando su ID en la URL
+        y el nuevo estado en el cuerpo de la solicitud. El sistema valida si el 
+        usuario autenticado tiene permiso para realizar el cambio.
+      parameters:
+        - name: id
+          in: path
+          description: ID del pedido (ObjectId válido de MongoDB).
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+            example: "671e79a472eebc5e2c86efab"
+      requestBody:
+        description: Es necesario enviar el nuevo estado para el pedido.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  description: El nuevo estado del pedido.
+                  enum: ["PENDIENTE", "PAGADO", "ENVIADO", "CANCELADO"]
+                motivo:
+                  type: string
+                  description: Opcional, un motivo para el cambio (ej. cancelación).
+              required:
+                - estado
+            example:
+              estado: "ENVIADO"
+      responses:
+        '200':
+          description: Acción realizada con éxito. El estado del pedido fue actualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Error de validación (Zod) en los parámetros o el body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+        '403':
+          description: |
+            Acción Prohibida (ForbiddenError).
+            El usuario no tiene permiso para realizar este cambio de estado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGenerico'
+        '404':
+          description: |
+            Pedido no encontrado (PedidoDoesNotExistError) o
+            Producto no encontrado (ProductoDoesNotExistError) al intentar reponer stock.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorPedidoNoEncontrado'
+                  - $ref: '#/components/schemas/ErrorProductoNoEncontrado'
+        '409':
+          description: Conflicto de estado (CambioEstadoInvalidoError).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCambioEstado'
+  /productos:
+    get:
+      tags:
+        - Productos
+      summary: Retorna productos paginados y filtrados
+      description: >
+        Retorna todos los productos de la base de datos, ordenados y filtrados según los parámetros de búsqueda. 
+        Soporta paginación y filtros por vendedor, título, descripción, *múltiples categorías (por ID)*, rango de precios y orden.
+      parameters:
+        - name: page
+          in: query
+          description: Número de página (entero positivo).
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Cantidad de productos por página (1 a 100).
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: vendedor
+          in: query
+          description: ID del vendedor (ObjectId de MongoDB).
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+        - name: titulo
+          in: query
+          description: Filtra productos cuyo título contenga el texto dado.
+          schema:
+            type: string
+        - name: descripcion
+          in: query
+          description: Filtra productos por coincidencias en la descripción.
+          schema:
+            type: string
+        - name: categorias
+          in: query
+          description: Lista de IDs de categorías (ObjectId de MongoDB) a filtrar. Los productos deben pertenecer a *al menos una* de las categorías proporcionadas (lógica OR).
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              pattern: '^[0-9a-fA-F]{24}$'
+        - name: precioMin
+          in: query
+          description: Precio mínimo del producto (entero positivo).
+          schema:
+            type: number
+            minimum: 0
+        - name: precioMax
+          in: query
+          description: Precio máximo del producto (entero positivo).
+          schema:
+            type: number
+            minimum: 0
+        - name: orderBy
+          in: query
+          description: Criterio de ordenamiento.
+          schema:
+            type: string
+            enum: [precio_asc, precio_desc, ventas_desc, fecha_creacion_desc]
+      responses:
+        '200':
+          description: Lista de productos obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaDeProductos'
+        '400':
+          description: Parámetros inválidos (paginación o filtros).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+  /productos/{id}:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene un producto por ID
+      description: Devuelve la información del producto correspondiente al ID proporcionado.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del producto (ObjectId válido de MongoDB).
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+      responses:
+        '200':
+          description: Producto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: ID inválido (error de validación Zod).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+        '404':
+          description: Producto no encontrado (ProductoDoesNotExistError).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorProductoNoEncontrado'
+  /usuarios/notificaciones:
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtiene notificaciones del usuario autenticado
+      description: Se retornan las notificaciones del usuario autenticado. El ID de usuario se obtiene del token.
+      parameters:
+        - name: page
+          in: query
+          description: Número de página.
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Cantidad de notificaciones por página.
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: leida
+          in: query
+          description: Filtra notificaciones por estado de lectura (true o false).
+          schema:
+            type: boolean
+            example: false
+      responses:
+        '200':
+          description: Envío de notificaciones con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginaDeNotificaciones'
+        '400':
+          description: Error de validación (Zod) en los parámetros de consulta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+  /usuarios/notificaciones/{id}:
+    patch:
+      tags:
+        - Notificaciones
+      summary: Marca una notificación como leída
+      description: Se marca la notificación con el ID respectivo como leída para el usuario autenticado.
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la notificación (ObjectId).
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+            example: "671e79a472eebc5e2c86efac"
+      responses:
+        '200':
+          description: Notificación marcada como leída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarcarLeidaResponse'
+        '400':
+          description: Error de validación (Zod) en el ID de la notificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorValidacionZod'
+        '404':
+          description: Notificación no encontrada (NotificacionDoesNotExistError).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotificacionNoEncontrada'
+components:
+  schemas:
+    Categoria:
+      description: Schema de la categoría maestra (colección separada).
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único de la categoría (ObjectId de MongoDB).
+          pattern: '^[0-9a-fA-F]{24}$'
+          example: "654c6c9a29a67a001a1d1d1d"
+        nombre:
+          type: string
+          example: "Calzado"
+      required:
+        - _id
+        - nombre
+    Producto:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único del producto (ObjectId de MongoDB).
+          example: "671e79a472eebc5e2c86efab"
+        titulo:
+          type: string
+          example: "Notebook Gamer"
+        descripcion:
+          type: string
+          example: "Notebook con RTX 3050"
+        precio:
+          type: number
+          example: 350000
+        moneda:
+          type: string
+          example: "PESO_ARG"
+        stock:
+          type: integer
+          example: 10
+        activo:
+          type: boolean
+          example: true
+        categorias:
+          type: array
+          description: Lista de categorías a las que pertenece el producto (desnormalizada).
+          items:
+            # **ACTUALIZACIÓN 2: Usar ID y nombre para desnormalización**
+            $ref: '#/components/schemas/Categoria'
+          example:
+            - _id: "654c6c9a29a67a001a1d1d1d"
+              nombre: "Electrónica"
+            - _id: "654c6c9a29a67a001a1d1d1e"
+              nombre: "Computadoras"
+        vendedor:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: "671e79a472eebc5e2c86efac"
+            nombre:
+              type: string
+              example: "Tienda Sol"
+            email:
+              type: string
+              example: "tienda@example.com"
+        fotos:
+          type: array
+          items:
+            type: string
+          example: ["https://servidor.com/foto1.jpg"]
+        cantidadVendida:
+          type: integer
+          description: "Total de unidades vendidas de este producto."
+          example: 50
+        createdAt:
+          type: string
+          format: date-time
+          description: "Fecha de creación del producto."
+        updatedAt:
+          type: string
+          format: date-time
+          description: "Fecha de última modificación del producto."
+      required:
+        - _id
+        - titulo
+        - descripcion
+        - precio
+        - moneda
+        - stock
+        - activo
+        - vendedor
+        - categorias
+        - cantidadVendida
+        - createdAt
+        - updatedAt
+    PaginaDeProductos:
+      description: Objeto de paginación devuelto por ProductoService
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        perPage:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 52
+        totalPages:
+          type: integer
+          example: 6
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Producto'
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Id inválido"
+    Pedido:
+      description: Schema completo de un Pedido (basado en Mongoose)
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+        comprador:
+          type: string
+          format: objectId
+        vendedor:
+          type: string
+          format: objectId
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
+        moneda:
+          type: string
+        direccionEntrega:
+          $ref: '#/components/schemas/DireccionEntrega'
+        estado:
+          type: string
+        fechaCreacion:
+          type: string
+          format: date-time
+        historialEstados:
+          type: array
+          items:
+            $ref: '#/components/schemas/CambioEstadoPedido'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ItemPedido:
+      description: Item de un pedido (basado en itemPedidoSchema.js)
+      type: object
+      properties:
+        producto:
+          type: string
+          format: objectId
+        cantidad:
+          type: number
+        precioUnitario:
+          type: number
+    DireccionEntrega:
+      description: Dirección de entrega (basado en direccionEntregaSchema.js)
+      type: object
+      properties:
+        calle: { type: string }
+        altura: { type: string }
+        piso: { type: string }
+        departamento: { type: string }
+        codigoPostal: { type: string }
+        ciudad: { type: string }
+        provincia: { type: string }
+        pais: { type: string }
+        lat: { type: string }
+        lon: { type: string }
+    CambioEstadoPedido:
+      description: Historial de cambio de estado (basado en cambioEstadoPedidoSchema.js)
+      type: object
+      properties:
+        fecha:
+          type: string
+          format: date-time
+        estado:
+          type: string
+        usuario:
+          type: string
+          format: objectId
+        motivo:
+          type: string
+    CrearPedidoRequest:
+      description: Cuerpo para POST /pedidos (basado en Zod crearPedidoSchema)
+      type: object
+      properties:
+        vendedor:
+          type: string
+          pattern: '^[0-9a-fA-F]{24}$'
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productoId:
+                type: string
+                pattern: '^[0-9a-fA-F]{24}$'
+              cantidad:
+                type: number
+            required: [productoId, cantidad]
+        moneda:
+          type: string
+        direccionEntrega:
+          $ref: '#/components/schemas/DireccionEntrega'
+      required: [vendedor, items, moneda, direccionEntrega]
+    CrearPedidoResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Pedido creado con éxito"
+        _id:
+          type: string
+          example: "671e79a472eebc5e2c86efaf"
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Estado del pedido actualizado con éxito"
+    ErrorValidacionZod:
+      type: array
+      items:
+        type: object
+        properties:
+          path: { type: array, items: { type: string } }
+          message: { type: string }
+      example:
+        - path: ["pedidoId"]
+          message: "Id inválido"
+    ErrorGenerico:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "fail"
+        message:
+          type: string
+          example: "Solo el vendedor puede marcar el pedido como enviado"
+    ErrorPedidoNoEncontrado:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "671e79a472eebc5e2c86efab"
+        message:
+          type: string
+          example: "Pedido con id: 671e79a472eebc5e2c86efab no existe."
+    ErrorProductoNoEncontrado:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "671e79a472eebc5e2c86efac"
+        message:
+          type: string
+          example: "Producto con id: 671e79a472eebc5e2c86efac no existe."
+    ErrorStockResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Stock insuficiente de productos"
+        productosFaltantes:
+          type: array
+          items:
+            type: object
+            properties:
+              producto:
+                type: object
+                properties:
+                  _id: { type: string }
+                  titulo: { type: string }
+              cantidad: { type: number }
+            example:
+              - producto: { _id: "671e79a472eebc5e2c86efac", titulo: "Notebook" }
+                cantidad: 2
+    ErrorCambioEstado:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Cambio de estado inválido"
+        message:
+          type: string
+          example: "No se puede enviar un pedido cancelado"
+        estadoActual:
+          type: string
+          example: "CANCELADO"
+        estadoSolicitado:
+          type: string
+          example: "ENVIADO"
+    Notificacion:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+          example: "671e79a472eebc5e2c86efac"
+        mensaje:
+          type: string
+          example: "Tu pedido ha sido enviado"
+        fechaAlta:
+          type: string
+          format: date-time
+        leida:
+          type: boolean
+          example: false
+        fechaLeida:
+          type: string
+          format: date-time
+    MarcarLeidaResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: "Notificación marcada como leída"
+        notificacion:
+          $ref: '#/components/schemas/Notificacion'
+    PaginaDeNotificaciones:
+      description: Objeto de paginación devuelto por UsuarioService
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        perPage:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 52
+        totalPages:
+          type: integer
+          example: 6
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notificacion'
+    ErrorNotificacionNoEncontrada:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "671e79a472eebc5e2c86efac"
+        message:
+          type: string
+          example: "No se encontró la notificación."

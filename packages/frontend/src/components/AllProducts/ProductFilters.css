@@ -1,0 +1,195 @@
+.product-filters {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+}
+
+.product-filters h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom: 2px solid var(--pistacho);
+  padding-bottom: 8px;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  color: #333;
+}
+.filter-group h4 {
+  margin-top: 8px;
+  color: #333;
+
+}
+
+.filter-group input[type="number"],
+.filter-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* Estilos responsivos para ProductFilters dentro de AllProducts */
+@media (max-width: 1200px) {
+  /* Hacer filtros más compactos */
+  .product-filters {
+    padding: 1rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-filters {
+    padding: 0.75rem;
+  }
+  
+  .filter-input,
+  .filter-select {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* En móvil, mostrar filtros en formato horizontal compacto */
+  .product-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .filter-group {
+    margin-bottom: 0;
+  }
+}
+
+.category-filter-list {
+  max-height: 200px;
+  overflow-y: auto  ;
+}
+
+.checkbox-item {
+  display: flex;
+  gap: 0.5em;
+  margin-block: 0.5em;
+}
+.checkbox-item label {
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .product-filters {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Estilos base */
+.filters-container {
+  /* ...existing styles... */
+}
+
+/* Media query para pantallas menores a 768px */
+@media (max-width: 767px) {
+  .filters-container {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Oculto por defecto */
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    background-color: transparent;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  /* Mostrar filtros cuando están abiertos */
+  .filters-container.open {
+    left: 0;
+  }
+
+  /* Overlay para cerrar filtros tocando fuera */
+  .filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+
+  .filters-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Botón de cerrar para móvil */
+  .filters-close-button {
+    display: block;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    z-index: 1001;
+  }
+  .filters-close-button svg {
+    height: 1rem;
+  }
+
+  .filters-close-button:hover {
+    color: #333;
+  }
+}
+
+/* Para pantallas de 768px o más, mostrar filtros normalmente */
+@media (min-width: 768px) {
+  .filters-container {
+    position: static;
+    width: auto;
+    height: auto;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .filters-overlay {
+    display: none;
+  }
+
+  .filters-close-button {
+    display: none;
+  }
+}

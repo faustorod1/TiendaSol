@@ -7,6 +7,90 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --primary-purple: rgb(36, 4, 78);
+  --secondary-purple: rgb(115, 71, 172);
+  --primary-white: rgb(250, 250, 250);
+  --primary-orange: rgb(254, 31, 2);
+  --primary-gray: rgb(36, 36, 36);
+  --light-purple: #a5b4fc;
+}
+
+:root {
+  --blanco-humo: rgb(245, 245, 245);       /* Fondo general limpio */
+  --negro-suave: rgb(28, 28, 28);          /* Texto principal, íconos */
+  --gris-neutro: rgb(189, 189, 189);       /* Bordes, texto secundario */
+  --beige-claro: rgb(239, 231, 218);       /* Fondo alternativo cálido */
+  --amarillo-sol: rgb(255, 211, 105);      /* Acento visual y botones */
+}
+
+:root {
+  --gris-hielo: rgb(245, 248, 250);        /* Fondo principal, muy claro y fresco */
+  --carbón: rgb(34, 34, 34);               /* Texto principal, elegante y fuerte */
+  --gris-piedra: rgb(160, 160, 160);       /* Texto secundario, bordes */
+  --verde-salvia: rgb(152, 180, 160);      /* Acento suave, botones, enlaces */
+  --verde-profundo: rgb(40, 70, 60);       /* Hover, detalles intensos */
+}
+
+:root {
+  --gris-marfil: rgb(248, 248, 248);       /* Fondo principal limpio */
+  --negro-true: rgb(20, 20, 20);           /* Texto oscuro puro */
+  --gris-ceniza: rgb(120, 120, 120);       /* Texto secundario */
+  --gris-piedra: rgb(190, 190, 190);       /* Bordes suaves, separadores */
+  --dorado-suave: rgb(212, 175, 55);       /* Acento discreto y lujoso */
+}
+
+:root {
+  --arena: rgb(245, 236, 220);             /* Fondo base, muy cálido */
+  --tierra-profunda: rgb(60, 40, 20);      /* Texto principal */
+  --arcilla: rgb(191, 124, 78);            /* Acento cálido */
+  --terracota: rgb(223, 145, 99);          /* Botones, elementos destacados */
+  --beige-mate: rgb(224, 213, 196);        /* Fondos secundarios */
+}
+
+:root {
+  --gris-oscuro: rgb(28, 28, 28);          /* Fondo principal oscuro */
+  --gris-medio: rgb(80, 80, 80);           /* Texto principal o secundarios */
+  --gris-claro: rgb(200, 200, 200);        /* Texto claro sobre fondo oscuro */
+  --blanco-puro: rgb(255, 255, 255);       /* Contraste extremo */
+  --azul-neón: rgb(0, 204, 255);           /* Acento moderno (botones, hover) */
+}
+
+:root{
+  --pistacho: #8ACB88;
+  --nyanza: #E4FDE1;
+  --dark-purple:#270722;
+  --thistle:#C8B8DB;
+
+  --pistacho-hover: #a8cea7;
+  --nyanza-hover: #f0fbf0;
+  --dark-purple-hover:rgb(41, 14, 37);
+  --thistle-hover:#ddd5e4;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  flex-grow: 1;
+  min-height: 640px;
+}
+
+header, footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+a.link-no-style{
+    text-decoration: none;
+}
+
 code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
