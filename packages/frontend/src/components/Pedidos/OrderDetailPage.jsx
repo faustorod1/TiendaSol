@@ -612,7 +612,11 @@ const OrderDetailPage = () => {
               {typeof order.direccionEntrega === 'object' ? (
                 <>
                   <p>{order.direccionEntrega.calle || ''}, {order.direccionEntrega.altura || ''}</p>
-                  <p>{order.direccionEntrega.codigoPostal || ''}, {`Piso: ${order.direccionEntrega.piso || ''}`}, {`Depto.: ${order.direccionEntrega.departamento || ''}`}</p>
+                  <p>
+                    {order.direccionEntrega.codigoPostal || ''}
+                    {order.direccionEntrega.piso && `, Piso: ${order.direccionEntrega.piso}`}
+                    {order.direccionEntrega.departamento && `, Depto.: ${order.direccionEntrega.departamento}`}
+                  </p>
                   <p>{order.direccionEntrega.ciudad || ''}, {order.direccionEntrega.provincia || ''}, {order.direccionEntrega.pais || ''}</p>
                   <p>Coordenadas: {order.direccionEntrega.lat || 'N/A'}, {order.direccionEntrega.lon || 'N/A'}</p>
                 </>
