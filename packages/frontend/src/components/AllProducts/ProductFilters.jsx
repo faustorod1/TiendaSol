@@ -106,7 +106,6 @@ const ProductFilters = ({ currentFilters, onFilterChange }) => {
               <div className="filter-group">
                 <label htmlFor="orderBy">Ordenar por</label>
                 <select id="orderBy" name="orderBy" value={currentFilters.orderBy || ''} onChange={handleChange}>
-                  <option value="">Relevancia</option>
                   <option value="precio_asc">Precio (menor a mayor)</option>
                   <option value="precio_desc">Precio (mayor a menor)</option>
                   <option value="ventas_desc">Más vendidos</option>
