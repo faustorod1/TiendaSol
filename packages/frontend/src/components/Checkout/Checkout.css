@@ -123,6 +123,7 @@
 .form-group label[for="altura"]::after,
 .form-group label[for="codigoPostal"]::after,
 .form-group label[for="ciudad"]::after,
+.form-group label[for="provincia"]::after,
 .form-group label[for="pais"]::after {
   content: " *";
   color: #495057;
