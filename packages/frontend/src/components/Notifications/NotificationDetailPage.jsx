@@ -42,6 +42,20 @@ const NotificationDetailPage = () => {
     fetchOne();
   }, [id]);
 
+  let resourceURL;
+  if (notification?.tipoRecurso) {
+    switch (notification.tipoRecurso) {
+      case 'PEDIDO':
+        resourceURL = {
+          text: 'Ir al pedido',
+          url: `/account/pedidos/${notification.recursoId}`
+        };
+        break;
+      default:
+        break;
+    }
+  }
+
   const formatFullDate = (timestamp) => {
     return new Date(timestamp).toLocaleString('es-ES', {
       year: 'numeric',
@@ -118,6 +132,12 @@ const NotificationDetailPage = () => {
             {notification.mensaje}
           </div>
           
+          {resourceURL && (
+            <Link to={resourceURL.url} className="notification-resource-link">
+              {resourceURL.text}
+            </Link>
+          )}
+          
           <div className="notification-detail-meta">
             <span className="notification-date">
               {formatFullDate(notification.fechaAlta)}
@@ -128,7 +148,6 @@ const NotificationDetailPage = () => {
               </span>
             )}
           </div>
-          
         </div>
 
         {/* Footer con acciones opcionales */}

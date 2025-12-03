@@ -18,6 +18,7 @@ export class PedidoRepository {
 
     async save(pedido) {
         const pedidoParaGuardar = {
+            _id: pedido._id,
             comprador: mongoose.Types.ObjectId.createFromHexString(pedido.comprador.id),
             vendedor: mongoose.Types.ObjectId.createFromHexString(pedido.vendedor.id),
 

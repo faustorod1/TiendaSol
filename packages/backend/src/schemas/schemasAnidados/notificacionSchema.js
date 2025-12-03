@@ -25,6 +25,14 @@ export const notificacionSchema = new mongoose.Schema({
     fechaLeida: {
         type: Date,
         required: false,
+    },
+    tipoRecurso: {
+        type: String,
+        required: false
+    },
+    recursoId: {
+        type: String,
+        required: false
     }
 }, {
 });

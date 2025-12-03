@@ -316,9 +316,6 @@ const OrderDetailPage = () => {
           ...prevOrder,
           estado: newStatus
         }));
-        
-        alert(`Estado cambiado exitosamente a "${getStatusText(newStatus)}"`);
-        
       } else {
         console.error('Error al cambiar estado:', result);
         alert(`Error al cambiar el estado: ${result?.error || result?.message || 'Error desconocido'}`);
@@ -618,7 +615,9 @@ const OrderDetailPage = () => {
                     {order.direccionEntrega.departamento && `, Depto.: ${order.direccionEntrega.departamento}`}
                   </p>
                   <p>{order.direccionEntrega.ciudad || ''}, {order.direccionEntrega.provincia || ''}, {order.direccionEntrega.pais || ''}</p>
-                  <p>Coordenadas: {order.direccionEntrega.lat || 'N/A'}, {order.direccionEntrega.lon || 'N/A'}</p>
+                  {order.direccionEntrega.lat && order.direccionEntrega.lon && (
+                    <p>Coordenadas: {order.direccionEntrega.lat || 'N/A'}, {order.direccionEntrega.lon || 'N/A'}</p>
+                  )}
                 </>
               ) : (
                 <p>{order.direccionEntrega}</p>

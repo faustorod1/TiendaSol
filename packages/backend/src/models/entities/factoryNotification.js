@@ -79,6 +79,6 @@ Importe total: {{TOTAL}}`;
                 return null;
         }
 
-        return new Notificacion(destinatario, mensaje);
+        return new Notificacion(destinatario, mensaje, "PEDIDO", pedido._id);
     }
 }
