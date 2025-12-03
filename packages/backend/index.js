@@ -24,7 +24,6 @@ import { ProductoController } from './src/controllers/productoController.js';
 import { UsuarioController } from './src/controllers/usuarioController.js';
 import { CategoriaController } from "./src/controllers/categoriaController.js";
 
-
 const app = express();
 app.use(express.json());
 

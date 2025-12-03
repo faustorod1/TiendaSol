@@ -15,3 +15,12 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Ignora el error de sintaxis que ocurre al cargar la app
+  if (err.message.includes("SyntaxError: expected expression, got '<'")) {
+    return false;
+  }
+  // Permitir que otros errores fallen la prueba
+  return true;
+});

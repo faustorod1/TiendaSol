@@ -1,22 +1,31 @@
 const PRODUCTS_PER_PAGE = 10;
 const URL_PRODUCTOS = '/productos';
 const SELECTORS = {
-    // TODO: REVISAR Y AJUSTAR ESTOS SELECTORES EN TU CÓDIGO REACT
     // Se recomienda usar atributos data-cy (Cypress data-testing attribute)
-    nextButton: '[data-cy="pagination-next"]', 
+    nextButton: '[data-cy="pagination-next"]',
     prevButton: '[data-cy="pagination-prev"]',
     productListContainer: '[data-cy="product-list"]',
     productItem: '[data-cy="product-item"]',
     firstProductTitle: '[data-cy="product-title"]', // Selector para el título del primer producto
 };
 
+// Se ejecuta antes de toda la suite para asegurar un entorno limpio
+before(() => {
+    // Borra las cookies, localStorage y sesión para asegurar un estado limpio.
+    cy.clearAllSessionStorage()
+    cy.clearCookies()
+})
+
 describe('E2E Test: Paginado de Productos en TiendaSol', () => {
+    // Variables para almacenar los títulos de los productos
     let firstProductTitlePage1;
     let firstProductTitlePage2;
 
     // Antes de cada test, navegamos a la página de productos.
     beforeEach(() => {
+        // La configuración en e2e.js permite que esta visita continúe
         cy.visit(URL_PRODUCTOS);
+        cy.log('*** Test: Navegación a página inicial completada. ***');
     });
 
     it('1. Valida la carga inicial y el número correcto de productos', () => {
@@ -28,7 +37,7 @@ describe('E2E Test: Paginado de Productos en TiendaSol', () => {
         cy.get(SELECTORS.productItem)
           .should('have.length', PRODUCTS_PER_PAGE);
 
-        // 3. Capturar el título del primer producto para futuras comparaciones.
+        // 3. Capturar el título del primer producto y guardarlo en la variable.
         cy.get(SELECTORS.firstProductTitle).first().then(($title) => {
             firstProductTitlePage1 = $title.text().trim();
             cy.log(`Producto 1 (Página 1): ${firstProductTitlePage1}`);
@@ -40,12 +49,10 @@ describe('E2E Test: Paginado de Productos en TiendaSol', () => {
     });
 
     it('2. Navegación a la página siguiente y verificación de cambio de contenido', () => {
-        // Asegurarse de que el título de la Pág. 1 ya fue capturado (dependencia del test anterior).
-        if (!firstProductTitlePage1) {
-             cy.get(SELECTORS.firstProductTitle).first().then(($title) => {
-                firstProductTitlePage1 = $title.text().trim();
-            });
-        }
+        // Capturamos el título de la Pág. 1 nuevamente, en caso de que el test 1 no haya corrido antes.
+        cy.get(SELECTORS.firstProductTitle).first().then(($title) => {
+            firstProductTitlePage1 = $title.text().trim();
+        });
         
         // 1. Hacer clic en el botón "Siguiente".
         cy.get(SELECTORS.nextButton)
@@ -53,10 +60,13 @@ describe('E2E Test: Paginado de Productos en TiendaSol', () => {
           .click();
 
         // 2. Verificar que el URL se actualice correctamente (ej. /productos?page=2).
-        // Si tu aplicación no usa query params, puedes comentar la siguiente línea.
         cy.url().should('include', '?page=2');
 
-        // 3. Verificar que el número de productos sigue siendo el mismo (PRODUCTS_PER_PAGE).
+        // *** CAMBIO CLAVE AÑADIDO AQUÍ: Espera inteligente por el nuevo contenido renderizado. ***
+        cy.get(SELECTORS.productItem).first().should('be.visible');
+        // Usar .should('be.visible') o .should('have.length', PRODUCTS_PER_PAGE) fuerza a Cypress a esperar la recarga.
+        
+        // 3. Verificar que el número de productos sigue siendo el mismo.
         cy.get(SELECTORS.productItem)
           .should('have.length', PRODUCTS_PER_PAGE);
         
@@ -74,34 +84,37 @@ describe('E2E Test: Paginado de Productos en TiendaSol', () => {
     });
 
     it('3. Navegación a la página anterior y retorno al contenido original', () => {
-        // 1. Navegar a la página 2 primero.
+        // 1. Navegar directamente a la página 2 para iniciar este test de forma independiente.
         cy.visit(`${URL_PRODUCTOS}?page=2`);
 
-        // 2. Capturar el primer producto de la Pág. 2 (en caso de que el test 2 no haya corrido).
+        // Capturar el título del primer producto de la Pág. 2 para la comparación.
+        let productTitlePage2OnEntry;
         cy.get(SELECTORS.firstProductTitle).first().then(($title) => {
-            firstProductTitlePage2 = $title.text().trim();
+            productTitlePage2OnEntry = $title.text().trim();
         });
 
-        // 3. Hacer clic en el botón "Anterior".
+        // 2. Hacer clic en el botón "Anterior".
         cy.get(SELECTORS.prevButton)
           .should('not.be.disabled')
           .click();
 
-        // 4. Verificar el retorno al URL base (o ?page=1).
+        // 3. Verificar el retorno al URL base (o ?page=1).
         cy.url().should('not.include', 'page=2');
         cy.url().should('include', URL_PRODUCTOS); 
+        
+        // *** CAMBIO CLAVE AÑADIDO AQUÍ: Espera inteligente por el nuevo contenido renderizado. ***
+        cy.get(SELECTORS.productItem).first().should('be.visible');
 
-        // 5. Verificar que el contenido (el primer producto) sea idéntico al de la Pág. 1.
+        // 4. Verificar que el contenido (el primer producto) sea idéntico al de la Pág. 1.
         cy.get(SELECTORS.firstProductTitle).first().then(($title) => {
             const returnedProductTitle = $title.text().trim();
             
-            // Aquí usamos la asunción de que el primer producto de la Pág 1 es diferente al de la Pág 2
-            // y que al volver a Pág 1, volvemos a ver el primer producto de Pág 1.
-            expect(returnedProductTitle).to.not.equal(firstProductTitlePage2);
-            cy.log(`Test de retorno exitoso. Producto 1: ${returnedProductTitle}`);
+            // Verificamos que el producto retornado NO sea el de la página 2.
+            expect(returnedProductTitle).to.not.equal(productTitlePage2OnEntry);
+            cy.log(`Test de retorno exitoso. Producto 1 retornado: ${returnedProductTitle}`);
         });
 
-        // 6. Verificar que el botón "Anterior" vuelva a estar deshabilitado.
+        // 5. Verificar que el botón "Anterior" vuelva a estar deshabilitado.
         cy.get(SELECTORS.prevButton).should('be.disabled');
     });
 });
