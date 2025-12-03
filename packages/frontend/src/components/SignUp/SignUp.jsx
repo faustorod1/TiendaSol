@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './SignUp.css';
-import { registerUser } from '../../service/usuarioService';
+import { registerUser, loginUser } from '../../service/usuarioService';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 const SignUp = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,9 @@ const SignUp = ({ user }) => {
     confirmPassword: '',
     tipoUsuario: 'COMPRADOR'
   });
+
+  const { refreshContext: refreshNotifications } = useNotifications();
+  const navigate = useNavigate();
 
   // Inicializar con 3 métodos de pago fijos (opcionales)
   const [metodosPago, setMetodosPago] = useState([
@@ -135,8 +140,62 @@ const SignUp = ({ user }) => {
       
       if (result.success) {
         setSuccess('Cuenta creada correctamente');
-        // Opcional: redirigir al login o dashboard
-        // navigate('/login');
+
+        // Se loguea el usuario de una vez
+        try {
+              const credentials = {
+                email: formData.email.trim(),
+                password: formData.password
+              };
+        
+              const result = await loginUser(credentials);
+              
+              if (result && result.success) {
+                
+                if (result.data && result.data.token) {
+                  localStorage.setItem('authToken', result.data.token);
+                }
+                
+                if (result.data && (result.data.usuario || result.data.user)) {
+                  const userData = result.data.usuario || result.data.user;
+                  localStorage.setItem('user', JSON.stringify(userData));
+                  localStorage.setItem('userId', userData._id || userData.id);
+                  localStorage.setItem('userType', userData.tipo || 'COMPRADOR');
+                }
+        
+                window.dispatchEvent(new CustomEvent('authChange'));
+        
+                refreshNotifications();
+                navigate('/', { replace: true });
+                
+              } else if (result && result.success === false) {
+            
+                if (result.status === 401) {
+                  setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+                } else if (result.status === 404) {
+                  setError('Usuario no encontrado. ¿Te has registrado?');
+                } else if (result.status === 500) {
+                  setError('Error del servidor. Inténtalo de nuevo más tarde.');
+                } else {
+                  setError(result.error || 'Error al iniciar sesión. Verifica tus credenciales.');
+                }
+              } else {
+                setError('Respuesta inesperada del servidor. Inténtalo de nuevo.');
+              }
+              
+            } catch (err) {
+        
+              if (err.name === 'NetworkError' || err.message.includes('Network')) {
+                setError('Error de conexión. Verifica tu conexión a internet.');
+              } else if (err.message.includes('timeout')) {
+                setError('El servidor tardó demasiado en responder. Inténtalo de nuevo.');
+              } else {
+                setError('Error de conexión. Por favor, inténtalo de nuevo.');
+              }
+            } finally {
+              {/*setIsLoading(false);*/}
+            }
+
       } else {
         setError(result.error || 'Error al crear la cuenta');
       }

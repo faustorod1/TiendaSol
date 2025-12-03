@@ -74,7 +74,7 @@ const Checkout = () => {
         return;
       }
 
-      const requiredAddressFields = ['calle', 'altura', 'codigoPostal', 'ciudad', 'pais'];
+      const requiredAddressFields = ['calle', 'altura', 'codigoPostal', 'ciudad', 'provincia', 'pais'];
       const missingFields = requiredAddressFields.filter(field => !addressData[field]?.trim());
       
       if (missingFields.length > 0) {
@@ -83,6 +83,7 @@ const Checkout = () => {
           altura: 'Altura',
           codigoPostal: 'Código Postal',
           ciudad: 'Ciudad',
+          provincia: 'Provincia',
           pais: 'País'
         };
         const missingFieldNames = missingFields.map(field => fieldNames[field]).join(', ');
@@ -119,7 +120,7 @@ const Checkout = () => {
           departamento: addressData.departamento.trim() || '',
           codigoPostal: addressData.codigoPostal.trim(),
           ciudad: addressData.ciudad.trim(),
-          provincia: addressData.provincia.trim() || '',
+          provincia: addressData.provincia.trim(),
           pais: addressData.pais.trim(),
           lat: addressData.lat.trim() || '',
           lon: addressData.lon.trim() || ''
@@ -300,8 +301,9 @@ const Checkout = () => {
                         type="text"
                         value={addressData.provincia}
                         onChange={(e) => handleAddressChange('provincia', e.target.value)}
-                        placeholder="Buenos Aires (opcional)"
+                        placeholder="Buenos Aires"
                         disabled={isSubmitting}
+                        required
                       />
                     </div>
 

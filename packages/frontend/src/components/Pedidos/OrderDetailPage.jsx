@@ -605,16 +605,16 @@ const OrderDetailPage = () => {
           </div>
         </div>
 
-        {/* Dirección de entrega */}
         {order.direccionEntrega && (
           <div className="delivery-address-section">
             <h3>Dirección de Entrega</h3>
             <div className="address-info">
               {typeof order.direccionEntrega === 'object' ? (
                 <>
-                  <p>{order.direccionEntrega.calle || ''}</p>
-                  <p>{order.direccionEntrega.ciudad || ''}, {order.direccionEntrega.provincia || ''}</p>
-                  <p>{order.direccionEntrega.codigoPostal || ''}, {order.direccionEntrega.pais || ''}</p>
+                  <p>{order.direccionEntrega.calle || ''}, {order.direccionEntrega.altura || ''}</p>
+                  <p>{order.direccionEntrega.codigoPostal || ''}, {`Piso: ${order.direccionEntrega.piso || ''}`}, {`Depto.: ${order.direccionEntrega.departamento || ''}`}</p>
+                  <p>{order.direccionEntrega.ciudad || ''}, {order.direccionEntrega.provincia || ''}, {order.direccionEntrega.pais || ''}</p>
+                  <p>Coordenadas: {order.direccionEntrega.lat || 'N/A'}, {order.direccionEntrega.lon || 'N/A'}</p>
                 </>
               ) : (
                 <p>{order.direccionEntrega}</p>
