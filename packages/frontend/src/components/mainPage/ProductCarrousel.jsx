@@ -43,11 +43,12 @@ const ProductCarrousel = ({ products = [], autoPlay = true, autoPlayDelay = 6000
           className="carousel-button prev" 
           onClick={prevProduct}
           aria-label="Producto anterior"
+          data-testid="prev-button"
         >
           ←
         </button>
 
-        <Link to={`/productos/${currentProduct._id}`} className="carousel-content">
+        <Link to={`/productos/${currentProduct._id}`} className="carousel-content" data-testid="active-product-item" data-product-id={currentProduct._id}>
           <img 
             src={currentProduct.fotos?.[0]} 
             alt={currentProduct.titulo} 
@@ -62,6 +63,7 @@ const ProductCarrousel = ({ products = [], autoPlay = true, autoPlayDelay = 6000
           className="carousel-button next" 
           onClick={nextProduct}
           aria-label="Producto siguiente"
+          data-testid="next-button"
         >
           →
         </button>
