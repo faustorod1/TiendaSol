@@ -303,7 +303,6 @@ const CreateProduct = () => {
                                                 formData.categorias.some(cat => cat._id === categoria._id) 
                                                     ? 'selected' : ''
                                             }`}
-                                            onClick={() => handleCategoriaToggle(categoria)}
                                         >
                                             <input
                                                 type="checkbox"
@@ -314,9 +313,6 @@ const CreateProduct = () => {
                                             <label htmlFor={`cat-${categoria._id}`}>
                                                 {categoria.nombre}
                                             </label>
-                                            {formData.categorias.some(cat => cat._id === categoria._id) && (
-                                                <span className="check-icon">✓</span>
-                                            )}
                                         </div>
                                     ))
                                 ) : (
