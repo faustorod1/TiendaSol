@@ -1,7 +1,15 @@
 import mongoose from 'mongoose';
 import { Producto } from '../models/entities/producto.js';
 import { Moneda } from '../models/entities/moneda.js'
-import { categoriaSchema } from './schemasAnidados/categoriaSchema.js';
+
+// Es similar a la otra pero sin el unique en el nombre
+const categoriaProductoSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    nombre: {
+        type: String,
+        required: true
+    }
+}, { _id: false });
 
 const productoSchema = new mongoose.Schema({
     vendedor:{
@@ -18,7 +26,7 @@ const productoSchema = new mongoose.Schema({
         required: true,
     },
     categorias: {
-        type: [categoriaSchema],
+        type: [categoriaProductoSchema],
         required: true,
     },
     precio:{

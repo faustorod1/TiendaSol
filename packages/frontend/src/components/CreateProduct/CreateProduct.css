@@ -304,7 +304,41 @@
     background: #f7fafc;
 }
 
-/* Estilos para cada item de categoría */
+.checkbox-item-create {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox-item-create:hover {
+    background-color: #f8f9fa;
+}
+
+.checkbox-item-create.selected {
+    background-color: #e3f2fd;
+}
+
+.checkbox-item-create label {
+    flex: 1;
+    cursor: pointer;
+    margin: 0;
+    padding: 4px 0;
+}
+
+.checkbox-item-create input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.checkbox-item-create .check-icon {
+    color: #007bff;
+    font-weight: bold;
+    margin-left: auto;
+}
+
 .checkbox-item-create {
     display: flex;
     align-items: center;
