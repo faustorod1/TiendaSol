@@ -6,11 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {}
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "test:unit": "npm run test -- test/unit",
+    "test:integracion": "cross-env NODE_ENV=test npm run test -- test/integracion"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +29,8 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "mongodb-memory-server": "^10.4.0",
+    "supertest": "^6.3.3"
   }
 }
