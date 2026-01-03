@@ -22,6 +22,16 @@ The project is structured into two main packages to streamline development and d
 
 - API First: Exposes a clean RESTful API consumed by the React client.
 
+## 🤖 Tech Stack
+- Frontend: React.js & Next.js (for optimized routing and rendering).
+- Backend: Node.js, Express.js & MongoDB (NoSQL Database).
+- API Documentation: Swagger (OpenAPI Specification).
+- Communication: Axios (Promise-based HTTP client).
+
+## 🧪 Quality Assurance & Testing
+- Smoke, Unit & Integration Testing: Implemented with Jest.
+- End-to-End (E2E) Testing: Automated browser testing using Cypress to ensure critical user flows (like checkout) work perfectly.
+
 ## 📦 Project Structure
 
 ```
@@ -37,8 +47,15 @@ For a detailed look at the project's scope, business rules, and technical requir
 
 👉 [**Project Specifications (PDF)**](./docs/Requirements&Specifications.pdf)
 
-## 🚀 Quick Start (Development)
+## 🌐 API Documentation
+The API is fully documented and testable via Swagger UI. Once the backend is running, you can access the documentation at `/api-docs`.
 
+## 📡 Deployment
+While the platform is not currently hosted on a live server, it includes all necessary configurations.
+- Frontend: Hosted on Netlify.
+- Backend & Database: Deployed using Render.
+
+## 🚀 Quick Start (Development)
 Follow these steps to get the project up and running:
 
 ### 1\. Install Dependencies
