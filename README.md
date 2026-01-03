@@ -22,8 +22,6 @@ The project is structured into two main packages to streamline development and d
 
 - API First: Exposes a clean RESTful API consumed by the React client.
 
-
-
 ## 📦 Project Structure
 
 ```
@@ -33,6 +31,11 @@ The project is structured into two main packages to streamline development and d
 │   └── frontend/       # React Application (UI & User Experience)
 ├── package.json        # Monorepo configuration (npm workspaces)
 ```
+
+## 📄 Requirements & Specifications
+For a detailed look at the project's scope, business rules, and technical requirements defined for the **Desarrollo de Software (DDS)** course at **UTN FRBA**, you can access the formal documentation here:
+
+👉 [**Project Specifications (PDF)**](./docs/Requirements&Specifications.pdf)
 
 ## 🚀 Quick Start (Development)
 
