@@ -1,54 +1,52 @@
-Este repositorio es la base para el Trabajo Práctico de la materia **Desarrollo de Software (DDS)** de la carrera **Ingeniería en Sistemas de Información** de la **UTN FRBA**. Se trata de un **monorepo** que integra una aplicación frontend con Create React App y un backend con Express, facilitando el desarrollo y la gestión de ambos proyectos en un único entorno.
+# Tienda Sol - Full Stack E-commerce Platform
 
-## 📦 Estructura del Proyecto
+## 📌 Project Overview
+Tienda Sol is an E-commerce solution built with a Full Stack JavaScript approach. The project is managed as a Monorepo using npm workspaces, integrating a dynamic React frontend with a robust Express.js backend.
 
-El monorepo está organizado de la siguiente manera:
+The platform follows a strict Layered Architecture (Routers, Controllers, Repositories, and Domain Models), ensuring high maintainability and a clear separation of concerns between business logic and data access.
+
+## 🏗️ Architecture & Technical Stack
+The project is structured into two main packages to streamline development and deployment:
+
+### 🖥️ Frontend (React.js)
+- SPA Architecture: Built with React hooks for efficient state and lifecycle management.
+
+- Responsive UI: Optimized for both mobile and desktop environments, ensuring a seamless user experience across all screen sizes.
+
+- Component-Based: High reusability of UI elements across the platform.
+
+### ⚙️ Backend (Node.js & Express)
+- Layered Design: Organized into Controllers, Repositories, and Domain Models to handle complex e-commerce logic.
+
+- Security & Middleware: Configured with CORS and Dotenv for secure, environment-specific management.
+
+- API First: Exposes a clean RESTful API consumed by the React client.
+
+
+
+## 📦 Project Structure
 
 ```
 .
 ├── packages/
-│   ├── backend/        # Servidor Express.js
-│   └── frontend/       # Aplicación React (Create React App)
-├── package.json        # Configuración del monorepo (root)
-├── README.md           # Este archivo
-└── .env.example        # Ejemplo de configuración de variables de entorno
+│   ├── backend/        # Express.js Server (Business Logic & API)
+│   └── frontend/       # React Application (UI & User Experience)
+├── package.json        # Monorepo configuration (npm workspaces)
 ```
 
-## ⚙️ Paquetes
+## 🚀 Quick Start (Development)
 
-Este monorepo utiliza **`npm workspaces`** para gestionar los diferentes paquetes.
+Follow these steps to get the project up and running:
 
-### Backend (`packages/backend`)
-
-El backend está construido con Express.js y utiliza las siguientes dependencias:
-
-- **`express`**: El framework web para Node.js, utilizado para construir la API.
-- **`cors`**: Middleware para Express que habilita Cross-Origin Resource Sharing (CORS), necesario para permitir que el frontend acceda al backend desde un origen diferente.
-- **`dotenv`**: Carga variables de entorno desde un archivo `.env` en `process.env`. Es crucial para configurar el puerto del servidor y los orígenes permitidos.
-
-La idea es dar lo mínimo para levantar el servidor, y que durante el desarrollo del TP se vayan agregando las dependencias necesarias.
-
-### Frontend (`packages/frontend`)
-
-El frontend es una aplicación de React generada con Create React App.
-
-## 🚀 Inicio Rápido
-
-Seguí estos pasos para poner en marcha el proyecto:
-
-### 1\. Instalación de Dependencias
-
-Desde la raíz del monorepo, ejecutá:
+### 1\. Install Dependencies
 
 ```bash
 npm install
 ```
 
-Esto instalará todas las dependencias para la raíz y para los paquetes `frontend` y `backend`.
+### 2\. Environment Setup
 
-### 2\. Configuración de Variables de Entorno
-
-Crea un archivo `.env` en el directorio `packages/backend`. Puedes usar el archivo `.env.example` como plantilla.
+Create a `.env` file in `packages/backend` based on the `.env.example`provided.
 
 ```
 # packages/backend/.env
@@ -56,34 +54,31 @@ ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 SERVER_PORT=3001
 ```
 
-- **`ALLOWED_ORIGINS`**: Define los orígenes permitidos para las solicitudes CORS. Asegurate de incluir la URL donde se ejecuta tu frontend (por defecto, `http://localhost:3000` para Create React App). Cuando se haga el despliegue en nube acá se deberá incluir la URL donde se desplegó el frontend.
-- **`SERVER_PORT`**: El puerto en el que se ejecutará el servidor backend (ej. `8000`).
+### 3\. Running the Application
 
-### 3\. Ejecución de la Aplicación
+You can start the frontend and backend separately or both at the same time:
 
-Podés iniciar el frontend y el backend por separado o ambos a la vez:
-
-#### Ejecutar el Backend
+#### Run Backend
 
 ```bash
 npm run start:backend
 ```
 
-Para el desarrollo con reinicio automático:
+For development with automatic restart (hot-reload):
 
 ```bash
 npm run dev:backend
 ```
 
-#### Ejecutar el Frontend
+#### Run Frontend
 
 ```bash
 npm run start:frontend
 ```
 
-#### Ejecutar Ambos (Desarrollo)
+#### Run Both (Development Mode)
 
-Para iniciar el backend en modo `dev` y el frontend simultáneamente, usá:
+To start the backend in dev mode and the frontend simultaneously, use:
 
 ```bash
 npm run start:dev
