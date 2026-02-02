@@ -47,6 +47,10 @@ For a detailed look at the project's scope, business rules, and technical requir
 
 👉 [**Project Specifications (PDF)**](./docs/Requirements&Specifications.pdf)
 
+## 📸 Project Screenshots
+![Captura de la app 1](docs/captura01.jpeg)
+![Captura de la app 2](docs/captura02.jpeg)
+
 ## 🌐 API Documentation
 The API is fully documented and testable via Swagger UI. Once the backend is running, you can access the documentation at `/api-docs`.
 
